@@ -1,0 +1,10 @@
+Debug*/
+//Gramont2Test/Debug
+*mk
+*txt
+Resources/
+Libs/
+!CMakeLists.txt
+!Gramont2Test/Resources/picking.*
+.cmake_dirty
+
