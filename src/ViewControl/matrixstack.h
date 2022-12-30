@@ -11,12 +11,9 @@ class MatrixStack
 public:
     MatrixStack();
     virtual ~MatrixStack();
-    void setModelMatrixdv(const double *);//, bool *
-    void setViewMatrixdv(const double *);
-    void setProjectionMatrixdv(const double *);
-    void setNeedUpdateModelMat(bool *);
-    void setNeedUpdateViewMat(bool *);
-    void setNeedUpdateProjectionMat(bool *);
+    void setModelMatrixdv(const double *, bool *);
+    void setViewMatrixdv(const double *, bool *);
+    void setProjectionMatrixdv(const double *, bool *);
 
     void UpdateMatrices();
 

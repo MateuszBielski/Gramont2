@@ -271,13 +271,6 @@ TEST(Surface,TexCoordCorners)
     GLfloat expCoord_y[] = {0,0,1,1};
     for(short i = 0 ; i < 4 ; i++) {
         short n = cornInd[i];
-//        GLfloat x,y,exp_x,exp_y;
-//        x = texCoord[n * 2];
-//        y = texCoord[n * 2 + 1];
-//        exp_x = expCoord_x[i];
-//        exp_y = expCoord_y[i];
-//        int c = 9;
-//        cout<<"\n"<<texCoord[n * 2]<<", "<<texCoord[n * 2 + 1];
         ASSERT_EQ(texCoord[n * 2],expCoord_x[i]);
         ASSERT_EQ(texCoord[n * 2 + 1],expCoord_y[i]);
     }

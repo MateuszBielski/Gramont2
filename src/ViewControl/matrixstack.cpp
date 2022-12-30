@@ -14,35 +14,28 @@ MatrixStack::~MatrixStack()
 {
 
 }
-void MatrixStack::setNeedUpdateModelMat(bool* b)
-{
-    needUpd_model = b;
-}
 
-//void MatrixStack::setModelMatrixdv(const double * modelM, bool * b)
-//{
-//    modelMat = modelM;
-//    modelSetted = true;
-//    needUpd_model = b;
-//    *needUpd_model = true;
-//}
-void MatrixStack::setModelMatrixdv(const double * modelM)
+void MatrixStack::setModelMatrixdv(const double * modelM, bool * b)
 {
     modelMat = modelM;
     modelSetted = true;
+    needUpd_model = b;
     *needUpd_model = true;
 }
 
-void MatrixStack::setViewMatrixdv(const double * viewM)
+
+void MatrixStack::setViewMatrixdv(const double * viewM, bool * b)
 {
     viewMat = viewM;
     viewSetted = true;
+    needUpd_view = b;
     *needUpd_view = true;
 }
-void MatrixStack::setProjectionMatrixdv(const double * projM)
+void MatrixStack::setProjectionMatrixdv(const double * projM, bool * b)
 {
     projMat = projM;
     projectionSetted = true;
+    needUpd_proj = b;
     *needUpd_proj = true;
 }
 void MatrixStack::UpdateMatrices()
@@ -77,13 +70,3 @@ const float* MatrixStack::getViewMatrixfv()
 }
 
 
-
-void MatrixStack::setNeedUpdateViewMat(bool* b)
-{
-    needUpd_view = b;
-}
-
-void MatrixStack::setNeedUpdateProjectionMat(bool* b)
-{
-    needUpd_proj = b;
-}

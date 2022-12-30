@@ -269,16 +269,13 @@ TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
     ASSERT_NE(sum_mat(model_1->getModelMatrix()),sum_mat(model_2->getModelMatrix()));
     spMatrixStack ms = make_shared<MatrixStack>();
     bool need = true;
-    ms->setNeedUpdateViewMat(&need);
-    ms->setNeedUpdateProjectionMat(&need);
     double matrix[] = {1,0,0,0,
                        0,1,0,0,
                        0,0,1,0,
                        0,0,0,1,
                       };
-                      ms->setViewMatrixdv(matrix);
-    ms->setViewMatrixdv(matrix);
-    ms->setProjectionMatrixdv(matrix);
+    ms->setViewMatrixdv(matrix,&need);
+    ms->setProjectionMatrixdv(matrix,&need);
     MultiModelManager man(nullptr);
     MultiModelManagerAccess acc(man);
 
