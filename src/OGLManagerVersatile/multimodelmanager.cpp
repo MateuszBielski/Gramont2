@@ -83,6 +83,8 @@ void MultiModelManager::SetShadersAndGeometry()
     };
     setLocations<OglRenderer>(m_TexRenderer,tnames,*ptr_TextureShader,&myOGLShaders::GetUnifLoc);
     setMatricesForRender(m_TexRenderer);
+    m_ptrMatrixStack->setNeedUpdateViewMat(&cameraTrial->needUpdateViewMat);
+    m_ptrMatrixStack->setNeedUpdateProjectionMat(&cameraTrial->needUpdateProjMat);
     m_ptrMatrixStack->setViewMatrixdv(cameraTrial->getViewMatrixdv());
     m_ptrMatrixStack->setProjectionMatrixdv(cameraTrial->getProjMatrixdv());
 }
@@ -93,7 +95,9 @@ void MultiModelManager::Draw3d()
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto d = model->GetModelData();
+        m_ptrMatrixStack->setNeedUpdateModelMat(&model->needUpdateModelMat);
         m_ptrMatrixStack->setModelMatrixdv(model->getModelMatrixdv());
+        m_ptrMatrixStack->UpdateMatrices();
         m_TexRenderer->DrawTextureForSingleModelEntry(tex, d,ptr_TextureShader->getProgramId());
 //        model->GetModelData();
     }

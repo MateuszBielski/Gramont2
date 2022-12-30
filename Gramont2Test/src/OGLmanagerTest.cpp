@@ -257,25 +257,37 @@ TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
 {
     auto model_1 = make_shared<OneModelMock>();
     auto model_2 = make_shared<OneModelMock>();
-    
+
     auto sum_mat = [](const float * m) {
         float s = 0;
         for(short i = 0; i < 16 ; i++)
             s += m[i];
         return s;
     };
-    model_1->Rotate(23,{0,1,1});
-    model_2->Rotate(22,{1,0,1});
+    model_1->Rotate(23, {0,1,1});
+    model_2->Rotate(22, {1,0,1});
     ASSERT_NE(sum_mat(model_1->getModelMatrix()),sum_mat(model_2->getModelMatrix()));
-        MultiModelManager man(nullptr);
+    spMatrixStack ms = make_shared<MatrixStack>();
+    bool need = true;
+    ms->setNeedUpdateViewMat(&need);
+    ms->setNeedUpdateProjectionMat(&need);
+    double matrix[] = {1,0,0,0,
+                       0,1,0,0,
+                       0,0,1,0,
+                       0,0,0,1,
+                      };
+                      ms->setViewMatrixdv(matrix);
+    ms->setViewMatrixdv(matrix);
+    ms->setProjectionMatrixdv(matrix);
+    MultiModelManager man(nullptr);
     MultiModelManagerAccess acc(man);
-//    upOglRenderer rend = make_unique<OglRendererMock>();
+
     acc.setTexRenderer(make_unique<OglRendererMock>());
-//    acc.setMatrixStack(ms);
+    acc.setMatrixStack(ms);
     man.setModels(vector<spOneModel> {model_1,model_2});
-    
+
     man.Draw3d();
-    
+
     upOglRendererMock rend = acc.getTexRenderer<OglRendererMock>();
     auto sum = rend->getSumsOfmatMVP();
     ASSERT_EQ(2,sum.size());

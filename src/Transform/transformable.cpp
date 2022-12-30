@@ -15,6 +15,11 @@ const float* Transformable::getModelMatrix()
 }
 const double* Transformable::getModelMatrixdv()
 {
+    float * mat4f = glm::value_ptr(modelMatrix);
+    for(short i = 0; i < 16 ; i++)
+    {
+        mat4d[i] = mat4f[i];
+    }
     return mat4d;
 }
 void Transformable::Translate(glm::vec3 translateVector)

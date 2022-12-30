@@ -15,6 +15,8 @@ public:
     virtual void UpdateMatrices() override;
     const double * getViewMatrixdv();
     const double * getProjMatrixdv();
+    bool needUpdateViewMat;
+    bool needUpdateProjMat;
 protected:
 
 };

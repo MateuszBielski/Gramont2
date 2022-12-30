@@ -19,6 +19,7 @@ public:
     void Rotate(float, glm::vec3);
     const float * getModelMatrix();
     const double * getModelMatrixdv();
+    bool needUpdateModelMat;
 protected:
 
 

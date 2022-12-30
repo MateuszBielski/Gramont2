@@ -53,10 +53,6 @@ TEST(MatrixStack,Update_ModelViewProjectionMatrix_multiply)
     float matrixExpect[] = {1.8606356, -0.0810948, 0.1684064, 0.0595035, 0.0304628, 2.6853154, 0.5968390, 0.2108827, 0.1200559, 0.5754452, -2.7614169, -0.9756986, 0.0000000, 0.0000000, 139.7219543, 395.4403076};
     const float * matrixResult;
 
-    ms.setModelMatrixdv(matrix_model);
-    ms.setViewMatrixdv(matrix_view);
-    ms.setProjectionMatrixdv(matrix_projection);
-    matrixResult = ms.getModelViewProjectionMatrixfv();
     
     bool needUpdateM = true;
     bool needUpdateV = true;
@@ -65,6 +61,10 @@ TEST(MatrixStack,Update_ModelViewProjectionMatrix_multiply)
     ms.setNeedUpdateViewMat(&needUpdateV);
     ms.setNeedUpdateProjectionMat(&needUpdateP);
     
+    ms.setModelMatrixdv(matrix_model);
+    ms.setViewMatrixdv(matrix_view);
+    ms.setProjectionMatrixdv(matrix_projection);
+    matrixResult = ms.getModelViewProjectionMatrixfv();
     ms.UpdateMatrices();
 
     float expect, result;
@@ -75,6 +75,41 @@ TEST(MatrixStack,Update_ModelViewProjectionMatrix_multiply)
 
         ASSERT_FLOAT_EQ(expect,result);
     }
+}
+TEST(MatrixStack,NeedUpdateTrueAfterSet_ModelMat)
+{
+    MatrixStack ms;
+    double matrix_model[16];
+    bool needUpdateM = false;
+
+    ms.setNeedUpdateModelMat(&needUpdateM);
+    ms.setModelMatrixdv(matrix_model);
+    
+    ASSERT_TRUE(needUpdateM);
+}
+TEST(MatrixStack,NeedUpdateTrueAfterSet_ViewMat)
+{
+    MatrixStack ms;
+
+    bool needUpdateV = false;
+    double matrix_view[16];
+    
+    ms.setNeedUpdateViewMat(&needUpdateV);
+    ms.setViewMatrixdv(matrix_view);
+    
+    ASSERT_TRUE(needUpdateV);
+}
+TEST(MatrixStack,NeedUpdateTrueAfterSet_ProjectionMat)
+{
+     MatrixStack ms;
+
+    bool needUpdateP = false;
+    double matrix_projection[16];
+    
+    ms.setNeedUpdateProjectionMat(&needUpdateP);
+    ms.setProjectionMatrixdv(matrix_projection);
+    
+    ASSERT_TRUE(needUpdateP);
 }
 TEST(MatrixStack,NeedUpdateFalse_afterUpdate)
 {
@@ -105,10 +140,6 @@ TEST(MatrixStack,Multiply_NoNeedUpdate)
     float matrixExpect[] = {1.8606356, -0.0810948, 0.1684064, 0.0595035, 0.0304628, 2.6853154, 0.5968390, 0.2108827, 0.1200559, 0.5754452, -2.7614169, -0.9756986, 0.0000000, 0.0000000, 139.7219543, 395.4403076};
     const float * matrixResult;
 
-    ms.setModelMatrixdv(matrix_model);
-    ms.setViewMatrixdv(matrix_view);
-    ms.setProjectionMatrixdv(matrix_projection);
-    matrixResult = ms.getModelViewProjectionMatrixfv();
     
     bool needUpdateM = true;
     bool needUpdateV = true;
@@ -117,6 +148,10 @@ TEST(MatrixStack,Multiply_NoNeedUpdate)
     ms.setNeedUpdateViewMat(&needUpdateV);
     ms.setNeedUpdateProjectionMat(&needUpdateP);
     
+    ms.setModelMatrixdv(matrix_model);
+    ms.setViewMatrixdv(matrix_view);
+    ms.setProjectionMatrixdv(matrix_projection);
+    matrixResult = ms.getModelViewProjectionMatrixfv();
     ms.UpdateMatrices();
     matrix_view[3] = 1.2;
     needUpdateV = false;
@@ -131,3 +166,10 @@ TEST(MatrixStack,Multiply_NoNeedUpdate)
         ASSERT_FLOAT_EQ(expect,result);
     }
 }
+//TEST(MatrixStack,ChangeModel_Updates_MVP_VW)
+//{
+//    
+//}
+//TEST(MatrixStack,ChangeView_Updates_MVP_VW)
+//TEST(MatrixStack,ChangeProjection_noUpdates_VW)
+//TEST(MatrixStack,ChangeProjection_Updates_MVP)
