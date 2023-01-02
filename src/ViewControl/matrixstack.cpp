@@ -44,17 +44,28 @@ void MatrixStack::UpdateMatrices()
     ok &= modelSetted;
     ok &= viewSetted;
     ok &= projectionSetted;
-//    ok &= (bool)needUpd_model;
-//    ok &= (bool)needUpd_view;
-//    ok &= (bool)needUpd_proj;
     if(!ok)return;
+    
     double m_dToVw[16];
     double m_dMVP[16];
-    if(*needUpd_model || *needUpd_view)
+    
+    bool updateView = false;
+    updateView |= *needUpd_model;
+    updateView |= *needUpd_view;
+    
+    if(updateView) {
         MyMatMul4x4(viewMat, modelMat, m_dToVw);
-    if(*needUpd_proj)
+        SetAsGLFloat4x4(m_dToVw, viewMatrix, 16);
+    }
+    
+    bool updateMVP = updateView;
+    updateMVP |= *needUpd_proj;
+    
+    if(updateMVP) {
         MyMatMul4x4(projMat, m_dToVw, m_dMVP);
-    SetAsGLFloat4x4(m_dMVP, modelViewProjectionMatrix, 16);
+        SetAsGLFloat4x4(m_dMVP, modelViewProjectionMatrix, 16);
+    }
+
     *needUpd_model = false;
     *needUpd_view = false;
     *needUpd_proj = false;
@@ -68,5 +79,3 @@ const float* MatrixStack::getViewMatrixfv()
 {
     return viewMatrix;
 }
-
-

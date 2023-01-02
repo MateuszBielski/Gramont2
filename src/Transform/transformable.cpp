@@ -4,29 +4,34 @@
 
 Transformable::Transformable()
 {
-    modelMatrix = glm::mat4(1.0f);
+    modelMatrix = glm::dmat4(1.0d);
 }
 Transformable::~Transformable()
 {
 }
-const float* Transformable::getModelMatrix()
+const double* Transformable::getModelMatrixdv()
 {
     return glm::value_ptr(modelMatrix);
 }
-const double* Transformable::getModelMatrixdv()
+const float* Transformable::getModelMatrixfv()
 {
-    float * mat4f = glm::value_ptr(modelMatrix);
-    for(short i = 0; i < 16 ; i++)
-    {
-        mat4d[i] = mat4f[i];
-    }
-    return mat4d;
+    UpdateFloatMatrix();
+    return mat4f;
 }
-void Transformable::Translate(glm::vec3 translateVector)
+void Transformable::Translate(glm::dvec3 translateVector)
 {
     modelMatrix = glm::translate(modelMatrix,translateVector);
+    UpdateFloatMatrix();
 }
-void Transformable::Rotate(float angle, glm::vec3 axis)
+void Transformable::Rotate(double angle, glm::dvec3 axis)
 {
     modelMatrix = glm::rotate(modelMatrix, glm::radians(angle), axis);
+    UpdateFloatMatrix();
+}
+void Transformable::UpdateFloatMatrix()
+{
+    double * mat4d = glm::value_ptr(modelMatrix);
+    for(short i = 0; i < 16 ; i++) {
+        mat4f[i] = mat4d[i];
+    }
 }

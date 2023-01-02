@@ -10,14 +10,15 @@ using namespace std;
 class Transformable
 {
 private:
-    glm::mat4 modelMatrix;// = glm::mat4(1.0f);
-    double mat4d[16];
+    glm::dmat4 modelMatrix;
+    float mat4f[16];
+    void UpdateFloatMatrix();
 public:
     Transformable();
     ~Transformable();
-    void Translate(glm::vec3);
-    void Rotate(float, glm::vec3);
-    const float * getModelMatrix();
+    void Translate(glm::dvec3);
+    void Rotate(double, glm::dvec3);
+    const float * getModelMatrixfv();
     const double * getModelMatrixdv();
     bool needUpdateModelMat;
 protected:

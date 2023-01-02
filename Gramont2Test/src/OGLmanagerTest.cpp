@@ -266,7 +266,7 @@ TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
     };
     model_1->Rotate(23, {0,1,1});
     model_2->Rotate(22, {1,0,1});
-    ASSERT_NE(sum_mat(model_1->getModelMatrix()),sum_mat(model_2->getModelMatrix()));
+    ASSERT_NE(sum_mat(model_1->getModelMatrixfv()),sum_mat(model_2->getModelMatrixfv()));
     spMatrixStack ms = make_shared<MatrixStack>();
     bool need = true;
     double matrix[] = {1,0,0,0,

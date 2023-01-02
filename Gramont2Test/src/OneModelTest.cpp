@@ -293,7 +293,7 @@ TEST(Transformable,TranslateByVector)
     Transformable tran;
     glm::vec3 translateVector(2.7f, 4.1f, -0.4f);
     tran.Translate(translateVector);
-    const float * modelMatrix = tran.getModelMatrix();
+    const float * modelMatrix = tran.getModelMatrixfv();
     ASSERT_FLOAT_EQ(modelMatrix[12],2.7);
     ASSERT_FLOAT_EQ(modelMatrix[13],4.1);
     ASSERT_FLOAT_EQ(modelMatrix[14],-0.4);
@@ -301,7 +301,7 @@ TEST(Transformable,TranslateByVector)
 TEST(Transformable,Rotate)
 {
     Transformable tran;
-    const float * modelMatrix = tran.getModelMatrix(); 
+    const float * modelMatrix = tran.getModelMatrixfv(); 
 //    cout<<"\n";
 //    for(int i = 0; i < 16 ; i++)cout<<modelMatrix[i]<<", ";
     ASSERT_EQ(0.0,modelMatrix[1]);
@@ -313,7 +313,7 @@ TEST(Transformable,Rotate)
 TEST(Transformable,OneModelMockHasIdentityModelMatrixAtBegin)
 {
     OneModelMock model;
-    const float * modMat = model.getModelMatrix();
+    const float * modMat = model.getModelMatrixfv();
     float expect[] = {1,0,0,0,
     0,1,0,0,
     0,0,1,0,
