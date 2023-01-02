@@ -281,6 +281,7 @@ TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
 
     acc.setTexRenderer(make_unique<OglRendererMock>());
     acc.setMatrixStack(ms);
+    acc.setMatricesForTexRender();
     man.setModels(vector<spOneModel> {model_1,model_2});
 
     man.Draw3d();

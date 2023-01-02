@@ -91,15 +91,13 @@ void MultiModelManager::SetShadersAndGeometry()
 
 void MultiModelManager::Draw3d()
 {
-    m_Camera->UpdateMatrices();
+//    m_Camera->UpdateMatrices();
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto d = model->GetModelData();
-//        m_ptrMatrixStack->setNeedUpdateModelMat(&model->needUpdateModelMat);
         m_ptrMatrixStack->setModelMatrixdv(model->getModelMatrixdv(),&model->needUpdateModelMat);
         m_ptrMatrixStack->UpdateMatrices();
         m_TexRenderer->DrawTextureForSingleModelEntry(tex, d,ptr_TextureShader->getProgramId());
-//        model->GetModelData();
     }
 }
 

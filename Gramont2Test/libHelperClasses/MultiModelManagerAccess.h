@@ -12,6 +12,7 @@ public:
     void setTextureShaderForTest(spMyOGLShaders sh){manager.ptr_TextureShader = sh;}
     void setMatrixStack(spMatrixStack ms){manager.m_ptrMatrixStack = ms;}
     void setTexRenderer(upOglRenderer );
+    void setMatricesForTexRender();
     template<typename T>
     unique_ptr<T> getTexRenderer();
 private:

@@ -26,4 +26,8 @@ unique_ptr<T> MultiModelManagerAccess::getTexRenderer()
     }
     return move(castedRenderer);
 }
+void MultiModelManagerAccess::setMatricesForTexRender()
+{
+	manager.setMatricesForRender(manager.m_TexRenderer);
+}
 template unique_ptr<OglRendererMock> MultiModelManagerAccess::getTexRenderer<OglRendererMock>();

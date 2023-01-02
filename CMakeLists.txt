@@ -11,6 +11,7 @@ set(includes
     src/Textures
     src/GeometryModel
     src/ViewControl
+    src/Transform
 )
 #message("standard c++")
 #message(STATUS ${CMAKE_CXX_STANDARD})
@@ -25,6 +26,8 @@ set ( CXX_SRCS
     src/GeometryModel/onemodel.cpp
     src/Textures/textureformodel.cpp
     src/ViewControl/cameratrial.cpp
+    src/ViewControl/matrixstack.cpp
+    src/Transform/transformable.cpp
 )
 set(CMAKE_BUILD_TYPE Debug)
 #add_compile_options(-H)
