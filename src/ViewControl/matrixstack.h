@@ -32,6 +32,8 @@ protected:
     float viewMatrix[16];
     bool modelSetted = false, viewSetted = false, projectionSetted = false;
 private:
+    double m_dToVw[16];
+    double m_dMVP[16];
 
 };
 using spMatrixStack = shared_ptr<MatrixStack>;

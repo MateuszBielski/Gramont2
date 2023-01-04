@@ -46,9 +46,6 @@ void MatrixStack::UpdateMatrices()
     ok &= projectionSetted;
     if(!ok)return;
     
-    double m_dToVw[16];
-    double m_dMVP[16];
-    
     bool updateView = false;
     updateView |= *needUpd_model;
     updateView |= *needUpd_view;

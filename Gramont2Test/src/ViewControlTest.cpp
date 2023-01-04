@@ -4,6 +4,8 @@
 #include <sstream>
 #include <iomanip>
 #include <cmath>
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 
 TEST(MatrixStack,DefaultReturnIdentity)
@@ -234,6 +236,53 @@ TEST(MatrixStack,ChangeModel_Updates_MVP_VW)
     }
     ASSERT_TRUE(notEqual);
 }
+template<typename T>
+void CreateRandomMatrixTv(T * mat,T low,T high)
+{
+    int lowInt = (int)floor(low);
+    int highInt = (int)ceil(high);
+    T rangeInt = highInt - lowInt;
+    T range = high - low;
+    T ratio = range/rangeInt;
+    for(short i = 0 ; i < 16 ; i++) {
+        mat[i] = low + ratio * (rand() % (highInt - lowInt + 1 ));
+//        cout<<"\n"<<mat[i];
+    }
+}
+TEST(MatrixStack,CreateRandomMatrix)
+{
+    double matrix[16];
+    CreateRandomMatrixTv(matrix,0.5d,240.0d);
+    double first = matrix[0];
+    bool outOfRange = false;
+    bool equal = true;
+    for(short i = 0 ; i < 16 ; i++) {
+        outOfRange |= matrix[i] < 0.5;
+        outOfRange |= matrix[i] > 240;
+        equal &= first != matrix[i];
+    }
+    ASSERT_FALSE(outOfRange);
+    ASSERT_FALSE(equal);
+}
+
+TEST(MatrixStack,MultiplicationGLM)
+{
+    double mat4dv_1[16];
+    CreateRandomMatrixTv(mat4dv_1,-9.3d,21.43d);
+    double mat4dv_2[16];
+    CreateRandomMatrixTv(mat4dv_1,-8.3d,24.43d);
+    auto mat1 = glm::make_mat4x4(mat4dv_1);
+    auto mat2 = glm::make_mat4x4(mat4dv_2);
+    auto matResult = mat1 * mat2;
+    double * matResultdv = glm::value_ptr(matResult);
+    double matExp[16];
+    MyMatMul4x4(mat4dv_1, mat4dv_2, matExp);
+    bool equal = true;
+    for(short i = 0 ; i < 16 ; i++) {
+        equal &= matResultdv[i] == matExp[i];
+    }
+    ASSERT_TRUE(equal);
+}
 TEST(MatrixStack,ChangeView_Updates_MVP_VW)
 {
     MatrixStack ms;
@@ -265,7 +314,7 @@ TEST(MatrixStack,ChangeView_Updates_MVP_VW)
     ms.UpdateMatrices();
     memcpy(matrixResultMVP_2,ms.getModelViewProjectionMatrixfv(),16 * sizeof(float));
     memcpy(matrixResultVW_2, ms.getViewMatrixfv(),16 * sizeof(float));
-    
+
     bool notEqual = false;
     for(short u = 0; u < 16 ; u++) {
         if(matrixResultMVP_1[u] != matrixResultMVP_2[u])notEqual = true;
@@ -282,11 +331,15 @@ TEST(MatrixStack,ChangeView_Updates_MVP_VW)
 TEST(MatrixStack,ChangeProjection_Updates_MVP)
 {
     MatrixStack ms;
+    double l = 1.3, h = 83.4;
     double matrix_model[16];
+    CreateRandomMatrixTv(matrix_model,l,h);
     double matrix_view[16];
+    CreateRandomMatrixTv(matrix_view,l,h);
     double matrix_projection[16];
+    CreateRandomMatrixTv(matrix_projection,l,h);
     float matrixExpect[16];
-    FillMatricesWithRealData_1(matrix_model,matrix_view,matrix_projection,matrixExpect);
+//    FillMatricesWithRealData_1(matrix_model,matrix_view,matrix_projection,matrixExpect);
     float matrixResultMVP_1[16];
     float matrixResultMVP_2[16];
     float matrixResultVW_1[16];
@@ -303,24 +356,49 @@ TEST(MatrixStack,ChangeProjection_Updates_MVP)
     ms.UpdateMatrices();
     memcpy(matrixResultMVP_1,ms.getModelViewProjectionMatrixfv(),16 * sizeof(float));
     memcpy(matrixResultVW_1, ms.getViewMatrixfv(),16 * sizeof(float));
+    auto matrixExpectVW_1glm =glm::make_mat4x4(matrix_view) * glm::make_mat4x4(matrix_model);
+    auto matrixExpectMVP_1glm =glm::make_mat4x4(matrix_projection) * matrixExpectVW_1glm;
+    double * matrixExpectVW_1fv = glm::value_ptr(matrixExpectVW_1glm);
+    double * matrixExpectMVP_1fv = glm::value_ptr(matrixExpectMVP_1glm);
 
+    bool notEqual = false;
+    for(short u = 0; u < 16 ; u++) {
+        if(round_to(matrixExpectVW_1fv[u],4) != round_to(matrixResultVW_1[u],4)) {
+            
+            notEqual = true;
+//            cout<<"notEqual "<<matrixResultVW_1[u] - matrixExpectVW_1fv[u]<<"  ";
+        }
+//        cout<<matrixExpectVW_1fv[u]<<", "<<matrixResultVW_1[u]<<"\n";
+    }
+    ASSERT_FALSE(notEqual);
+    notEqual = false;
+    for(short u = 0; u < 16 ; u++) {
+        if(round_to(matrixExpectMVP_1fv[u],4) != round_to(matrixResultMVP_1[u],4)) {
+            notEqual = true;
+        }
+    }
+    ASSERT_FALSE(notEqual);
+    
     matrix_projection[2] = 1.5;
     needUpdateP = true;
 
     ms.UpdateMatrices();
     memcpy(matrixResultMVP_2,ms.getModelViewProjectionMatrixfv(),16 * sizeof(float));
     memcpy(matrixResultVW_2, ms.getViewMatrixfv(),16 * sizeof(float));
-    
-    bool notEqual = false;
+    auto matrixExpectMVP_2glm =glm::make_mat4x4(matrix_projection) * glm::make_mat4x4(matrix_view) * glm::make_mat4x4(matrix_model);
+    double * matrixExpectMVP_2fv = glm::value_ptr(matrixExpectMVP_2glm);
     for(short u = 0; u < 16 ; u++) {
-        if(matrixResultMVP_1[u] != matrixResultMVP_2[u])notEqual = true;
-//        cout<<matrixResultMVP_1[u]<<", "<<matrixResultMVP_2[u]<<"\n";
+        if(round_to(matrixExpectMVP_2fv[u],4) != round_to(matrixResultMVP_2[u],4)) {
+            notEqual = true;
+        }
+        cout<<"\n"<<matrixExpectMVP_2fv[u]<<", "<<matrixResultMVP_2[u];
     }
-    ASSERT_TRUE(notEqual);
-    bool equal = false;
-    for(short u = 0; u < 16 ; u++) {
-        if(matrixResultVW_1[u] != matrixResultVW_2[u])notEqual = true;
-//        cout<<matrixResultVW_1[u]<<", "<<matrixResultVW_2[u]<<"\n";
-    }
-    ASSERT_FALSE(equal);
+    ASSERT_FALSE(notEqual);
+}
+TEST(CameraTrial,needUpdateProjMat_After_ViewSizeChanged)
+{
+    CameraTrial cam;
+    cam.needUpdateProjMat = false;
+    cam.ViewSizeChanged(34,52);
+    ASSERT_TRUE(cam.needUpdateProjMat);
 }

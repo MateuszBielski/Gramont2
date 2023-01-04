@@ -36,3 +36,8 @@ const double* CameraTrial::getProjMatrixdv()
 {
     return m_dProj;
 }
+void CameraTrial::ViewSizeChanged(int newWidth, int newHeight)
+{
+    myOGLCamera::ViewSizeChanged(newWidth,newHeight);
+    needUpdateProjMat = true;
+}

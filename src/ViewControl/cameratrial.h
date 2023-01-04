@@ -13,6 +13,7 @@ private:
 
 public:
     virtual void UpdateMatrices() override;
+    virtual void ViewSizeChanged(int newWidth, int newHeight) override;
     const double * getViewMatrixdv();
     const double * getProjMatrixdv();
     bool needUpdateViewMat;

@@ -137,7 +137,7 @@ public:
     // Initial positions
     void InitPositions();
     // When the size of the window changes
-    void ViewSizeChanged(int newWidth, int newHeight);
+    virtual void ViewSizeChanged(int newWidth, int newHeight);
     // The whole transformation matrix
     const GLfloat* GetFloatMVP();
     // The 'To View Space' transformation matrix
