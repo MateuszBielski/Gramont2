@@ -296,15 +296,38 @@ TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
     cout<<sum1<<", "<<sum2;
     ASSERT_NE(sum2,sum1);
 }
-//TEST(MultiModelManager,setViewport_setsProjMatrixInStack)
-//{
-//    auto ms = make_shared<MatrixStack>();
-//    MultiModelManager man(nullptr);
-//    MultiModelManagerAccess acc(man);
-//    acc.setMatrixStack(ms);
-//    man.SetViewport(1,1,640,400);
-//    ASSERT_TRUE(nullptr != ms->getProjMatrixdv());
-//}
+TEST(MultiModelManager,updateVWMatrixInStack_OnMouseRotDragging)
+{
+    auto ms = make_shared<MatrixStack>();
+    MultiModelManager man(nullptr);
+    
+    MultiModelManagerAccess acc(man);
+    acc.setMatrixStack(ms);
+    
+    auto model_1 = make_shared<OneModelMock>();
+    auto model_2 = make_shared<OneModelMock>();
+    man.setModels(vector<spOneModel> {model_1,model_2});
+    man.SetViewport(1,1,640,400);
+    man.SetShadersAndGeometry();
+    float msVW_1[16];
+    float msVW_2[16];
+    auto msVW = ms->getViewMatrixfv();
+    
+    man.OnMouseRotDragging(45,39);
+    man.Draw3d();
+    for(short i = 0 ; i < 16 ; i++)msVW_1[i] = msVW[i];
+    
+    man.OnMouseRotDragging(47,35);
+    man.Draw3d();
+    for(short i = 0 ; i < 16 ; i++)msVW_2[i] = msVW[i];
+    
+    bool notEqual = false;
+    for(short i = 0 ; i < 16 ; i++)
+    {
+        if((msVW_1[i] - msVW_2[i]) != 0.0f) notEqual = true;
+    }
+    ASSERT_TRUE(notEqual);
+}
 TEST(MultiModelManager,contentOfMatrices)
 {
     auto ms = make_shared<MatrixStack>();

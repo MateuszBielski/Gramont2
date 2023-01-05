@@ -26,16 +26,17 @@ void CameraTrial::UpdateMatrices()
 //        SetAsGLFloat4x4(m_dToVw, m_fMVP, 16);
         m_needMVPUpdate = false;
     }
-    int i;
-//    cout.precision(7);
+//    int i;
+//    cout.precision(3);
+//    cout<<fixed;
 //    cout<<"\n double matrix_model[] = {"<<fixed;
 //    for(i = 0; i < 16 ; i++)cout<<m_dMode[i]<<", ";
 //    cout<<"};\n double matrix_projection[] = {";
 //    for(i = 0; i < 16 ; i++)cout<<m_dProj[i]<<", ";
 //    cout<<"};\n double matrix_view[] = {";
 //    for(i = 0; i < 16 ; i++)cout<<m_dView[i]<<", ";
-//    cout<<"};\n float matrixExpect[] = {";
-//    for(i = 0; i < 16 ; i++)cout<<m_fMVP[i]<<", ";
+//    cout<<"\n VW";
+//    for(i = 0; i < 16 ; i++)cout<<m_fToVw[i]<<", ";
 }
 
 const double* CameraTrial::getViewMatrixdv()

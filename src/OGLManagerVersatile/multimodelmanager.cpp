@@ -29,8 +29,9 @@ void MultiModelManager::setModels(vector<spOneModel>&& m)
 
 void MultiModelManager::setMatricesForRender(upOglRenderer& rend)
 {
+    //OLD VERSION
 //myOGLManager::setMatricesForRender(rend);
-
+//NEW VERSION
     rend->m_matrices.matMVP = m_ptrMatrixStack->getModelViewProjectionMatrixfv();
     rend->m_matrices.matToVw = m_ptrMatrixStack->getViewMatrixfv();
     rend->m_matrices.light_position = m_Light.GetFLightPos();
@@ -99,6 +100,7 @@ void MultiModelManager::Draw3d()
         m_ptrMatrixStack->UpdateMatrices();
         m_TexRenderer->DrawTextureForSingleModelEntry(tex, d,ptr_TextureShader->getProgramId());
     }
+//    cout<<"\nMultiModelManager::Draw3d()";
 }
 
 void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
