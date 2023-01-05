@@ -29,6 +29,8 @@ void MultiModelManager::setModels(vector<spOneModel>&& m)
 
 void MultiModelManager::setMatricesForRender(upOglRenderer& rend)
 {
+//myOGLManager::setMatricesForRender(rend);
+
     rend->m_matrices.matMVP = m_ptrMatrixStack->getModelViewProjectionMatrixfv();
     rend->m_matrices.matToVw = m_ptrMatrixStack->getViewMatrixfv();
     rend->m_matrices.light_position = m_Light.GetFLightPos();
@@ -83,15 +85,13 @@ void MultiModelManager::SetShadersAndGeometry()
     };
     setLocations<OglRenderer>(m_TexRenderer,tnames,*ptr_TextureShader,&myOGLShaders::GetUnifLoc);
     setMatricesForRender(m_TexRenderer);
-//    m_ptrMatrixStack->setNeedUpdateViewMat(&cameraTrial->needUpdateViewMat);
-//    m_ptrMatrixStack->setNeedUpdateProjectionMat(&cameraTrial->needUpdateProjMat);
     m_ptrMatrixStack->setViewMatrixdv(cameraTrial->getViewMatrixdv(),&cameraTrial->needUpdateViewMat);
     m_ptrMatrixStack->setProjectionMatrixdv(cameraTrial->getProjMatrixdv(),&cameraTrial->needUpdateProjMat);
 }
 
 void MultiModelManager::Draw3d()
 {
-//    m_Camera->UpdateMatrices();
+    m_Camera->UpdateMatrices();
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto d = model->GetModelData();

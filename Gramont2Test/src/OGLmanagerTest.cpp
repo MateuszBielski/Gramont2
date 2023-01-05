@@ -252,6 +252,7 @@ TEST(MultiModelManager,MatrixStackKnowsCameraMatrices)
     auto camViewMatrix = camera->getViewMatrixdv();
     auto camProjMatrix = camera->getProjMatrixdv();
     ASSERT_EQ(camViewMatrix,ms->getViewMatrixdv());
+    ASSERT_EQ(camProjMatrix,ms->getProjMatrixdv());
 }
 TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
 {
@@ -294,6 +295,47 @@ TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
     float sum1 = sum.top();
     cout<<sum1<<", "<<sum2;
     ASSERT_NE(sum2,sum1);
+}
+//TEST(MultiModelManager,setViewport_setsProjMatrixInStack)
+//{
+//    auto ms = make_shared<MatrixStack>();
+//    MultiModelManager man(nullptr);
+//    MultiModelManagerAccess acc(man);
+//    acc.setMatrixStack(ms);
+//    man.SetViewport(1,1,640,400);
+//    ASSERT_TRUE(nullptr != ms->getProjMatrixdv());
+//}
+TEST(MultiModelManager,contentOfMatrices)
+{
+    auto ms = make_shared<MatrixStack>();
+    MultiModelManager man(nullptr);
+    
+    MultiModelManagerAccess acc(man);
+    acc.setMatrixStack(ms);
+    
+    auto model_1 = make_shared<OneModelMock>();
+    auto model_2 = make_shared<OneModelMock>();
+    man.setModels(vector<spOneModel> {model_1,model_2});
+    man.SetViewport(1,1,640,400);
+    man.SetShadersAndGeometry();
+    man.Draw3d();
+    auto camMVP = acc.getPtrCameraForTest()->GetFloatMVP();
+    bool camMVPnoZero = false;
+    for(short i = 0 ; i < 16 ; i++)
+    {
+//        cout<<"\n"<<camMVP[i];
+        if(camMVP[i] == 0.0f) camMVPnoZero = true;
+    }
+    ASSERT_FALSE(camMVPnoZero);
+    
+    auto msMVP = ms->getModelViewProjectionMatrixfv();
+    bool msMVPnoZero = false;
+    for(short i = 0 ; i < 16 ; i++)
+    {
+        if(msMVP[i] == 0.0f) msMVPnoZero = true;
+    }
+    ASSERT_FALSE(msMVPnoZero);
+    
 }
 //class functorGlUniformMatrix4fv
 //    {

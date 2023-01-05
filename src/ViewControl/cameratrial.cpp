@@ -9,9 +9,20 @@ void CameraTrial::UpdateMatrices()
 //        MyMatMul4x4(m_dProj, m_dView, m_dToVw);
 //        MyMatMul4x4(m_dToVw, m_dMode, m_dMVP);
         // Store the 'float' matrices
+        
         SetAsGLFloat4x4(m_dToVw, m_fToVw, 16);
 //        SetAsGLFloat4x4(m_dMVP, m_fToVw, 16);
         SetAsGLFloat4x4(m_dMVP, m_fMVP, 16);
+        /***forDebug matrixStack*/
+        float sum= 0.0f;
+        for(short i = 0 ; i < 16 ; i++)
+        {
+            sum += m_fMVP[i];
+        }
+        if(sum > 0.0f){
+            int o = 9;
+        }
+        /**/
 //        SetAsGLFloat4x4(m_dToVw, m_fMVP, 16);
         m_needMVPUpdate = false;
     }
@@ -29,7 +40,8 @@ void CameraTrial::UpdateMatrices()
 
 const double* CameraTrial::getViewMatrixdv()
 {
-    return m_dMode;
+//    return m_dMode;//cause of errors?
+    return m_dView;
 }
 
 const double* CameraTrial::getProjMatrixdv()
