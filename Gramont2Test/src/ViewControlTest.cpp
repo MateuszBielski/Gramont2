@@ -391,7 +391,7 @@ TEST(MatrixStack,ChangeProjection_Updates_MVP)
         if(round_to(matrixExpectMVP_2fv[u],4) != round_to(matrixResultMVP_2[u],4)) {
             notEqual = true;
         }
-        cout<<"\n"<<matrixExpectMVP_2fv[u]<<", "<<matrixResultMVP_2[u];
+//        cout<<"\n"<<matrixExpectMVP_2fv[u]<<", "<<matrixResultMVP_2[u];
     }
     ASSERT_FALSE(notEqual);
 }

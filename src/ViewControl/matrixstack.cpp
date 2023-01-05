@@ -45,22 +45,23 @@ void MatrixStack::UpdateMatrices()
     ok &= viewSetted;
     ok &= projectionSetted;
     if(!ok)return;
-    
+
     bool updateView = false;
     updateView |= *needUpd_model;
     updateView |= *needUpd_view;
-    
+
     if(updateView) {
-        MyMatMul4x4(viewMat, modelMat, m_dToVw);
-        SetAsGLFloat4x4(m_dToVw, viewMatrix, 16);
+        m_dToVw = glm::make_mat4x4(viewMat) * glm::make_mat4x4(modelMat);
+        SetAsGLFloat4x4(glm::value_ptr(m_dToVw), viewMatrix, 16);
+
     }
-    
+
     bool updateMVP = updateView;
     updateMVP |= *needUpd_proj;
-    
+
     if(updateMVP) {
-        MyMatMul4x4(projMat, m_dToVw, m_dMVP);
-        SetAsGLFloat4x4(m_dMVP, modelViewProjectionMatrix, 16);
+        m_dMVP = glm::make_mat4x4(projMat) * m_dToVw;
+        SetAsGLFloat4x4(glm::value_ptr(m_dMVP), modelViewProjectionMatrix, 16);
     }
 
     *needUpd_model = false;

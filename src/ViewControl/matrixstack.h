@@ -3,6 +3,9 @@
 #include <iostream>
 #include <memory>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 using namespace std;
 
 
@@ -32,8 +35,7 @@ protected:
     float viewMatrix[16];
     bool modelSetted = false, viewSetted = false, projectionSetted = false;
 private:
-    double m_dToVw[16];
-    double m_dMVP[16];
+    glm::dmat4x4 m_dToVw, m_dMVP;
 
 };
 using spMatrixStack = shared_ptr<MatrixStack>;
