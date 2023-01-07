@@ -251,8 +251,10 @@ TEST(MultiModelManager,MatrixStackKnowsCameraMatrices)
     auto camera = acc.getPtrCameraForTest();
     auto camViewMatrix = camera->getViewMatrixdv();
     auto camProjMatrix = camera->getProjMatrixdv();
+    auto camModeMatrix = camera->getModeMatrixdv();
     ASSERT_EQ(camViewMatrix,ms->getViewMatrixdv());
     ASSERT_EQ(camProjMatrix,ms->getProjMatrixdv());
+    ASSERT_EQ(camModeMatrix,ms->getCamModeMatrixdv());
 }
 TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
 {

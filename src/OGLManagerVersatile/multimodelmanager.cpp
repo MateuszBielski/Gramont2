@@ -88,6 +88,7 @@ void MultiModelManager::SetShadersAndGeometry()
     setMatricesForRender(m_TexRenderer);
     m_ptrMatrixStack->setViewMatrixdv(cameraTrial->getViewMatrixdv(),&cameraTrial->needUpdateViewMat);
     m_ptrMatrixStack->setProjectionMatrixdv(cameraTrial->getProjMatrixdv(),&cameraTrial->needUpdateProjMat);
+    m_ptrMatrixStack->setCamModeMatrixdv(cameraTrial->getModeMatrixdv(),&cameraTrial->needUpdateModeMat);
 }
 
 void MultiModelManager::Draw3d()

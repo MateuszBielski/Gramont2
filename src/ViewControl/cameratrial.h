@@ -16,8 +16,10 @@ public:
     virtual void ViewSizeChanged(int newWidth, int newHeight) override;
     const double * getViewMatrixdv();
     const double * getProjMatrixdv();
+    const double * getModeMatrixdv();
     bool needUpdateViewMat;
     bool needUpdateProjMat;
+    bool needUpdateModeMat;
 protected:
 
 };
