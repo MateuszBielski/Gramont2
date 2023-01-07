@@ -17,6 +17,7 @@ class MultiModelManager : public myOGLManager
 
 private:
     spCameraTrial cameraTrial;
+    void MakeAndSetCustomModels();
 public:
     MultiModelManager(myOGLErrHandler* extErrHnd);
     ~MultiModelManager();

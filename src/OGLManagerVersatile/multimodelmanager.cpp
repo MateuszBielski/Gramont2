@@ -12,10 +12,8 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd):myOGLManager(ex
     m_ptrMatrixStack = make_shared<MatrixStack>();
 #ifndef TESTOWANIE_F
 #define TEXTURE_IMAGE "Resources/MB640x400.jpg"
-    //move to separate private method
-    auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
-//    auto model_2 = make_shared<OneModelMock>();
-    setModels(vector<spOneModel> {model_1});
+#define TEXTURE_IMAGE2 "Resources/ksiezyc.jpg"
+    MakeAndSetCustomModels();
 #endif
 }
 
@@ -26,12 +24,22 @@ void MultiModelManager::setModels(vector<spOneModel>&& m)
 {
     models = m;
 }
-
+void MultiModelManager::MakeAndSetCustomModels()
+{
+    auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
+    auto model_2 = make_shared<ConvexSurface>(80,80,100,100,30);
+    setModels(vector<spOneModel> {model_1,model_2});
+    model_1->Translate({60.0f,0.0f,0.0f});
+    model_2->Rotate(60.0f,{0.0f,0.3f,0.8f});
+    model_2->Translate({-60.0f,0.0f,0.0f});
+    model_1->MyTexture()->LoadImageFile(TEXTURE_IMAGE2);
+    model_2->MyTexture()->LoadImageFile(TEXTURE_IMAGE);
+}
 void MultiModelManager::setMatricesForRender(upOglRenderer& rend)
 {
     //OLD VERSION
 //myOGLManager::setMatricesForRender(rend);
-//NEW VERSION
+    //NEW VERSION
     rend->m_matrices.matMVP = m_ptrMatrixStack->getModelViewProjectionMatrixfv();
     rend->m_matrices.matToVw = m_ptrMatrixStack->getViewMatrixfv();
     rend->m_matrices.light_position = m_Light.GetFLightPos();
@@ -67,10 +75,13 @@ void MultiModelManager::SetShadersAndGeometry()
     };
     setLocations<BufferLoader>(m_BufferLoader,locNamsTexBuff,*ptr_TextureShader,&myOGLShaders::GetAttribLoc);
     int a = models.size();
+    
     for(auto& model : models) {
         auto& tex = *model->MyTexture();// czy auto& ?
         auto& d = model->GetModelData();
+#ifdef TESTOWANIE_F
         tex.LoadImageFile(TEXTURE_IMAGE);
+#endif
         m_BufferLoader->CreateBuffersForSingleModelEntry(d);
         m_BufferLoader->LoadTextureBuffersForSingleModelEntry(tex, d);
 //        model->GetModelData();
@@ -107,4 +118,3 @@ void MultiModelManager::Draw3d()
 void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 {
 }
-
