@@ -8,6 +8,7 @@ MatrixStack::MatrixStack():modelViewProjectionMatrix {
     0.0, 0.0, 1.0, 0.0,
     0.0, 0.0, 0.0, 1.0
 } {
+    m_dToVw = glm::dmat4x4(1.0d);
 }
 
 MatrixStack::~MatrixStack()
@@ -25,7 +26,7 @@ void MatrixStack::setModelMatrixdv(const double * modelM, bool * b)
 
 void MatrixStack::setCamModeMatrixdv(const double* camMode, bool* b)
 {
-	camModeMat = camMode;
+    camModeMat = camMode;
     camModeMatSetted = true;
     needUpd_camMode = b;
     //*needUpd_camMode = true; not secured by test
@@ -51,7 +52,6 @@ void MatrixStack::UpdateMatrices()
     ok &= modelSetted;
     ok &= viewSetted;
     ok &= projectionSetted;
-    ok &= camModeMatSetted;
     if(!ok)return;
 
     bool updateView = false;
@@ -59,8 +59,14 @@ void MatrixStack::UpdateMatrices()
     updateView |= *needUpd_view;
 
     if(updateView) {
-//        m_dToVw = glm::make_mat4x4(viewMat) * glm::make_mat4x4(modelMat);
-        m_dToVw = glm::make_mat4x4(viewMat) * glm::make_mat4x4(camModeMat) * glm::make_mat4x4(modelMat);
+        /*works*/
+        if(camModeMatSetted) {
+
+            m_dToVw = glm::make_mat4x4(viewMat) * glm::make_mat4x4(camModeMat) * glm::make_mat4x4(modelMat);
+        } else {
+            m_dToVw = glm::make_mat4x4(viewMat) * glm::make_mat4x4(modelMat);
+        }
+       
         SetAsGLFloat4x4(glm::value_ptr(m_dToVw), viewMatrix, 16);
 
     }

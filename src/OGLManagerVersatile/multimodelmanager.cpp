@@ -7,14 +7,12 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd):myOGLManager(ex
 {
     ptr_TextureShader = make_shared<myOGLShaders>();
     int i = 7;
-    cameraTrial = make_shared<CameraTrial>(); 
+    cameraTrial = make_shared<CameraTrial>();
     m_Camera = cameraTrial;
     m_ptrMatrixStack = make_shared<MatrixStack>();
-#ifndef TESTOWANIE_F
-#define TEXTURE_IMAGE "Resources/MB640x400.jpg"
-#define TEXTURE_IMAGE2 "Resources/ksiezyc.jpg"
+
     MakeAndSetCustomModels();
-#endif
+
 }
 
 MultiModelManager::~MultiModelManager()
@@ -26,14 +24,18 @@ void MultiModelManager::setModels(vector<spOneModel>&& m)
 }
 void MultiModelManager::MakeAndSetCustomModels()
 {
+#ifndef TESTOWANIE_F
+#define TEXTURE_IMAGE "Resources/MB640x400.jpg"
+#define TEXTURE_IMAGE2 "Resources/ksiezyc.jpg"
     auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
     auto model_2 = make_shared<ConvexSurface>(80,80,100,100,30);
     setModels(vector<spOneModel> {model_1,model_2});
-    model_1->Translate({60.0f,0.0f,0.0f});
-    model_2->Rotate(60.0f,{0.0f,0.3f,0.8f});
-    model_2->Translate({-60.0f,0.0f,0.0f});
+    model_1->Translate( {60.0f,0.0f,0.0f});
+    model_2->Rotate(60.0f, {0.0f,0.3f,0.8f});
+    model_2->Translate( {-60.0f,0.0f,0.0f});
     model_1->MyTexture()->LoadImageFile(TEXTURE_IMAGE2);
     model_2->MyTexture()->LoadImageFile(TEXTURE_IMAGE);
+#endif
 }
 void MultiModelManager::setMatricesForRender(upOglRenderer& rend)
 {
@@ -75,7 +77,7 @@ void MultiModelManager::SetShadersAndGeometry()
     };
     setLocations<BufferLoader>(m_BufferLoader,locNamsTexBuff,*ptr_TextureShader,&myOGLShaders::GetAttribLoc);
     int a = models.size();
-    
+
     for(auto& model : models) {
         auto& tex = *model->MyTexture();// czy auto& ?
         auto& d = model->GetModelData();
