@@ -10,10 +10,10 @@ using namespace std;
 class CameraTrial : public myOGLCamera
 {
 private:
-
 public:
     virtual void UpdateMatrices() override;
     virtual void ViewSizeChanged(int newWidth, int newHeight) override;
+    void UpdatePosition(int ,int ,int , int );
     const double * getViewMatrixdv();
     const double * getProjMatrixdv();
     const double * getModeMatrixdv();
@@ -21,7 +21,6 @@ public:
     bool needUpdateProjMat;
     bool needUpdateModeMat;
 protected:
-
 };
 
 using spCameraTrial = shared_ptr<CameraTrial>;

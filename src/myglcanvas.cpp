@@ -93,7 +93,7 @@ bool MyGLCanvas::oglInit()
 
     // The current context must be set before we get OGL pointers
     SetCurrent(*m_oglContext);
-    
+
 
     // Initialize our OGL pointers
 //    if ( !myOGLManager::Init(m_oglContext) ) {
@@ -108,7 +108,7 @@ bool MyGLCanvas::oglInit()
 //    m_oglManager = new myOGLManagerPyramid(&fOGLErrHandler);
     auto fun = &fOGLErrHandler;
     m_oglManager = new OGLManager(&fOGLErrHandler);
-    
+
 
     // Get the GL version for the current OGL context
     wxString sglVer = "\nUsing OpenGL version: ";
@@ -127,7 +127,7 @@ bool MyGLCanvas::oglInit()
     // Load some data into GPU
     m_oglManager->SetShadersAndGeometry();
 
-    
+
     return true;
 }
 
@@ -198,7 +198,16 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
             Refresh(false);
         }
     }
-    if( event.LeftDClick()){
-        m_oglManager->OnMouseLeftDClick(event.GetX(),event.GetY());
+
+    if(event.MiddleIsDown()) {
+        if ( ! event.Dragging() ) {
+            m_oglManager->OnMouseButDown(event.GetX(), oglwinY);
+        } else {
+            m_oglManager->OnMouseMiddleClick(event.GetX(),oglwinY);
+            Refresh(false);
+        }
+    }
+    if( event.LeftDClick()) {
+        m_oglManager->OnMouseLeftDClick(event.GetX(),oglwinY);
     }
 }

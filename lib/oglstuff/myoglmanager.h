@@ -44,6 +44,7 @@ public:
     void OnMouseButDown(int posX, int posY);
     void OnMouseRotDragging(int posX, int posY);
     virtual void OnMouseLeftDClick(int posX, int posY) {};
+    virtual void OnMouseMiddleClick(int posX, int posY) {};
 
     virtual void ZapiszShaderyDoPlikow() {};
     virtual void OdczytajShaderyZplikow() {};
@@ -67,8 +68,8 @@ protected:
 
 
     // For mouse event
-    int m_mousePrevX;
-    int m_mousePrevY;
+    int m_mousePrevX = 0;
+    int m_mousePrevY = 0;
 };
 
 #endif // myOGLManager_H

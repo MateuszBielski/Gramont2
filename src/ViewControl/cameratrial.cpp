@@ -1,4 +1,7 @@
 #include "cameratrial.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+
 
 
 void CameraTrial::UpdateMatrices()
@@ -38,10 +41,27 @@ void CameraTrial::UpdateMatrices()
 //    cout<<"\n VW";
 //    for(i = 0; i < 16 ; i++)cout<<m_fToVw[i]<<", ";
 }
+void CameraTrial::UpdatePosition(int m_mousePrevX,int  m_mousePrevY,int  posX, int posY)
+{
+	double xdiff = 1.0d * (posX - m_mousePrevX);
+	double ydiff = 1.0d * (posY - m_mousePrevY);
 
+//   m_camPosition
+    
+    glm::dvec4 moveInCameraCoord(xdiff,ydiff,0.0,0.0);
+    glm::dvec4 moveInWorldCoord = glm::inverse(glm::make_mat4x4(m_dView)) * moveInCameraCoord;
+    
+    m_camPosition.x -= moveInWorldCoord.x;
+    m_camPosition.y -= moveInWorldCoord.y;
+    m_camPosition.z -= moveInWorldCoord.z;
+    
+    m_camTarget.x -= moveInWorldCoord.x;
+    m_camTarget.y -= moveInWorldCoord.y;
+    m_camTarget.z -= moveInWorldCoord.z;
+    MyLookAt(m_camPosition, m_camUp, m_camTarget, m_dView);
+}
 const double* CameraTrial::getViewMatrixdv()
 {
-//    return m_dMode;//cause of errors?
     return m_dView;
 }
 
@@ -58,3 +78,4 @@ void CameraTrial::ViewSizeChanged(int newWidth, int newHeight)
     myOGLCamera::ViewSizeChanged(newWidth,newHeight);
     needUpdateProjMat = true;
 }
+

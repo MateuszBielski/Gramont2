@@ -45,7 +45,7 @@ void MatrixStack::setProjectionMatrixdv(const double * projM, bool * b)
     needUpd_proj = b;
     *needUpd_proj = true;
 }
-/**/
+
 void MatrixStack::UpdateMatrices()
 {
     bool ok = true;
@@ -58,17 +58,13 @@ void MatrixStack::UpdateMatrices()
     updateView |= *needUpd_model;
     updateView |= *needUpd_view;
 
-    if(updateView) {
-        /*works*/
-        if(camModeMatSetted) {
+        if(updateView) {
+        m_dToVw = glm::make_mat4x4(modelMat);
+        if(camModeMatSetted)
+            m_dToVw = glm::make_mat4x4(camModeMat) * m_dToVw;
 
-            m_dToVw = glm::make_mat4x4(viewMat) * glm::make_mat4x4(camModeMat) * glm::make_mat4x4(modelMat);
-        } else {
-            m_dToVw = glm::make_mat4x4(viewMat) * glm::make_mat4x4(modelMat);
-        }
-       
+        m_dToVw =  glm::make_mat4x4(viewMat) * m_dToVw;
         SetAsGLFloat4x4(glm::value_ptr(m_dToVw), viewMatrix, 16);
-
     }
 
     bool updateMVP = updateView;
@@ -84,38 +80,7 @@ void MatrixStack::UpdateMatrices()
     *needUpd_proj = false;
 }
 
-/*works
-void MatrixStack::UpdateMatrices()
-{
-    bool ok = true;
-    ok &= modelSetted;
-    ok &= viewSetted;
-    ok &= projectionSetted;
-    if(!ok)return;
 
-    bool updateView = false;
-    updateView |= *needUpd_model;
-    updateView |= *needUpd_view;
-
-    if(updateView) {
-        m_dToVw = glm::make_mat4x4(viewMat) * glm::make_mat4x4(modelMat);
-        SetAsGLFloat4x4(glm::value_ptr(m_dToVw), viewMatrix, 16);
-
-    }
-
-    bool updateMVP = updateView;
-    updateMVP |= *needUpd_proj;
-
-    if(updateMVP) {
-        m_dMVP = glm::make_mat4x4(projMat) * m_dToVw;
-        SetAsGLFloat4x4(glm::value_ptr(m_dMVP), modelViewProjectionMatrix, 16);
-    }
-
-    *needUpd_model = false;
-    *needUpd_view = false;
-    *needUpd_proj = false;
-}
-*/
 const float* MatrixStack::getModelViewProjectionMatrixfv()
 {
     return modelViewProjectionMatrix;

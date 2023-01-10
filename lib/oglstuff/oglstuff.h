@@ -167,9 +167,7 @@ public:
     GLfloat m_fToVw[16];
 protected:
     bool m_needMVPUpdate;
-private:
-
-
+    
     // Coordinates in model space
     myVec3 m_centerOfWorld;
     double m_radiusOfWorld;

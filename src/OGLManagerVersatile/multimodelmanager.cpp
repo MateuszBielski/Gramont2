@@ -116,7 +116,13 @@ void MultiModelManager::Draw3d()
     }
 //    cout<<"\nMultiModelManager::Draw3d()";
 }
-
+void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
+{
+	cameraTrial->UpdatePosition(m_mousePrevX, m_mousePrevY, posX, posY);
+    m_mousePrevX = posX;
+    m_mousePrevY = posY;
+}
 void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 {
 }
+
