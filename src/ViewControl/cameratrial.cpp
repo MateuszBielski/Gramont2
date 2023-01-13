@@ -83,20 +83,13 @@ void CameraTrial::UpdatePosition(int m_mousePrevX,int  m_mousePrevY,int  posX, i
     m_camTarget.z -= moveInWorldCoord.z;
     MyLookAt(m_camPosition, m_camUp, m_camTarget, m_dView);
 }
-void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
+dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, dmat_stack mstack)
 {
-    if ( fromX == toX && fromY == toY )
-        return; //no rotation
-
-    // 1. Obtain axis of rotation and angle simulating a virtual trackball "r"
-
-    // 1.1. Calculate normalized coordinates (2x2x2 box).
-    // The trackball is a part of sphere of radius "r" (the rest is hyperbolic)
-    // Use r= 0.8 for better maximum rotation (more-less 150 degrees)
-    double xw1 = (2.0 * fromX - m_winWidth) / m_winWidth;
-    double yw1 = (2.0 * fromY - m_winHeight) / m_winHeight;
-    double xw2 = (2.0 * toX - m_winWidth) / m_winWidth;
-    double yw2 = (2.0 * toY - m_winHeight) / m_winHeight;
+	
+    double xw1 = (2.0 * move.fromX - m_winWidth) / m_winWidth;
+    double yw1 = (2.0 * move.fromY - m_winHeight) / m_winHeight;
+    double xw2 = (2.0 * move.toX - m_winWidth) / m_winWidth;
+    double yw2 = (2.0 * move.toY - m_winHeight) / m_winHeight;
     double z1 = GetTrackballZ(xw1, yw1, 0.8);
     double z2 = GetTrackballZ(xw2, yw2, 0.8);
 
@@ -106,15 +99,41 @@ void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
     dvec3 axis = cross(v1,v2);
     
     dvec4 axis4(axis,0.0);
-    axis4 = inverse(make_mat4x4(m_dView)) * axis4;
+    
+    while(!mstack.empty())
+    {
+        axis4 = inverse(*mstack.top()) * axis4;
+        mstack.pop();
+    }
+    
     axis.x = axis4.x;
     axis.y = axis4.y;
     axis.z = axis4.z;
 
     axis = normalize(axis);
     double angle = glm::angle(v1,v2);
-    q_rotationDiff = angleAxis(angle, axis);
-    q_rotation = q_rotationDiff * q_rotation;
+    return angleAxis(angle, axis);
+}
+
+void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
+{
+    if ( fromX == toX && fromY == toY )
+        return; //no rotation
+        
+    dmat_stack mstack;
+    dmat4x4 mat_dProj = make_mat4x4(m_dProj);
+    dmat4x4 mat_dView = make_mat4x4(m_dView);
+    mstack.push(&mat_dProj);
+    mstack.push(&mat_dView);
+    
+    ScreenMove move;
+    move.fromX = fromX;
+    move.fromY = fromY;
+    move.toX = toX;
+    move.toY = toY;
+    dquat q_diff = RotationFromScreenMove(move, mstack);
+    
+    q_rotation = q_diff * q_rotation;
     
     dvec3 camTarget(m_camTarget.x, m_camTarget.y, m_camTarget.z);
 
@@ -130,3 +149,4 @@ void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
     // Inform we need to calculate MVP matrix
     m_needMVPUpdate = true;
 }
+
