@@ -1,6 +1,12 @@
 cmake_minimum_required(VERSION 3.10)
 
 project(Gramont2)
+
+if (MSVC)
+set(wxWidgets_ROOT_DIR D:\\programy\\wxWidgets)
+set(wxWidgets_CONFIGURATION mswud)
+endif (MSVC)
+
 find_package(wxWidgets REQUIRED gl core)
 include(${wxWidgets_USE_FILE})
 
@@ -37,6 +43,10 @@ add_subdirectory(lib/mathstuff)
 add_subdirectory(lib/oglstuff)
 add_subdirectory(lib/funcs)
 add_subdirectory(lib/wxApp)
+
+if (MSVC)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
+endif (MSVC)
 
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS})
 target_link_libraries(${CMAKE_PROJECT_NAME} 
