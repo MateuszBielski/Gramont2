@@ -153,7 +153,7 @@ public:
     }
 
     // Simulates a virtual trackball and rotates the 'world'
-    void MouseRotation(int fromX, int fromY, int toX, int toY);
+    virtual void MouseRotation(int fromX, int fromY, int toX, int toY);
     double GetTrackballZ(double x, double y, double r);
 
     // The used matrices

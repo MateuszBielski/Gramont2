@@ -60,9 +60,10 @@ void MatrixStack::UpdateMatrices()
 
         if(updateView) {
         m_dToVw = glm::make_mat4x4(modelMat);
+
         if(camModeMatSetted)
             m_dToVw = glm::make_mat4x4(camModeMat) * m_dToVw;
-
+            
         m_dToVw =  glm::make_mat4x4(viewMat) * m_dToVw;
         SetAsGLFloat4x4(glm::value_ptr(m_dToVw), viewMatrix, 16);
     }
