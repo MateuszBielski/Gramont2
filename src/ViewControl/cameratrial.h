@@ -25,13 +25,17 @@ class CameraTrial : public myOGLCamera
 {
 private:
     dquat q_rotation;
-    dquat q_rotationDiff;
+    dmat4 transormations;
+    dmat4 dmat4view;
+    dvec3 position;
+    dvec3 target;
+    dvec3 camUp;
 public:
     CameraTrial();
-//    virtual void InitPositions()override;
     virtual void UpdateMatrices() override;
     virtual void ViewSizeChanged(int newWidth, int newHeight) override;
     void UpdatePosition(int ,int ,int , int );
+    void UpdateViewMatrix();
     virtual void MouseRotation(int fromX, int fromY, int toX, int toY) override;
     dquat RotationFromScreenMove(ScreenMove& ,dmat_stack );
     const double * getViewMatrixdv();

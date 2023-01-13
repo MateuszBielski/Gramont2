@@ -106,7 +106,7 @@ void MultiModelManager::SetShadersAndGeometry()
 
 void MultiModelManager::Draw3d()
 {
-    m_Camera->UpdateMatrices();
+//    m_Camera->UpdateMatrices();
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto d = model->GetModelData();
