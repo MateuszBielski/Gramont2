@@ -9,11 +9,10 @@
 CameraTrial::CameraTrial()
 {
     q_rotation.w = 1.0d;
-    transormations = dmat4x4(1.0d);
-    transormations = make_mat4x4(m_dView);
     position = dvec3(m_camPosition.x,m_camPosition.y,m_camPosition.z);
     target = dvec3(m_camTarget.x,m_camTarget.y,m_camTarget.z);
     camUp = dvec3(m_camUp.x,m_camUp.y,m_camUp.z);
+    UpdateViewMatrix();
 }
 
 void CameraTrial::UpdateMatrices()
@@ -44,7 +43,8 @@ void CameraTrial::UpdateMatrices()
 }
 const double* CameraTrial::getViewMatrixdv()
 {
-    return m_dView;
+//    return m_dView;
+    return value_ptr(dmat4view);
 }
 
 const double* CameraTrial::getProjMatrixdv()
@@ -66,26 +66,14 @@ void CameraTrial::UpdatePosition(int m_mousePrevX,int  m_mousePrevY,int  posX, i
     double xdiff = 1.0d * (posX - m_mousePrevX);
     double ydiff = 1.0d * (posY - m_mousePrevY);
 
-//   m_camPosition
-
     glm::dvec4 moveInCameraCoord(xdiff,ydiff,0.0,0.0);
-    glm::dvec4 moveInWorldCoord = glm::inverse(glm::make_mat4x4(m_dView)) * moveInCameraCoord;
+    glm::dvec4 moveInWorldCoord = inverse(transformation) * 
+    inverse(make_mat4x4(m_dView)) * moveInCameraCoord;
 
-    m_camPosition.x -= moveInWorldCoord.x;
-    m_camPosition.y -= moveInWorldCoord.y;
-    m_camPosition.z -= moveInWorldCoord.z;
-
-    m_camTarget.x -= moveInWorldCoord.x;
-    m_camTarget.y -= moveInWorldCoord.y;
-    m_camTarget.z -= moveInWorldCoord.z;
     target = target - glm::xyz(moveInWorldCoord);
     position = position - glm::xyz(moveInWorldCoord);
-    MyLookAt(m_camPosition, m_camUp, m_camTarget, m_dView);
-
-    glm::mat4 view;
-    view = glm::lookAt(position,
-                       target,
-                       camUp);
+    
+    UpdateViewMatrix();
 }
 dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, dmat_stack mstack)
 {
@@ -109,26 +97,19 @@ dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, dmat_stack mstack)
         mstack.pop();
     }
 
-    axis.x = axis4.x;
-    axis.y = axis4.y;
-    axis.z = axis4.z;
-
-    axis = normalize(axis);
+    axis = normalize(xyz(axis4));
     double angle = glm::angle(v1,v2);
     return angleAxis(angle, axis);
 }
 void CameraTrial::UpdateViewMatrix()
 {
-    dmat4x4 mnew(1.0d);
-    mnew = glm::translate(mnew, target);
-    mnew = mnew * toMat4(q_rotation);
-    mnew = glm::translate(mnew, target);
+    transformation = dmat4x4(1.0d);
+    transformation = translate(transformation, target);
+    transformation = transformation * toMat4(q_rotation);
+    transformation = translate(transformation, -target);
 
-    double * mnewv = glm::value_ptr(mnew);
-    for (size_t i = 0; i<16; ++i)
-        m_dMode[i] = mnewv[i];
-
-    m_needMVPUpdate = true;
+    dmat4view = lookAt(position,target,camUp);
+    dmat4view = dmat4view * transformation;
 }
 void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
 {
@@ -140,6 +121,7 @@ void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
     dmat4x4 mat_dView = make_mat4x4(m_dView);
     mstack.push(&mat_dProj);
     mstack.push(&mat_dView);
+//    mstack.push(&dmat4view);
 
     ScreenMove move;
     move.fromX = fromX;

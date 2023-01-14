@@ -25,7 +25,7 @@ class CameraTrial : public myOGLCamera
 {
 private:
     dquat q_rotation;
-    dmat4 transormations;
+    dmat4 transformation;
     dmat4 dmat4view;
     dvec3 position;
     dvec3 target;
