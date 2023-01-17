@@ -30,12 +30,15 @@ private:
     dvec3 position;
     dvec3 target;
     dvec3 camUp;
+    dvec3 rotCenter;
 public:
     CameraTrial();
     virtual void UpdateMatrices() override;
     virtual void ViewSizeChanged(int newWidth, int newHeight) override;
     void UpdatePosition(int ,int ,int , int );
     void UpdateViewMatrix();
+    void UpdateViewMatrixCenterOfRotNotStable();
+    void UpdateViewMatrixTwoMatrices();
     virtual void MouseRotation(int fromX, int fromY, int toX, int toY) override;
     dquat RotationFromScreenMove(ScreenMove& ,dmat_stack );
     const double * getViewMatrixdv();

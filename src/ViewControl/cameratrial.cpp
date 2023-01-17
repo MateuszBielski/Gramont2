@@ -12,6 +12,7 @@ CameraTrial::CameraTrial()
     position = dvec3(m_camPosition.x,m_camPosition.y,m_camPosition.z);
     target = dvec3(m_camTarget.x,m_camTarget.y,m_camTarget.z);
     camUp = dvec3(m_camUp.x,m_camUp.y,m_camUp.z);
+    rotCenter = target;
     UpdateViewMatrix();
 }
 
@@ -60,6 +61,15 @@ void CameraTrial::ViewSizeChanged(int newWidth, int newHeight)
     myOGLCamera::ViewSizeChanged(newWidth,newHeight);
     needUpdateProjMat = true;
 }
+void CameraTrial::UpdateViewMatrix()
+{
+    transformation = toMat4(q_rotation);
+    dvec3 newPosition = xyz(transformation * dvec4(position,0.0));
+    dvec3 newCamUp = xyz(transformation * dvec4(camUp,0.0));
+    dvec3 newTarget = xyz(transformation * dvec4(target,0.0));
+    
+    dmat4view = lookAt(newPosition + rotCenter,newTarget + rotCenter,newCamUp);
+}
 
 void CameraTrial::UpdatePosition(int m_mousePrevX,int  m_mousePrevY,int  posX, int posY)
 {
@@ -67,14 +77,25 @@ void CameraTrial::UpdatePosition(int m_mousePrevX,int  m_mousePrevY,int  posX, i
     double ydiff = 1.0d * (posY - m_mousePrevY);
 
     glm::dvec4 moveInCameraCoord(xdiff,ydiff,0.0,0.0);
-    glm::dvec4 moveInWorldCoord = inverse(transformation) * 
-    inverse(make_mat4x4(m_dView)) * moveInCameraCoord;
+    glm::dvec4 moveInWorldCoord = 
+    inverse(toMat4(q_rotation)) * 
+    inverse(dmat4view) * 
+    inverse(make_mat4x4(m_dProj)) *
+    moveInCameraCoord;
+    
+    dvec4 moveInIndirectSpace = 
+    inverse(dmat4view) * 
+    moveInCameraCoord;
 
-    target = target - glm::xyz(moveInWorldCoord);
-    position = position - glm::xyz(moveInWorldCoord);
+    rotCenter = rotCenter - xyz(moveInIndirectSpace);
+    target = target - xyz(moveInWorldCoord);
+    position = position - xyz(moveInWorldCoord);
     
     UpdateViewMatrix();
 }
+
+
+
 dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, dmat_stack mstack)
 {
 
@@ -84,6 +105,7 @@ dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, dmat_stack mstack)
     double yw2 = (2.0 * move.toY - m_winHeight) / m_winHeight;
     double z1 = GetTrackballZ(xw1, yw1, 0.8);
     double z2 = GetTrackballZ(xw2, yw2, 0.8);
+    
 
     dvec3 v1 = normalize(dvec3 {xw1, yw1, z1});
     dvec3 v2 = normalize(dvec3 {xw2, yw2, z2});
@@ -99,17 +121,8 @@ dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, dmat_stack mstack)
 
     axis = normalize(xyz(axis4));
     double angle = glm::angle(v1,v2);
-    return angleAxis(angle, axis);
-}
-void CameraTrial::UpdateViewMatrix()
-{
-    transformation = dmat4x4(1.0d);
-    transformation = translate(transformation, target);
-    transformation = transformation * toMat4(q_rotation);
-    transformation = translate(transformation, -target);
-
-    dmat4view = lookAt(position,target,camUp);
-    dmat4view = dmat4view * transformation;
+//    cout<<"\nangle"<<axis.x<<", "<<axis.y<<", "<<axis.z;
+    return angleAxis(-angle, axis);
 }
 void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
 {
@@ -118,10 +131,9 @@ void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
 
     dmat_stack mstack;
     dmat4x4 mat_dProj = make_mat4x4(m_dProj);
-    dmat4x4 mat_dView = make_mat4x4(m_dView);
-    mstack.push(&mat_dProj);
-    mstack.push(&mat_dView);
-//    mstack.push(&dmat4view);
+//    mstack.push(&mat_dProj);
+    mstack.push(&dmat4view);
+//    mstack.push(&transformation);
 
     ScreenMove move;
     move.fromX = fromX;
@@ -132,5 +144,31 @@ void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
 
     q_rotation = q_diff * q_rotation;
 
+    
     UpdateViewMatrix();
+}
+void CameraTrial::UpdateViewMatrixTwoMatrices()
+{
+    transformation = dmat4x4(1.0d);
+    transformation = translate(transformation, target);
+    transformation = transformation * toMat4(q_rotation);
+    transformation = translate(transformation, -target);
+
+    dmat4view = lookAt(position,target,camUp);
+    dmat4view = dmat4view * transformation;
+}
+void CameraTrial::UpdateViewMatrixCenterOfRotNotStable()
+{
+    dvec3 newCamUp = xyz(toMat4(q_rotation) * dvec4(camUp,0.0));
+    dvec3 newTarget = xyz(toMat4(q_rotation) * dvec4(target,0.0));
+    
+    transformation = dmat4x4(1.0d);
+    transformation = translate(transformation, newTarget);
+    transformation = transformation * toMat4(q_rotation);
+    transformation = translate(transformation, -newTarget);
+    
+    dvec3 newPosition = xyz(transformation * dvec4(position,0.0));
+    
+    
+    dmat4view = lookAt(newPosition,newTarget,newCamUp);
 }
