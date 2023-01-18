@@ -31,16 +31,18 @@ private:
     dvec3 target;
     dvec3 camUp;
     dvec3 rotCenter;
+    double m_scale;
 public:
     CameraTrial();
-    virtual void UpdateMatrices() override;
     virtual void ViewSizeChanged(int newWidth, int newHeight) override;
-    void UpdatePosition(int ,int ,int , int );
     void UpdateViewMatrix();
-    void UpdateViewMatrixCenterOfRotNotStable();
-    void UpdateViewMatrixTwoMatrices();
+    void MoveOnSreenPlane(int ,int ,int , int );
     virtual void MouseRotation(int fromX, int fromY, int toX, int toY) override;
     dquat RotationFromScreenMove(ScreenMove& );
+    void MoveBackForWard(int );
+    void UpdateViewMatrixCenterOfRotNotStable();//?
+    void UpdateViewMatrixTwoMatrices();//?
+    virtual void UpdateMatrices() override;//?
     const double * getViewMatrixdv();
     const double * getProjMatrixdv();
     const double * getModeMatrixdv();

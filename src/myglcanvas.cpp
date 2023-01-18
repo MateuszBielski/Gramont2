@@ -207,12 +207,14 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
             m_oglManager->OnMouseMiddleClick(event.GetX(),oglwinY);
             Refresh(false);
         }
-    if( event.LeftDClick()) {
-        m_oglManager->OnMouseLeftDClick(event.GetX(),oglwinY);
+        if( event.LeftDClick()) {
+            m_oglManager->OnMouseLeftDClick(event.GetX(),oglwinY);
+        }
     }
 }
 void MyGLCanvas::OnMouseWheel(wxMouseEvent &event )
 {
     m_oglManager->OnMouseWheel(event.GetWheelRotation());
-    event.Skip();//?
+//    event.Skip();//?
+    Refresh(false);
 }

@@ -13,6 +13,7 @@ CameraTrial::CameraTrial()
     target = dvec3(m_camTarget.x,m_camTarget.y,m_camTarget.z);
     camUp = dvec3(m_camUp.x,m_camUp.y,m_camUp.z);
     rotCenter = target;
+    m_scale = 1.0;
     UpdateViewMatrix();
 }
 
@@ -65,8 +66,8 @@ void CameraTrial::UpdateViewMatrix()
 {
     dvec3 newPosition = position;
     /*****scale***/
-    double scal = 1.4;
-    transformation = scale(dmat4x4(1.0),dvec3(scal,scal,scal));
+//    double scale = 1.4;
+    transformation = scale(dmat4x4(1.0),dvec3(m_scale,m_scale,m_scale));
     newPosition = xyz(transformation * dvec4(position,0.0));
     /*****scale***/
     transformation = toMat4(q_rotation);
@@ -77,7 +78,7 @@ void CameraTrial::UpdateViewMatrix()
     dmat4view = lookAt(newPosition + rotCenter,newTarget + rotCenter,newCamUp);
 }
 
-void CameraTrial::UpdatePosition(int m_mousePrevX,int  m_mousePrevY,int  posX, int posY)
+void CameraTrial::MoveOnSreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX, int posY)
 {
     double xdiff = 1.0d * (posX - m_mousePrevX);
     double ydiff = 1.0d * (posY - m_mousePrevY);
@@ -132,6 +133,16 @@ void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
     
     UpdateViewMatrix();
 }
+void CameraTrial::MoveBackForWard(int distance)
+{
+	double factor = 1.05;
+    if(distance > 0)
+    {
+        m_scale *= factor;
+    }
+    else m_scale /= factor;
+    UpdateViewMatrix();
+}
 void CameraTrial::UpdateViewMatrixTwoMatrices()
 {
     transformation = dmat4x4(1.0d);
@@ -157,3 +168,4 @@ void CameraTrial::UpdateViewMatrixCenterOfRotNotStable()
     
     dmat4view = lookAt(newPosition,newTarget,newCamUp);
 }
+
