@@ -19,7 +19,7 @@
   <VirtualDirectory Name="src">
     <File Name="src/wxAppMain.cpp"/>
     <File Name="src/myframe.cpp"/>
-    <File Name="src/myglcanvas.cpp" ExcludeProjConfig=""/>
+    <File Name="src/myglcanvas.cpp"/>
     <VirtualDirectory Name="Surface">
       <File Name="src/Surface/surfaceonequad.h"/>
       <File Name="src/Surface/surfaceonequad.cpp"/>
@@ -189,7 +189,6 @@
     <File Name="lib/oglstuff/myoglmanager.h"/>
     <File Name="lib/wxApp/MyApp.h"/>
     <File Name="lib/wxApp/myframe.h"/>
-    <File Name="lib/wxApp/myglcanvas.h"/>
     <File Name="lib/wxApp/myframe.cpp"/>
     <File Name="lib/wxApp/wxAppMain.cpp"/>
     <File Name="lib/oglstuff/bufferloader.h"/>

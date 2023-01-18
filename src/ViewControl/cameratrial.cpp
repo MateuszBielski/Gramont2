@@ -63,11 +63,14 @@ void CameraTrial::ViewSizeChanged(int newWidth, int newHeight)
 }
 void CameraTrial::UpdateViewMatrix()
 {
+    dvec3 newPosition = position;
+    /*****scale***/
+    double scal = 1.4;
+    transformation = scale(dmat4x4(1.0),dvec3(scal,scal,scal));
+    newPosition = xyz(transformation * dvec4(position,0.0));
+    /*****scale***/
     transformation = toMat4(q_rotation);
-//    /*****scale***/
-//    dvec3 newPosition = 
-//    /*****scale***/
-    dvec3 newPosition = xyz(transformation * dvec4(position,0.0));
+    newPosition = xyz(transformation * dvec4(newPosition,0.0));
     dvec3 newCamUp = xyz(transformation * dvec4(camUp,0.0));
     dvec3 newTarget = xyz(transformation * dvec4(target,0.0));
     

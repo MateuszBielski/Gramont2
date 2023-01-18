@@ -40,7 +40,7 @@ public:
     void UpdateViewMatrixCenterOfRotNotStable();
     void UpdateViewMatrixTwoMatrices();
     virtual void MouseRotation(int fromX, int fromY, int toX, int toY) override;
-    dquat RotationFromScreenMove(ScreenMove& ,dmat_stack );
+    dquat RotationFromScreenMove(ScreenMove& );
     const double * getViewMatrixdv();
     const double * getProjMatrixdv();
     const double * getModeMatrixdv();

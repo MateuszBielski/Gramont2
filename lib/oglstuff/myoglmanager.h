@@ -45,6 +45,7 @@ public:
     void OnMouseRotDragging(int posX, int posY);
     virtual void OnMouseLeftDClick(int posX, int posY) {};
     virtual void OnMouseMiddleClick(int posX, int posY) {};
+    virtual void OnMouseWheel(int rotation) {};
 
     virtual void ZapiszShaderyDoPlikow() {};
     virtual void OdczytajShaderyZplikow() {};

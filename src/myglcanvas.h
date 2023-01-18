@@ -23,6 +23,7 @@ public:
     void OnPaint(wxPaintEvent& event);
     void OnSize(wxSizeEvent& event);
     void OnMouse(wxMouseEvent& event);
+    void OnMouseWheel(wxMouseEvent& event);
 
 private:
     // Members

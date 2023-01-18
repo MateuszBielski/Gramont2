@@ -59,6 +59,7 @@ target_link_libraries(${CMAKE_PROJECT_NAME}
     wxApp
     )
 target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE ${includes})
+target_include_directories(wxApp PRIVATE ${includes})
 target_include_directories(OglStuff 
             PRIVATE 
             src/GeometryModel
