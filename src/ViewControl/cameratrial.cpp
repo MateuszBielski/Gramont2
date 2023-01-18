@@ -64,6 +64,9 @@ void CameraTrial::ViewSizeChanged(int newWidth, int newHeight)
 void CameraTrial::UpdateViewMatrix()
 {
     transformation = toMat4(q_rotation);
+//    /*****scale***/
+//    dvec3 newPosition = 
+//    /*****scale***/
     dvec3 newPosition = xyz(transformation * dvec4(position,0.0));
     dvec3 newCamUp = xyz(transformation * dvec4(camUp,0.0));
     dvec3 newTarget = xyz(transformation * dvec4(target,0.0));
@@ -78,25 +81,17 @@ void CameraTrial::UpdatePosition(int m_mousePrevX,int  m_mousePrevY,int  posX, i
 
     glm::dvec4 moveInCameraCoord(xdiff,ydiff,0.0,0.0);
     glm::dvec4 moveInWorldCoord = 
-    inverse(toMat4(q_rotation)) * 
     inverse(dmat4view) * 
-    inverse(make_mat4x4(m_dProj)) *
     moveInCameraCoord;
     
-    dvec4 moveInIndirectSpace = 
-    inverse(dmat4view) * 
-    moveInCameraCoord;
-
-    rotCenter = rotCenter - xyz(moveInIndirectSpace);
-    target = target - xyz(moveInWorldCoord);
-    position = position - xyz(moveInWorldCoord);
+    rotCenter = rotCenter - xyz(moveInWorldCoord);
     
     UpdateViewMatrix();
 }
 
 
 
-dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, dmat_stack mstack)
+dquat CameraTrial::RotationFromScreenMove(ScreenMove& move)
 {
 
     double xw1 = (2.0 * move.fromX - m_winWidth) / m_winWidth;
@@ -111,15 +106,9 @@ dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, dmat_stack mstack)
     dvec3 v2 = normalize(dvec3 {xw2, yw2, z2});
 
     dvec3 axis = cross(v1,v2);
+    dvec4 axisInWorldSpace(inverse(dmat4view) * dvec4(axis,0.0));
 
-    dvec4 axis4(axis,0.0);
-
-    while(!mstack.empty()) {
-        axis4 = inverse(*mstack.top()) * axis4;
-        mstack.pop();
-    }
-
-    axis = normalize(xyz(axis4));
+    axis = normalize(xyz(axisInWorldSpace));
     double angle = glm::angle(v1,v2);
 //    cout<<"\nangle"<<axis.x<<", "<<axis.y<<", "<<axis.z;
     return angleAxis(-angle, axis);
@@ -129,21 +118,14 @@ void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
     if ( fromX == toX && fromY == toY )
         return; //no rotation
 
-    dmat_stack mstack;
-    dmat4x4 mat_dProj = make_mat4x4(m_dProj);
-//    mstack.push(&mat_dProj);
-    mstack.push(&dmat4view);
-//    mstack.push(&transformation);
-
     ScreenMove move;
     move.fromX = fromX;
     move.fromY = fromY;
     move.toX = toX;
     move.toY = toY;
-    dquat q_diff = RotationFromScreenMove(move, mstack);
+    dquat q_diff = RotationFromScreenMove(move);
 
     q_rotation = q_diff * q_rotation;
-
     
     UpdateViewMatrix();
 }
