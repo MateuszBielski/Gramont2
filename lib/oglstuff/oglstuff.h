@@ -183,6 +183,7 @@ protected:
     double m_fov;
     double m_nearD;
     double m_farD;
+    double aspect;
 };
 
 using spMyOGLCamera = shared_ptr<myOGLCamera>;

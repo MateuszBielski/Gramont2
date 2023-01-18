@@ -32,6 +32,7 @@ private:
     dvec3 camUp;
     dvec3 rotCenter;
     double m_scale;
+    double camDistance;
 public:
     CameraTrial();
     virtual void ViewSizeChanged(int newWidth, int newHeight) override;

@@ -332,12 +332,13 @@ void myOGLCamera::ViewSizeChanged(int newWidth, int newHeight)
     m_winHeight = newHeight;
 
     // Calculate the projection matrix
-    double aspect = (double) newWidth / newHeight;
+    aspect = (double) newWidth / newHeight;
     MyPerspective(m_fov, aspect, m_nearD, m_farD, m_dProj);
 
     // Inform we need to calculate MVP matrix
     m_needMVPUpdate = true;
 }
+
 
 const GLfloat* myOGLCamera::GetFloatMVP()
 {
