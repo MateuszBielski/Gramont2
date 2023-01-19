@@ -131,6 +131,10 @@ void myOGLManager::OnMouseButDown(int posX, int posY)
     m_mousePrevX = posX;
     m_mousePrevY = posY;
 }
+void myOGLManager::SwitchViewControl()
+{
+	doesCameraViewControl = !doesCameraViewControl;
+}
 
 void myOGLManager::OnMouseRotDragging(int posX, int posY)
 {

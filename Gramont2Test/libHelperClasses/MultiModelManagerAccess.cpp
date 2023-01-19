@@ -30,4 +30,8 @@ void MultiModelManagerAccess::setMatricesForTexRender()
 {
 	manager.setMatricesForRender(manager.m_TexRenderer);
 }
+bool MultiModelManagerAccess::CameraDoesViewControl()
+{
+	return manager.doesCameraViewControl;
+}
 template unique_ptr<OglRendererMock> MultiModelManagerAccess::getTexRenderer<OglRendererMock>();

@@ -13,6 +13,7 @@ public:
     void setMatrixStack(spMatrixStack ms){manager.m_ptrMatrixStack = ms;}
     void setTexRenderer(upOglRenderer );
     void setMatricesForTexRender();
+    bool CameraDoesViewControl();
     template<typename T>
     unique_ptr<T> getTexRenderer();
 private:

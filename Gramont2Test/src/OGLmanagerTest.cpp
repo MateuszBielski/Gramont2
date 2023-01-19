@@ -362,6 +362,17 @@ TEST(MultiModelManager,contentOfMatrices)
     ASSERT_FALSE(msMVPnoZero);
     
 }
+TEST(MultiModelManager,SwitchViewControl)
+{
+    MultiModelManager man(nullptr);
+    MultiModelManagerAccess acc(man);
+    
+    ASSERT_TRUE(acc.CameraDoesViewControl());
+    man.SwitchViewControl();
+    ASSERT_FALSE(acc.CameraDoesViewControl());
+    man.SwitchViewControl();
+    ASSERT_TRUE(acc.CameraDoesViewControl());
+}
 //class functorGlUniformMatrix4fv
 //    {
 //

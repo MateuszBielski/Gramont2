@@ -16,6 +16,7 @@ EVT_PAINT(MyGLCanvas::OnPaint)
 EVT_SIZE(MyGLCanvas::OnSize)
 EVT_MOUSE_EVENTS(MyGLCanvas::OnMouse)
 EVT_MOUSEWHEEL(MyGLCanvas::OnMouseWheel)
+EVT_KEY_DOWN(MyGLCanvas::OnKeyDown)
 wxEND_EVENT_TABLE()
 
 
@@ -218,3 +219,12 @@ void MyGLCanvas::OnMouseWheel(wxMouseEvent &event )
 //    event.Skip();//?
     Refresh(false);
 }
+void MyGLCanvas::OnKeyDown(wxKeyEvent& event)
+{
+	if(event.GetKeyCode() == 83)//"s"
+    {
+        m_oglManager->SwitchViewControl();
+    }
+}
+
+ 

@@ -24,6 +24,7 @@ public:
     void OnSize(wxSizeEvent& event);
     void OnMouse(wxMouseEvent& event);
     void OnMouseWheel(wxMouseEvent& event);
+    void OnKeyDown(wxKeyEvent& event);
 
 private:
     // Members

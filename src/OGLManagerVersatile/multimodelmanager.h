@@ -23,6 +23,7 @@ public:
     ~MultiModelManager();
     virtual void SetShadersAndGeometry() override;
     virtual void Draw3d() override;
+    virtual void OnMouseRotDragging(int posX, int posY) override;
     virtual void OnMouseLeftDClick(int posX, int posY) override;
     virtual void OnMouseWheel(int rotation) override;
     virtual void OnMouseMiddleClick(int posX, int posY);

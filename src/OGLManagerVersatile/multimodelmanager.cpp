@@ -119,14 +119,36 @@ void MultiModelManager::Draw3d()
 }
 void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
 {
-//	cameraTrial->MoveOnSreenPlane(m_mousePrevX, m_mousePrevY, posX, posY);
-    models[0]->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewGlmMatrixv());
+    if(doesCameraViewControl) {
+        cameraTrial->MoveOnSreenPlane(m_mousePrevX, m_mousePrevY, posX, posY);
+    } else {
+        models[0]->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewGlmMatrixv());
+    }
+    m_mousePrevX = posX;
+    m_mousePrevY = posY;
+}
+void MultiModelManager::OnMouseRotDragging(int posX, int posY)
+{
+    if ( m_mousePrevX == posX && m_mousePrevY == posY )
+        return;
+
+
+    if(doesCameraViewControl) {
+        m_Camera->MouseRotation(m_mousePrevX, m_mousePrevY, posX, posY);
+    } else {
+        ScreenMove move;
+        move.fromX = m_mousePrevX;
+        move.fromY = m_mousePrevY;
+        move.toX = posX;
+        move.toY = posY;
+        models[0]->MouseRotation(cameraTrial->RotationFromScreenMove(move));
+    }
     m_mousePrevX = posX;
     m_mousePrevY = posY;
 }
 void MultiModelManager::OnMouseWheel(int direction)
 {
-	cameraTrial->MoveBackForWard(direction);
+    cameraTrial->MoveBackForWard(direction);
 }
 
 void MultiModelManager::OnMouseLeftDClick(int posX, int posY)

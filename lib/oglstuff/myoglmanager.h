@@ -42,10 +42,11 @@ public:
 
     // Action events in OpenGL win coordinates (bottom is y=0)
     void OnMouseButDown(int posX, int posY);
-    void OnMouseRotDragging(int posX, int posY);
+    virtual void OnMouseRotDragging(int posX, int posY);
     virtual void OnMouseLeftDClick(int posX, int posY) {};
     virtual void OnMouseMiddleClick(int posX, int posY) {};
     virtual void OnMouseWheel(int rotation) {};
+    void SwitchViewControl();
 
     virtual void ZapiszShaderyDoPlikow() {};
     virtual void OdczytajShaderyZplikow() {};
@@ -62,6 +63,7 @@ protected:
     upBufferLoader m_BufferLoader;//should be settable
     upOglRenderer m_TexRenderer;//j/w
     upOglRenderer m_OglRenderer;
+    bool doesCameraViewControl = true;
 
     virtual void setMatricesForRender(upOglRenderer& );
     template<typename T>
