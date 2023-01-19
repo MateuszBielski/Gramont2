@@ -49,10 +49,7 @@ void MatrixStack::setProjectionMatrixdv(const double * projM, bool * b)
     needUpd_proj = b;
     *needUpd_proj = true;
 }
-//glm::dmat4x4& MatrixStack::getViewGlmMatrixRef()
-//{
-//	return viewGlmMatrix;
-//}
+
 void MatrixStack::UpdateMatrices()
 {
     bool ok = true;
@@ -95,4 +92,7 @@ const float* MatrixStack::getViewMatrixfv()
 {
     return viewMatrix;
 }
-
+glm::dmat4x4* MatrixStack::getViewGlmMatrixv()
+{
+    return viewGlmMatv;
+}

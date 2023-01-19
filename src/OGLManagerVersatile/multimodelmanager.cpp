@@ -119,8 +119,8 @@ void MultiModelManager::Draw3d()
 }
 void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
 {
-	cameraTrial->MoveOnSreenPlane(m_mousePrevX, m_mousePrevY, posX, posY);
-//    models[0]->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewPtrGlmMatrix());
+//	cameraTrial->MoveOnSreenPlane(m_mousePrevX, m_mousePrevY, posX, posY);
+    models[0]->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewGlmMatrixv());
     m_mousePrevX = posX;
     m_mousePrevY = posY;
 }

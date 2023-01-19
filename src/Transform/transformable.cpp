@@ -41,10 +41,11 @@ void Transformable::MoveOnScreenPlane(int m_mousePrevX,int  m_mousePrevY,int  po
     double ydiff = 1.0d * (posY - m_mousePrevY);
 
     glm::dvec4 moveInCameraCoord(xdiff,ydiff,0.0,0.0);
-//    glm::dvec4 moveInWorldCoord = 
-//    inverse(dmat4view) * 
-//    moveInCameraCoord;
-    
+    glm::dvec4 moveInWorldCoord = 
+    inverse(*dmat4view) * 
+    moveInCameraCoord;
+
+    Translate(moveInWorldCoord);
 //    rotCenter = rotCenter - xyz(moveInWorldCoord);
 //    
 //    dvec3 newPosition = position;

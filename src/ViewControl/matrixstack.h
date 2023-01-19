@@ -24,7 +24,7 @@ public:
 
     const float * getModelViewProjectionMatrixfv();
     const float * getViewMatrixfv();
-    glm::dmat4x4 * getViewPtrGlmMatrix();
+    glm::dmat4x4 * getViewGlmMatrixv();
 #ifdef TESTOWANIE_F
 //    const double * getViewMatrixdv(){return viewMat;}
     const double * getProjMatrixdv(){return projMat;}
