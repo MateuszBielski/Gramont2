@@ -55,6 +55,7 @@ void MatrixStack::UpdateMatrices()
     bool ok = true;
     ok &= modelSetted;
 //    ok &= viewSetted;
+    ok &= viewGlmMatv != nullptr;
     ok &= projectionSetted;
     if(!ok)return;
 

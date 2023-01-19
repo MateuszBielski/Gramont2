@@ -252,9 +252,9 @@ TEST(MultiModelManager,MatrixStackKnowsCameraMatrices)
     auto camViewMatrix = camera->getViewMatrixdv();
     auto camProjMatrix = camera->getProjMatrixdv();
     auto camModeMatrix = camera->getModeMatrixdv();
-    ASSERT_EQ(camViewMatrix,ms->getViewMatrixdv());
+//    ASSERT_EQ(camViewMatrix,ms->getViewMatrixdv()); //deleted
     ASSERT_EQ(camProjMatrix,ms->getProjMatrixdv());
-    ASSERT_EQ(camModeMatrix,ms->getCamModeMatrixdv());
+//    ASSERT_EQ(camModeMatrix,ms->getCamModeMatrixdv()); //deleted
 }
 TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
 {
@@ -277,7 +277,7 @@ TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
                        0,0,1,0,
                        0,0,0,1,
                       };
-    ms->setViewMatrixdv(matrix,&need);
+//    ms->setViewMatrixdv(matrix,&need); //deleted
     ms->setProjectionMatrixdv(matrix,&need);
     MultiModelManager man(nullptr);
     MultiModelManagerAccess acc(man);
