@@ -44,9 +44,10 @@ public:
     void UpdateViewMatrixCenterOfRotNotStable();//?
     void UpdateViewMatrixTwoMatrices();//?
     virtual void UpdateMatrices() override;//?
-    const double * getViewMatrixdv();
+    const double * getViewMatrixdv();//?
     const double * getProjMatrixdv();
-    const double * getModeMatrixdv();
+    const double * getModeMatrixdv();//?
+    dmat4x4 * getViewGlmMatrixdv();
     bool needUpdateViewMat;
     bool needUpdateProjMat;
     bool needUpdateModeMat;

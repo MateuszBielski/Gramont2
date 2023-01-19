@@ -18,6 +18,7 @@ public:
     ~Transformable();
     void Translate(glm::dvec3);
     void Rotate(double, glm::dvec3);
+    void MoveOnScreenPlane(int, int, int, int, glm::dmat4x4 *);
     const float * getModelMatrixfv();
     const double * getModelMatrixdv();
     bool needUpdateModelMat;

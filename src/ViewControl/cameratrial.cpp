@@ -57,6 +57,10 @@ const double* CameraTrial::getModeMatrixdv()
 {
     return m_dMode;
 }
+dmat4x4* CameraTrial::getViewGlmMatrixdv()
+{
+    return &dmat4view;
+}
 void CameraTrial::ViewSizeChanged(int newWidth, int newHeight)
 {
     myOGLCamera::ViewSizeChanged(newWidth,newHeight);

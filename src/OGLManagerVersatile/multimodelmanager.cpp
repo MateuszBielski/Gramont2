@@ -99,9 +99,10 @@ void MultiModelManager::SetShadersAndGeometry()
     };
     setLocations<OglRenderer>(m_TexRenderer,tnames,*ptr_TextureShader,&myOGLShaders::GetUnifLoc);
     setMatricesForRender(m_TexRenderer);
-    m_ptrMatrixStack->setViewMatrixdv(cameraTrial->getViewMatrixdv(),&cameraTrial->needUpdateViewMat);
+//    m_ptrMatrixStack->setViewMatrixdv(cameraTrial->getViewMatrixdv(),&cameraTrial->needUpdateViewMat);
+    m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionMatrixdv(cameraTrial->getProjMatrixdv(),&cameraTrial->needUpdateProjMat);
-    m_ptrMatrixStack->setCamModeMatrixdv(cameraTrial->getModeMatrixdv(),&cameraTrial->needUpdateModeMat);
+//    m_ptrMatrixStack->setCamModeMatrixdv(cameraTrial->getModeMatrixdv(),&cameraTrial->needUpdateModeMat);
 }
 
 void MultiModelManager::Draw3d()
@@ -119,6 +120,7 @@ void MultiModelManager::Draw3d()
 void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
 {
 	cameraTrial->MoveOnSreenPlane(m_mousePrevX, m_mousePrevY, posX, posY);
+//    models[0]->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewPtrGlmMatrix());
     m_mousePrevX = posX;
     m_mousePrevY = posY;
 }
