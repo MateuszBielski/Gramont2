@@ -39,7 +39,7 @@ public:
     void UpdateViewMatrix();
     void MoveOnSreenPlane(int ,int ,int , int );
     virtual void MouseRotation(int fromX, int fromY, int toX, int toY) override;
-    dquat RotationFromScreenMove(ScreenMove& );
+    dquat RotationFromScreenMove(ScreenMove& ,bool reverseAngle = false);
     void MoveBackForWard(int );
     void UpdateViewMatrixCenterOfRotNotStable();//?
     void UpdateViewMatrixTwoMatrices();//?

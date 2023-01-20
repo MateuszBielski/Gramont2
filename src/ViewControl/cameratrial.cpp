@@ -99,7 +99,7 @@ void CameraTrial::MoveOnSreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX,
 
 
 
-dquat CameraTrial::RotationFromScreenMove(ScreenMove& move)
+dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, bool reverseAngle)
 {
 
     double xw1 = (2.0 * move.fromX - m_winWidth) / m_winWidth;
@@ -118,8 +118,9 @@ dquat CameraTrial::RotationFromScreenMove(ScreenMove& move)
 
     axis = normalize(xyz(axisInWorldSpace));
     double angle = glm::angle(v1,v2);
+    if(reverseAngle) angle = -angle;
 //    cout<<"\nangle"<<axis.x<<", "<<axis.y<<", "<<axis.z;
-    return angleAxis(-angle, axis);
+    return angleAxis(angle, axis);
 }
 void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
 {
@@ -131,7 +132,8 @@ void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
     move.fromY = fromY;
     move.toX = toX;
     move.toY = toY;
-    dquat q_diff = RotationFromScreenMove(move);
+    bool reverseAngle = true;
+    dquat q_diff = RotationFromScreenMove(move,reverseAngle);
 
     q_rotation = q_diff * q_rotation;
     

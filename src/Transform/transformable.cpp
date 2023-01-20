@@ -1,10 +1,14 @@
 #include "transformable.h"
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/quaternion.hpp>
+#include <glm/gtx/vec_swizzle.hpp>
 
+using namespace glm;
 
 Transformable::Transformable()
 {
     modelMatrix = glm::dmat4(1.0d);
+    q_rotation.w = 1.0d;
 }
 Transformable::~Transformable()
 {
@@ -20,43 +24,47 @@ const float* Transformable::getModelMatrixfv()
 }
 void Transformable::Translate(glm::dvec3 translateVector)
 {
-    modelMatrix = glm::translate(modelMatrix,translateVector);
+    position += translateVector;
     UpdateFloatMatrix();
 }
 void Transformable::Rotate(double angle, glm::dvec3 axis)
 {
-    modelMatrix = glm::rotate(modelMatrix, glm::radians(angle), axis);
+    q_rotation = angleAxis(glm::radians(angle), axis) * q_rotation;
     UpdateFloatMatrix();
 }
 void Transformable::UpdateFloatMatrix()
 {
+    modelMatrix = dmat4x4(1.0);
+    modelMatrix= translate(modelMatrix,position);
+    modelMatrix= modelMatrix * glm::toMat4(q_rotation);
+    
     double * mat4d = glm::value_ptr(modelMatrix);
+//    cout<<"\n";
     for(short i = 0; i < 16 ; i++) {
         mat4f[i] = mat4d[i];
+//        cout<<mat4f[i]<<", ";
+//        if(isnan(mat4d[i])) {
+//            int p=8;
+//        }
     }
 }
 void Transformable::MoveOnScreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX,int  posY,glm::dmat4x4 * dmat4view)
 {
-     double xdiff = 1.0d * (posX - m_mousePrevX);
+    double xdiff = 1.0d * (posX - m_mousePrevX);
     double ydiff = 1.0d * (posY - m_mousePrevY);
 
     glm::dvec4 moveInCameraCoord(xdiff,ydiff,0.0,0.0);
-    glm::dvec4 moveInWorldCoord = 
-    inverse(*dmat4view) * 
-    moveInCameraCoord;
+    glm::dvec4 moveInWorldCoord =
+        inverse(*dmat4view) *
+        moveInCameraCoord;
+        
+    position += xyz(moveInWorldCoord);
+    
+    UpdateFloatMatrix();
+}
+void Transformable::MouseRotation(dquat q_diff)
+{
+    q_rotation = q_diff * q_rotation;
 
-    Translate(moveInWorldCoord);
-//    rotCenter = rotCenter - xyz(moveInWorldCoord);
-//    
-//    dvec3 newPosition = position;
-//    transformation = scale(dmat4x4(1.0),dvec3(m_scale,m_scale,m_scale));
-//    newPosition = xyz(transformation * dvec4(position,0.0));
-//    
-//    transformation = toMat4(q_rotation);
-//    newPosition = xyz(transformation * dvec4(newPosition,0.0));
-//    dvec3 newCamUp = xyz(transformation * dvec4(camUp,0.0));
-//    dvec3 newTarget = xyz(transformation * dvec4(target,0.0));
-//    
-//    dmat4view = lookAt(newPosition + rotCenter,newTarget + rotCenter,newCamUp);
-//    camDistance = glm::distance(newPosition,newTarget);
+    UpdateFloatMatrix();
 }
