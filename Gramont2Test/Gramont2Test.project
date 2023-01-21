@@ -26,6 +26,7 @@
     <File Name="src/ShaderTest.cpp"/>
     <File Name="src/BufferLoaderTest.cpp"/>
     <File Name="src/ViewControlTest.cpp"/>
+    <File Name="src/ViewControlNeedFixTest.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="libTestedClasses">
     <File Name="../src/Surface/surfaceonequad.cpp"/>

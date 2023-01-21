@@ -145,3 +145,21 @@ unsigned char* MyImgToArray(const wxImage& img, const wxColour& cTrans, unsigned
 
     return resArr;
 }
+void FillMatricesWithRealData_1(double * model,double * view, double * proj, float * expect)
+{
+
+    double matrix_model[] = {0.9467833, -0.0096355, -0.3217274, 0.0000000, 0.0422298, 0.9946301, 0.0944857, 0.0000000, 0.3190893, -0.1030440, 0.9421061, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 1.0000000 };
+    double matrix_view[] = {0.9659258, 0.0801606, 0.2460926, 0.0000000, 0.0000000, 0.9508289, -0.3097168, 0.0000000, -0.2588190, 0.2991634, 0.9184301, 0.0000000, 0.0000000, 0.0000000, -395.4403082, 1.0000000 };
+    double matrix_projection[] = {1.8647538, 0.0000000, 0.0000000, 0.0000000, 0.0000000, 2.7474774, 0.0000000, 0.0000000, 0.0000000, 0.0000000, -2.8301946, -1.0000000, 0.0000000, 0.0000000, -979.4510744, 0.0000000 };
+    float matrixExpect[] = {1.8606356, -0.0810948, 0.1684064, 0.0595035, 0.0304628, 2.6853154, 0.5968390, 0.2108827, 0.1200559, 0.5754452, -2.7614169, -0.9756986, 0.0000000, 0.0000000, 139.7219543, 395.4403076};
+    memcpy(model,matrix_model,sizeof(double)*16);
+    memcpy(view,matrix_view,sizeof(double)*16);
+    memcpy(proj,matrix_projection,sizeof(double)*16);
+    memcpy(expect,matrixExpect,sizeof(float)*16);
+}
+float round_to(float r, int d)
+{
+    float decim = 10;
+    for(short i = 1 ; i < d ; ++i)decim *= 10;
+    return round(r*decim)/decim;
+}

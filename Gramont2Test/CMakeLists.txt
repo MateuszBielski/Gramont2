@@ -25,6 +25,7 @@ set ( CXX_SRCS
     src/OglRendererTest.cpp
     src/BufferLoaderTest.cpp
     src/ViewControlTest.cpp
+    src/ViewControlNeedFixTest.cpp
 )
 #add_compile_options(-H)
 #target_compile_options(xxx?)

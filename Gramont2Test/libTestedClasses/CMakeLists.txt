@@ -16,6 +16,7 @@ set ( CXX_SRCS
     ../../src/ViewControl/matrixstack.cpp
     ../../src/Transform/transformable.cpp
     ../../lib/funcs/textfile.cpp
+    ../../lib/funcs/funkcje.cpp
     ../../lib/oglstuff/oglstuff.cpp
     ../../lib/oglstuff/myoglmanager.cpp
     ../../lib/oglstuff/bufferloader.cpp
