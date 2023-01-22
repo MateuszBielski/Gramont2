@@ -7,6 +7,7 @@
 #include "funkcje.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/vec_swizzle.hpp>
 
 
 TEST(MatrixStack,DefaultReturnIdentity)
@@ -134,4 +135,34 @@ TEST(CameraTrial,needUpdateProjMat_After_ViewSizeChanged)
     cam.needUpdateProjMat = false;
     cam.ViewSizeChanged(34,52);
     ASSERT_TRUE(cam.needUpdateProjMat);
+}
+//to replace with CameraScreenPlane later
+TEST(CameraTrial,DistanceGreatherThanZeroAtBegin)
+{
+    CameraTrial cam;
+    ASSERT_GT(cam.getDistance(),0);
+}
+TEST(CameraTrial,ViewMoveHorizontal)
+{
+    CameraTrial cam;
+    dmat4x4 * cameraViewMatrixfv = cam.getViewGlmMatrixdv();
+    dvec3 point(1.2,1.2,1.2);
+    dvec3 firstPointPosition = xyz(*cameraViewMatrixfv * dvec4(point,1.0));
+    cam.MoveOnScreenPlane(50,50,55,50);
+    dvec3 secondPointPosition = xyz(*cameraViewMatrixfv * dvec4(point,1.0));
+    ASSERT_EQ(round_to(firstPointPosition.y,5),round_to(secondPointPosition.y,5));
+    ASSERT_EQ(round_to(firstPointPosition.z,5),round_to(secondPointPosition.z,5));
+    ASSERT_NE(round_to(firstPointPosition.x,5),round_to(secondPointPosition.x,5));
+}
+TEST(CameraTrial,ViewMoveVertical)
+{
+    CameraTrial cam;
+    dmat4x4 * cameraViewMatrixfv = cam.getViewGlmMatrixdv();
+    dvec3 point(1.2,1.2,1.2);
+    dvec3 firstPointPosition = xyz(*cameraViewMatrixfv * dvec4(point,1.0));
+    cam.MoveOnScreenPlane(50,50,50,45);
+    dvec3 secondPointPosition = xyz(*cameraViewMatrixfv * dvec4(point,1.0));
+    ASSERT_EQ(round_to(firstPointPosition.x,5),round_to(secondPointPosition.x,5));
+    ASSERT_EQ(round_to(firstPointPosition.z,5),round_to(secondPointPosition.z,5));
+    ASSERT_NE(round_to(firstPointPosition.y,5),round_to(secondPointPosition.y,5));
 }

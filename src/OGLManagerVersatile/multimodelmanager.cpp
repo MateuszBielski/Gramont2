@@ -120,7 +120,7 @@ void MultiModelManager::Draw3d()
 void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
 {
     if(doesCameraViewControl) {
-        cameraTrial->MoveOnSreenPlane(m_mousePrevX, m_mousePrevY, posX, posY);
+        cameraTrial->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY);
     } else {
         models[0]->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewGlmMatrixv());
     }

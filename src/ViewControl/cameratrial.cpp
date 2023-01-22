@@ -70,19 +70,18 @@ void CameraTrial::UpdateViewMatrix()
 {
     dvec3 newPosition = position;
     transformation = scale(dmat4x4(1.0),dvec3(m_scale,m_scale,m_scale));
-    newPosition = xyz(transformation * dvec4(position,0.0));
+    newPosition = xyz(transformation * dvec4(position,1.0));
     
     transformation = toMat4(q_rotation);
-    newPosition = xyz(transformation * dvec4(newPosition,0.0));
-    dvec3 newCamUp = xyz(transformation * dvec4(camUp,0.0));
-    dvec3 newTarget = xyz(transformation * dvec4(target,0.0));
-    
+    newPosition = xyz(transformation * dvec4(newPosition,1.0));
+    dvec3 newCamUp = xyz(transformation * dvec4(camUp,1.0));
+    dvec3 newTarget = xyz(transformation * dvec4(target,1.0));
     dmat4view = lookAt(newPosition + rotCenter,newTarget + rotCenter,newCamUp);
     camDistance = glm::distance(newPosition,newTarget);
     
 }
 
-void CameraTrial::MoveOnSreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX, int posY)
+void CameraTrial::MoveOnScreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX, int posY)
 {
     double xdiff = 1.0d * (posX - m_mousePrevX);
     double ydiff = 1.0d * (posY - m_mousePrevY);

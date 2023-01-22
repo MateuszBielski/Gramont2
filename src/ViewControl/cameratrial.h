@@ -37,7 +37,7 @@ public:
     CameraTrial();
     virtual void ViewSizeChanged(int newWidth, int newHeight) override;
     void UpdateViewMatrix();
-    void MoveOnSreenPlane(int ,int ,int , int );
+    void MoveOnScreenPlane(int ,int ,int , int );
     virtual void MouseRotation(int fromX, int fromY, int toX, int toY) override;
     dquat RotationFromScreenMove(ScreenMove& ,bool reverseAngle = false);
     void MoveBackForWard(int );
@@ -51,6 +51,7 @@ public:
     bool needUpdateViewMat;
     bool needUpdateProjMat;
     bool needUpdateModeMat;
+    double getDistance() {return camDistance;}
 protected:
 };
 
