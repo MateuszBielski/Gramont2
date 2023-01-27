@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.10)
+cmake_minimum_required(VERSION 3.16)
 
 add_library(Glad SHARED ../../../glad/src/glad.c)
 

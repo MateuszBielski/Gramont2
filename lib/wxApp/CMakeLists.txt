@@ -1,6 +1,6 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
-add_library(wxApp wxAppMain.cpp
+add_library(wxApp SHARED wxAppMain.cpp
 myframe.cpp 
 )
 

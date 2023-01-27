@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.10)
+cmake_minimum_required(VERSION 3.16)
 
 add_library(OglStuff 
 SHARED 
@@ -9,7 +9,7 @@ bufferloader.cpp
 #dwa powyższe może da się złączyć?
 )
 
-target_link_libraries(OglStuff PRIVATE MathStuff Glad)
+target_link_libraries(OglStuff PRIVATE MathStuff Glad )
 target_include_directories(OglStuff PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 #target_compile_definitions(
