@@ -2,7 +2,7 @@
 #define ConvexSurface_H
 #include "surface.h"
 
-using namespace std;
+// using namespace std;
 
 class ConvexSurface : public Surface
 {

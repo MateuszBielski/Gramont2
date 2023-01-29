@@ -6,7 +6,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/quaternion.hpp>
 
-using namespace std;
+// using namespace std;
 
 class Transformable
 {
@@ -31,6 +31,6 @@ protected:
 
 
 };
-using spTransformable = shared_ptr<Transformable>;
-using upTransformable = unique_ptr<Transformable>;
+using spTransformable = std::shared_ptr<Transformable>;
+using upTransformable = std::unique_ptr<Transformable>;
 #endif // Transformable_H

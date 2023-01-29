@@ -8,7 +8,7 @@ MatrixStack::MatrixStack():modelViewProjectionMatrix {
     0.0, 0.0, 1.0, 0.0,
     0.0, 0.0, 0.0, 1.0
 } {
-    m_dToVw = glm::dmat4x4(1.0d);
+    m_dToVw = glm::dmat4x4(1.0f);
 }
 
 MatrixStack::~MatrixStack()

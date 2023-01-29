@@ -17,7 +17,7 @@
 // This file allows access to OpenGL functions used in this sample.
 #include <glad/glad.h>
 
-using namespace std;
+// using namespace std;
 
 enum {
     myoglERR_CLEAR = 0,
@@ -98,7 +98,7 @@ protected:
 
     bool m_SHAinitializated;
 };
-using spMyOGLShaders = shared_ptr<myOGLShaders>;
+using spMyOGLShaders = std::shared_ptr<myOGLShaders>;
 //-----------------------------------------------------------------------------
 // A "point light"
 class myLight
@@ -186,6 +186,6 @@ protected:
     double aspect;
 };
 
-using spMyOGLCamera = shared_ptr<myOGLCamera>;
-using upMyOGLCamera = unique_ptr<myOGLCamera>;
+using spMyOGLCamera = std::shared_ptr<myOGLCamera>;
+using upMyOGLCamera = std::unique_ptr<myOGLCamera>;
 #endif //OGLSTUFF_H

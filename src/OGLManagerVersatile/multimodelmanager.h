@@ -7,7 +7,7 @@
 
 #include "cameratrial.h"
 
-using namespace std;
+// using namespace std;
 
 class MultiModelManager : public myOGLManager
 {

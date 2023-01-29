@@ -7,8 +7,8 @@ using namespace glm;
 
 Transformable::Transformable()
 {
-    modelMatrix = glm::dmat4(1.0d);
-    q_rotation.w = 1.0d;
+    modelMatrix = glm::dmat4(1.0f);
+    q_rotation.w = 1.0f;
 }
 Transformable::~Transformable()
 {
@@ -50,8 +50,8 @@ void Transformable::UpdateFloatMatrix()
 }
 void Transformable::MoveOnScreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX,int  posY,glm::dmat4x4 * dmat4view)
 {
-    double xdiff = 1.0d * (posX - m_mousePrevX);
-    double ydiff = 1.0d * (posY - m_mousePrevY);
+    double xdiff = 1.0f * (posX - m_mousePrevX);
+    double ydiff = 1.0f * (posY - m_mousePrevY);
 
     glm::dvec4 moveInCameraCoord(xdiff,ydiff,0.0,0.0);
     glm::dvec4 moveInWorldCoord =

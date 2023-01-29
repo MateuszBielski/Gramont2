@@ -5,7 +5,7 @@
 #include <string.h> //memcpy
 #include <vector>
 
-using namespace std;
+// using namespace std;
 
 class Surface : public OneModel
 {
@@ -14,8 +14,8 @@ public:
     Surface(GLuint segmentX,GLuint segmentY,float sizeX,float sizeY);
     ~Surface();
     const vector<GLuint> IndicesAdjacentToPoint(GLuint);
-    const glm::vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts);//to move verts inside
-    const glm::vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent);//to move verts inside
+    glm::vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts);//to move verts inside
+    glm::vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent);//to move verts inside
     void CalculateResultantNormalForAllPoints();
     void SetZcoordinateForOnePoint(GLuint, float);
 protected:

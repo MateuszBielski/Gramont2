@@ -8,7 +8,7 @@
 
 CameraTrial::CameraTrial()
 {
-    q_rotation.w = 1.0d;
+    q_rotation.w = 1.0f;
     position = dvec3(m_camPosition.x,m_camPosition.y,m_camPosition.z);
     target = dvec3(m_camTarget.x,m_camTarget.y,m_camTarget.z);
     camUp = dvec3(m_camUp.x,m_camUp.y,m_camUp.z);
@@ -83,8 +83,8 @@ void CameraTrial::UpdateViewMatrix()
 
 void CameraTrial::MoveOnScreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX, int posY)
 {
-    double xdiff = 1.0d * (posX - m_mousePrevX);
-    double ydiff = 1.0d * (posY - m_mousePrevY);
+    double xdiff = 1.0f * (posX - m_mousePrevX);
+    double ydiff = 1.0f * (posY - m_mousePrevY);
 
     glm::dvec4 moveInCameraCoord(xdiff,ydiff,0.0,0.0);
     glm::dvec4 moveInWorldCoord = 
@@ -152,7 +152,7 @@ void CameraTrial::MoveBackForWard(int distance)
 }
 void CameraTrial::UpdateViewMatrixTwoMatrices()
 {
-    transformation = dmat4x4(1.0d);
+    transformation = dmat4x4(1.0f);
     transformation = translate(transformation, target);
     transformation = transformation * toMat4(q_rotation);
     transformation = translate(transformation, -target);
@@ -165,7 +165,7 @@ void CameraTrial::UpdateViewMatrixCenterOfRotNotStable()
     dvec3 newCamUp = xyz(toMat4(q_rotation) * dvec4(camUp,0.0));
     dvec3 newTarget = xyz(toMat4(q_rotation) * dvec4(target,0.0));
     
-    transformation = dmat4x4(1.0d);
+    transformation = dmat4x4(1.0f);
     transformation = translate(transformation, newTarget);
     transformation = transformation * toMat4(q_rotation);
     transformation = translate(transformation, -newTarget);

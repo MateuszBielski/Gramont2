@@ -1,6 +1,7 @@
 #include "surface.h"
 #include "iostream"
 #include <deque>
+#include <vector>
 
 using namespace std;
 
@@ -172,12 +173,12 @@ const vector<GLuint> Surface::IndicesAdjacentToPoint(GLuint index)
     }
     return result;
 }
-const glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts)
+glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts)
 {
     //definition to erase
 
     GLushort i = 0,nuNormals = adjacent.size() - 1;
-    glm::vec3 normals[nuNormals];
+    std::vector<glm::vec3> normals(nuNormals);
     GLuint px0 = point * 3,py0 = point * 3 + 1, pz0 = point * 3 + 2;
     GLuint px1, py1, pz1, px2, py2, pz2;
     glm::vec3 v0(verts[px0],verts[py0],verts[pz0]),normal(0.0f,0.0f,0.0f);
@@ -206,11 +207,11 @@ const glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point,const vector
     int c = 3;
     return glm::normalize(normal);
 }
-const glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point, const vector<GLuint> adjacent)
+glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point, const vector<GLuint> adjacent)
 {
     auto verts = data.verts;
     GLushort i = 0,nuNormals = adjacent.size() - 1;
-    glm::vec3 normals[nuNormals];
+    std::vector<glm::vec3> normals(nuNormals);
     GLuint px0 = point * 3,py0 = point * 3 + 1, pz0 = point * 3 + 2;
     GLuint px1, py1, pz1, px2, py2, pz2;
     glm::vec3 v0(verts[px0],verts[py0],verts[pz0]),normal(0.0f,0.0f,0.0f);
