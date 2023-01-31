@@ -13,7 +13,7 @@ include(${wxWidgets_USE_FILE})
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_TYPE Debug)
 
-#add_compile_options(-H)
+#
 
 if (MSVC)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -24,6 +24,7 @@ set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     # add_compile_options(/showIncludes)
 endif (MSVC)
 if(UNIX)
+    #add_compile_options(-H)
     add_compile_options(-fPIC)#static Glad is linked to dynamic Oglstuff
 endif(UNIX)
 
@@ -69,8 +70,8 @@ set ( CXX_SRCS
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS})
-add_subdirectory(lib/glad)
-add_subdirectory(lib/mathstuff)
+#add_subdirectory(lib/glad)
+#add_subdirectory(lib/mathstuff)
 add_subdirectory(lib/oglstuff)
 # add_subdirectory(lib/funcs)
 add_subdirectory(lib/wxApp)
@@ -92,10 +93,10 @@ target_include_directories(wxApp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
  #           src/Textures
  #           )
 #target_compile_definitions(
-#       ${CMAKE_PROJECT_NAME}
-#       PUBLIC 
-#      GLIBCXX_DEBUG#nie widać działania
-#      )
+ #      ${CMAKE_PROJECT_NAME}
+ #      PUBLIC 
+ #     GLIBCXX_DEBUG#nie widać działania
+ #     )
 #set(CMAKE_BUILD_TYPE Release) ustawia dla wszytkich wykonywalnych
 
             

@@ -5,7 +5,8 @@ SHARED
 oglstuff.cpp
 myoglmanager.cpp
 )
-
+add_subdirectory(glad)
+add_subdirectory(mathstuff)
 target_link_libraries(OglStuff PUBLIC MathStuff Glad)
 target_include_directories(OglStuff PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
