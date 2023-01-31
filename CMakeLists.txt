@@ -26,6 +26,8 @@ endif (MSVC)
 
 set(includes 
     ${CMAKE_CURRENT_SOURCE_DIR}/src
+	../glad/include
+	../include
 	lib/oglstuff
 	lib/mathstuff
 	lib/wxApp
@@ -36,8 +38,6 @@ set(includes
     src/Transform
     src/ViewControl
     src/Surface
-	../glad/include
-	../include
     # oglstuff
 )
 
@@ -46,21 +46,22 @@ set ( CXX_SRCS
     src/myglcanvas.cpp
     lib/oglstuff/myoglmanager.cpp
     lib/oglstuff/oglstuff.cpp
-    src/OGLManagerVersatile/multimodelmanager.cpp
 	lib/mathstuff/mathstuff.cpp
-    src/Textures/textureformodel.cpp
-    lib/oglstuff/oglrenderer.cpp
-    lib/oglstuff/bufferloader.cpp
-    src/Transform/transformable.cpp
-    src/Surface/surface.cpp
-    src/Surface/convexsurface.cpp
-    src/ViewControl/matrixstack.cpp
-    src/GeometryModel/onemodel.cpp
-    src/ViewControl/cameratrial.cpp
 	lib/funcs/funkcje.cpp
 	lib/funcs/textfile.cpp
 	lib/wxApp/myframe.cpp
 	lib/wxApp/wxAppMain.cpp
+    src/OGLManagerVersatile/multimodelmanager.cpp
+    src/OGLManagerVersatile/modelmanager.cpp
+    src/OGLManagerVersatile/oglrenderer.cpp
+    src/OGLManagerVersatile/bufferloader.cpp
+    src/Textures/textureformodel.cpp
+    src/Transform/transformable.cpp
+    src/Surface/surface.cpp
+    src/Surface/convexsurface.cpp
+    src/GeometryModel/onemodel.cpp
+    src/ViewControl/matrixstack.cpp
+    src/ViewControl/cameratrial.cpp
     # OGLManagerVersatile/onemodelmanager.cpp
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant

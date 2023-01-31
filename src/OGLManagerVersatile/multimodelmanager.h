@@ -1,15 +1,13 @@
 /* %PATH% %FILE% */
 #ifndef MultiModelManager_H
 #define MultiModelManager_H
-#include "myoglmanager.h"
+#include "modelmanager.h"
 #include "onemodel.h"
 #include "matrixstack.h"
 
 #include "cameratrial.h"
 
-// using namespace std;
-
-class MultiModelManager : public myOGLManager
+class MultiModelManager : public ModelManager
 {
 #ifdef TESTOWANIE_F
     friend class MultiModelManagerAccess;

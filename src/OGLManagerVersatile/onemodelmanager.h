@@ -1,11 +1,11 @@
 #ifndef ManagerPyramidOnlyGeom_H
 #define ManagerPyramidOnlyGeom_H
-#include "myoglmanager.h"
+#include "modelmanager.h"
 #include "onemodel.h"
 
 using namespace std;
 
-class OneModelManager : public myOGLManager
+class OneModelManager : public ModelManager
 {
 //    using spOneModelManager
 private:

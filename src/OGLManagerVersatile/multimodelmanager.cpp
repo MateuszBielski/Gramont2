@@ -5,8 +5,9 @@
 
 // using namespace std;
 
-MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd):myOGLManager(extErrHnd)
+MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
 {
+    setErrHandler(extErrHnd);
     ptr_TextureShader = make_shared<myOGLShaders>();
     int i = 7;
     cameraTrial = make_shared<CameraTrial>();
@@ -14,7 +15,6 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd):myOGLManager(ex
     m_ptrMatrixStack = make_shared<MatrixStack>();
 
     MakeAndSetCustomModels();
-
 }
 
 MultiModelManager::~MultiModelManager()
@@ -27,7 +27,8 @@ void MultiModelManager::setModels(vector<spOneModel>&& m)
 void MultiModelManager::MakeAndSetCustomModels()
 {
 #ifndef TESTOWANIE_F
-#define TEXTURE_IMAGE "Resources/andromeda.jpg"
+//#define TEXTURE_IMAGE "Resources/andromeda.jpg"
+#define TEXTURE_IMAGE "Resources/MB640x400.jpg"
 #define TEXTURE_IMAGE2 "Resources/ksiezyc.jpg"
     auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
     auto model_2 = make_shared<ConvexSurface>(80,80,100,100,30);

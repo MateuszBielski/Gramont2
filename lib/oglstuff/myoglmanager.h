@@ -1,21 +1,12 @@
 #ifndef myOGLManager_H
 #define myOGLManager_H
 #include "oglstuff.h"
-#include "bufferloader.h"
-#include "oglrenderer.h"
 
 // Used to handle GL errors in other part of the app.
 typedef void myOGLErrHandler(int err, int glerr, const GLchar* glMsg);
 
 using sha_FunGetStr = GLuint (myOGLShaders::*)(const std::string& name);
 
-using OLoc = OglRenderer::Locations;
-using t_OLoc_str = tuple<int OLoc::*,string>;
-using BLoc = BufferLoader::Locations;
-using t_BLoc_str = tuple<int BLoc::*,string>;
-
-template<typename T>
-using vec_locations_T = vector<tuple<int T::Locations::* , string>>;
 
 class myOGLManager
 {
@@ -50,24 +41,14 @@ public:
 
     virtual void ZapiszShaderyDoPlikow() {};
     virtual void OdczytajShaderyZplikow() {};
-#ifdef TESTOWANIE_F
-    upBufferLoader getBufferLoaderForTest(){return move(m_BufferLoader);};
-    upOglRenderer getTexRendererForTest(){return move(m_TexRenderer);};
-    myOGLCamera& getCameraRefForTest(){return *m_Camera;}
-#endif
+
 
 protected:
+    void setErrHandler(myOGLErrHandler* extErrHnd);
     // Members
     myLight        m_Light;
     spMyOGLCamera    m_Camera;
-    upBufferLoader m_BufferLoader;//should be settable
-    upOglRenderer m_TexRenderer;//j/w
-    upOglRenderer m_OglRenderer;
     bool doesCameraViewControl = true;
-
-    virtual void setMatricesForRender(upOglRenderer& );
-    template<typename T>
-    void setLocations(unique_ptr<T>&,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );
 
 
     // For mouse event

@@ -28,19 +28,15 @@ bool MyOnGLError(int err, const GLchar* glMsg)
 
     return err == myoglERR_JUSTLOG ? true : false;
 }
-
+void myOGLManager::setErrHandler(myOGLErrHandler* extErrHnd)
+{
+    //    externalMyOGLErrHandler = extErrHnd;
+    MyOnGLError(myoglERR_CLEAR); //clear error stack
+}
 myOGLManager::myOGLManager(myOGLErrHandler* extErrHnd)
 {
-//    externalMyOGLErrHandler = extErrHnd;
-#ifdef TESTOWANIE_F
-    GlFunctionsMock functionsMock;
-    functionsMock.Define();
-#endif
-    MyOnGLError(myoglERR_CLEAR); //clear error stack
-    m_BufferLoader = make_unique<BufferLoader>();
-    m_TexRenderer = make_unique<OglRenderer>();
-    m_OglRenderer = make_unique<OglRenderer>();
-    m_Camera = make_unique<myOGLCamera>();
+    if(extErrHnd)
+        setErrHandler(extErrHnd);
 }
 
 myOGLManager::~myOGLManager()
@@ -76,20 +72,6 @@ const GLubyte* myOGLManager::GetGLVendor()
 const GLubyte* myOGLManager::GetGLRenderer()
 {
     return glGetString(GL_RENDERER);
-}
-template<typename T>
-void myOGLManager::setLocations(unique_ptr<T>& rend, vec_locations_T<T> vec, myOGLShaders& shader,  sha_FunGetStr FunGetByString)
-{
-    for(auto& name : vec) {
-        rend->m_loc.*(get<0>(name)) = (shader.*FunGetByString)(get<1>(name));//ok
-    }
-}
-void myOGLManager::setMatricesForRender(upOglRenderer& rend)
-{
-    rend->m_matrices.matMVP = m_Camera->GetFloatMVP();
-    rend->m_matrices.matToVw = m_Camera->GetFloatToVw();
-    rend->m_matrices.light_position = m_Light.GetFLightPos();
-    rend->m_matrices.light_colour = m_Light.GetFLightColour();
 }
 void myOGLManager::SetShadersAndGeometry()
 {
@@ -131,10 +113,6 @@ void myOGLManager::OnMouseButDown(int posX, int posY)
     m_mousePrevX = posX;
     m_mousePrevY = posY;
 }
-void myOGLManager::SwitchViewControl()
-{
-	doesCameraViewControl = !doesCameraViewControl;
-}
 
 void myOGLManager::OnMouseRotDragging(int posX, int posY)
 {
@@ -142,6 +120,7 @@ void myOGLManager::OnMouseRotDragging(int posX, int posY)
     m_mousePrevX = posX;
     m_mousePrevY = posY;
 }
-//for linker
-template void myOGLManager::setLocations<OglRenderer>(unique_ptr<OglRenderer>&, vec_locations_T<OglRenderer>, myOGLShaders&, sha_FunGetStr);
-template void myOGLManager::setLocations<BufferLoader>(unique_ptr<BufferLoader>&, vec_locations_T<BufferLoader>, myOGLShaders&, sha_FunGetStr);
+void myOGLManager::SwitchViewControl()
+{
+    doesCameraViewControl = !doesCameraViewControl;
+}

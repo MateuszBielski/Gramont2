@@ -36,15 +36,17 @@
       <File Name="src/Surface/convexsurface.h"/>
       <File Name="src/Surface/convexsurface.cpp"/>
     </VirtualDirectory>
-    <VirtualDirectory Name="OGLManagerVersatile">
-      <File Name="src/OGLManagerVersatile/oglmanagerversatile.h"/>
-      <File Name="src/OGLManagerVersatile/oglmanagerversatile.cpp"/>
-      <File Name="src/OGLManagerVersatile/onemodelmanagerOld.cpp" ExcludeProjConfig="Debug"/>
-      <File Name="src/OGLManagerVersatile/onemodelmanagerOld.h"/>
+    <VirtualDirectory Name="ModelManagerVersatile">
       <File Name="src/OGLManagerVersatile/onemodelmanager.cpp"/>
       <File Name="src/OGLManagerVersatile/onemodelmanager.h"/>
       <File Name="src/OGLManagerVersatile/multimodelmanager.h"/>
       <File Name="src/OGLManagerVersatile/multimodelmanager.cpp"/>
+      <File Name="src/OGLManagerVersatile/modelmanager.h"/>
+      <File Name="src/OGLManagerVersatile/modelmanager.cpp"/>
+      <File Name="src/OGLManagerVersatile/bufferloader.cpp"/>
+      <File Name="src/OGLManagerVersatile/oglrenderer.cpp"/>
+      <File Name="src/OGLManagerVersatile/bufferloader.h"/>
+      <File Name="src/OGLManagerVersatile/oglrenderer.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="GeometryModel">
       <File Name="src/GeometryModel/onemodel.h"/>
@@ -191,10 +193,6 @@
     <File Name="lib/wxApp/myframe.h"/>
     <File Name="lib/wxApp/myframe.cpp"/>
     <File Name="lib/wxApp/wxAppMain.cpp"/>
-    <File Name="lib/oglstuff/bufferloader.h"/>
-    <File Name="lib/oglstuff/bufferloader.cpp"/>
-    <File Name="lib/oglstuff/oglrenderer.h"/>
-    <File Name="lib/oglstuff/oglrenderer.cpp"/>
     <File Name="lib/funcs/funkcje.cpp"/>
     <File Name="lib/funcs/funkcje.h"/>
     <File Name="lib/funcs/textfile.cpp"/>
