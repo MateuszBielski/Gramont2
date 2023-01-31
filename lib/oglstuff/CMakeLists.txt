@@ -4,12 +4,9 @@ add_library(OglStuff
 SHARED 
 oglstuff.cpp
 myoglmanager.cpp
-oglrenderer.cpp
-bufferloader.cpp
-#dwa powyższe może da się złączyć?
 )
 
-target_link_libraries(OglStuff PRIVATE MathStuff Glad )
+target_link_libraries(OglStuff PUBLIC MathStuff Glad)
 target_include_directories(OglStuff PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 #target_compile_definitions(

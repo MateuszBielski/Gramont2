@@ -14,26 +14,23 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_BUILD_TYPE Debug)
 
 #add_compile_options(-H)
+# add_compile_options(/showIncludes)
 
 if (MSVC)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
 	set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
     set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
-	#add_compile_options(/W0)
-    # add_compile_options(/showIncludes)
+	add_compile_options(/W0)
 endif (MSVC)
-if(UNIX)
-    add_compile_options(-fPIC)#static Glad is linked to dynamic Oglstuff
-endif(UNIX)
 
 set(includes 
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-	#../glad/include
+	../glad/include
 	../include
-	#lib/oglstuff
-	#lib/mathstuff
-	#lib/wxApp
+	lib/oglstuff
+	lib/mathstuff
+	lib/wxApp
 	lib/funcs
     src/OGLManagerVersatile
     src/GeometryModel
@@ -45,15 +42,15 @@ set(includes
 )
 
 set ( CXX_SRCS
-	#../glad/src/glad.c
+	../glad/src/glad.c
     src/myglcanvas.cpp
-    #lib/oglstuff/myoglmanager.cpp
-    #lib/oglstuff/oglstuff.cpp
-	#lib/mathstuff/mathstuff.cpp
+    lib/oglstuff/myoglmanager.cpp
+    lib/oglstuff/oglstuff.cpp
+	lib/mathstuff/mathstuff.cpp
 	lib/funcs/funkcje.cpp
 	lib/funcs/textfile.cpp
-	#lib/wxApp/myframe.cpp
-	#lib/wxApp/wxAppMain.cpp
+	lib/wxApp/myframe.cpp
+	lib/wxApp/wxAppMain.cpp
     src/OGLManagerVersatile/multimodelmanager.cpp
     src/OGLManagerVersatile/modelmanager.cpp
     src/OGLManagerVersatile/oglrenderer.cpp
@@ -69,23 +66,19 @@ set ( CXX_SRCS
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS})
-add_subdirectory(lib/glad)
-add_subdirectory(lib/mathstuff)
-add_subdirectory(lib/oglstuff)
+# add_subdirectory(lib/glad)
+# add_subdirectory(lib/mathstuff)
+# add_subdirectory(lib/oglstuff)
 # add_subdirectory(lib/funcs)
-add_subdirectory(lib/wxApp)
+# add_subdirectory(lib/wxApp)
 # add_subdirectory(src)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} 
     PUBLIC 
     ${wxWidgets_LIBRARIES}
-    #Glad
-    OglStuff
-    wxApp
-    #MathStuff
 	)
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${includes})
-target_include_directories(wxApp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
+
 #target_include_directories(OglStuff 
 #            PRIVATE 
  #           src/GeometryModel
