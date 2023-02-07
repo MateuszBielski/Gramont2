@@ -1,7 +1,7 @@
 #include "modelmanager.h"
-
-
-
+#ifdef TESTOWANIE_F
+#include "glFunctionsMock.h"
+#endif
 
 ModelManager::ModelManager():myOGLManager()
 {

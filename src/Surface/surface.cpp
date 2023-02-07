@@ -98,24 +98,7 @@ Surface::~Surface()
     Release(data.colours);
     Release(m_texture->texCoord);
 }
-//const vector<GLuint> Surface::IndicesAdjacentToPointGood(GLuint index)
-//{
-//    vector<GLuint> indices;
-//    GLuint verticalEdgeCheck = index % (m_segmentX + 1);
-//    GLuint horizontalEdgeCheck = (index - verticalEdgeCheck) / (m_segmentX + 1);
-//    if(verticalEdgeCheck < m_segmentX)
-//        indices.push_back(index + 1);
-//
-//    if(verticalEdgeCheck > 0)
-//        indices.push_back(index - 1);
-//
-//    if(horizontalEdgeCheck < m_segmentY)
-//        indices.push_back(index + 1 + m_segmentX);
-//
-//    if(horizontalEdgeCheck > 0)
-//        indices.push_back(index - 1 - m_segmentX);
-//    return indices;
-//}
+
 const vector<GLuint> Surface::IndicesAdjacentToPoint(GLuint index)
 {
     deque<GLint> indices(4,-1);
@@ -138,31 +121,20 @@ const vector<GLuint> Surface::IndicesAdjacentToPoint(GLuint index)
     if(horizontalEdgeCheck > 0) {
         indices[3] = index - 1 - m_segmentX;
     }
-//    cout<<index<<". ";
-//    if(noTop)cout<<"noTop, ";
-//    if(noLeft)cout<<"noLeft, ";
-//    auto it = indices.begin();
-//    while(it != indices.end()) {
-//        cout<<*it++<<", ";
-//    }
-//    cout<<endl;
+
     if (noTop || noLeft) {
-        //rewind Indices
-//        vector<GLint> temp;
-        auto it = indices.begin();
-        while(*it > -1) {
-            auto elem = *it;
-            indices.push_back(elem);
-            *it = -1;
-            it++;
-        }
-//        indices.insert(indices.end(),temp.begin(),temp.end());
+   
+        unsigned short which = 0;
+        auto elem = indices[which];
+        while(elem > -1)
+        {
+            auto newElem = elem;
+            indices.push_back(newElem);
+            indices[which] = -1;
+            elem = indices[++which];
+        } 
     }
-//    it = indices.begin();
-//    while(it != indices.end()) {
-//        cout<<*it++<<", ";
-//    }
-//    cout<<endl;
+    
     vector<GLuint> result;
 
     for(auto& i : indices) {
@@ -223,7 +195,6 @@ glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point, const vector<GLui
         py2 = adjacent[i + 1] * 3 + 1;
         pz2 = adjacent[i + 1] * 3 + 2;
 
-//        verts[]
         glm::vec3 v1 = glm::vec3(verts[px1] - verts[px0],verts[py1] - verts[py0],verts[pz1] - verts[pz0]);
         glm::vec3 v2 = glm::vec3(verts[px2] - verts[px0],verts[py2] - verts[py0],verts[pz2] - verts[pz0]);
         glm::vec3 res = glm::cross(v1,v2);
@@ -237,8 +208,6 @@ glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point, const vector<GLui
     normal.x /= nuNormals;
     normal.y /= nuNormals;
     normal.z /= nuNormals;
-//    int c = 3;
-//    glm::mat4x4 glm::matrixCompMult
     return glm::normalize(normal);
 }
 void Surface::CalculateResultantNormalForAllPoints()

@@ -166,25 +166,4 @@ TEST(CameraTrial,ViewMoveVertical)
     ASSERT_EQ(round_to(firstPointPosition.z,5),round_to(secondPointPosition.z,5));
     ASSERT_NE(round_to(firstPointPosition.y,5),round_to(secondPointPosition.y,5));
 }
-TEST(CameraTrial,RotateFromHorizontalMouseMove)
-{
-    CameraTrial cam;
-    cam.ViewSizeChanged(100,100);
-    dmat4x4 * cameraViewMatrixfv = cam.getViewGlmMatrixdv();
-    dvec3 point(1.2,1.2,1.2);
-    dvec3 firstPointPosition = xyz(*cameraViewMatrixfv * dvec4(point,1.0));
-    cam.MouseRotation(50,50,55,50);
-    dvec3 secondPointPosition = xyz(*cameraViewMatrixfv * dvec4(point,1.0));
-    dvec3 p0 = cam.getRotCenter();
-    dvec3 v1 = normalize(firstPointPosition - p0);
-    dvec3 v2 = normalize(secondPointPosition - p0);
-//    dvec3 axis = xyz(inverse(*cameraViewMatrixfv) * dvec4(cross(normalize(firstPointPosition),normalize(secondPointPosition)),1.0));
-//    dvec3 axis = xyz(inverse(*cameraViewMatrixfv) * dvec4(cross(v1,v2),1.0));
-    dvec3 axis = cross(v1,v2);
-//    dvec3 axis = cross(firstPointPosition,secondPointPosition);
-    
-    cout<<"\naxis"<<axis.x<<", "<<axis.y<<", "<<axis.z;
-//    ASSERT_EQ(round_to(firstPointPosition.y,5),round_to(secondPointPosition.y,5));
-//    ASSERT_EQ(round_to(firstPointPosition.z,5),round_to(secondPointPosition.z,5));
-//    ASSERT_NE(round_to(firstPointPosition.x,5),round_to(secondPointPosition.x,5));
-}
+

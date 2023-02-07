@@ -10,15 +10,16 @@ set ( CXX_SRCS
     OglRendererMock.cpp
     )
 set(Includes 
-    #${path_src}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 add_library(${TargetName} ${CXX_SRCS})
 
-target_link_libraries(${TargetName} PRIVATE LibGlad TestedClasses)
+target_link_libraries(${TargetName} PUBLIC 
+TestedClasses
+OglStuff
+)
+
 target_include_directories(${TargetName} 
     PUBLIC 
     ${Includes}
-    #PRIVATE
-    #../../../glad/include
     )

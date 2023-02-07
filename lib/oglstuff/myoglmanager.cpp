@@ -1,8 +1,6 @@
 #include <iostream>
 #include "myoglmanager.h"
-#ifdef TESTOWANIE_F
-#include "glFunctionsMock.h"
-#endif
+
 using namespace std;
 
 myOGLErrHandler* externalMyOGLErrHandler = NULL;

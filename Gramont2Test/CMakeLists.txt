@@ -27,32 +27,36 @@ set ( CXX_SRCS
     src/ViewControlTest.cpp
     src/ViewControlNeedFixTest.cpp
 )
+if(UNIX)
 #add_compile_options(-H)
-#target_compile_options(xxx?)
+    add_compile_options(-fPIC)#static Glad is linked to dynamic Oglstuff
+endif(UNIX)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/../lib/oglstuff ${CMAKE_CURRENT_BINARY_DIR}/oglstuff)
 add_subdirectory(libTestedClasses)
 add_subdirectory(libHelperClasses)
 
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS} )
-#target_include_directories(${CMAKE_PROJECT_NAME} PRIVATE )
+
 target_link_libraries(${CMAKE_PROJECT_NAME} 
         PUBLIC
         HelperClasses
         TestedClasses
-        #GTest::GTest
-        #-L/home/mateusz/gTest/lib -lgtest -lgtest_main -pthread
         -L${GTEST_LIBRARY_DIRS}
         ${GTEST_LIBRARIES}
         ${wxWidgets_LIBRARIES}
         )
-       
 target_include_directories(${CMAKE_PROJECT_NAME} 
         PRIVATE
         #/home/mateusz/gTest/include
         ${GTEST_INCLUDE_DIRS}
         )
 target_compile_definitions(
-        #${CMAKE_PROJECT_NAME}
         TestedClasses
+        PUBLIC 
+        TESTOWANIE_F
+        )
+target_compile_definitions(
+        OglStuff
         PUBLIC 
         TESTOWANIE_F
         )

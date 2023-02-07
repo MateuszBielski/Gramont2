@@ -41,8 +41,9 @@ unsigned short OneModelManager::nuDestructors = 0;
 unsigned short OneModelManager::nuInstantions = 0;
 unsigned short OneModelManager::maxNuInstantions = 0;
 
-OneModelManager::OneModelManager(myOGLErrHandler* extErrHnd):myOGLManager(extErrHnd)
+OneModelManager::OneModelManager(myOGLErrHandler* extErrHnd)
 {
+    setErrHandler(extErrHnd);
 //    model = new Model;
     model = Model;
     ++nuConstructors;
