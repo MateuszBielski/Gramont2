@@ -52,6 +52,7 @@ public:
     bool needUpdateProjMat;
     bool needUpdateModeMat;
     double getDistance() {return camDistance;}
+    glm::dquat getQ_rotationVal() {return q_rotation;}
 protected:
 };
 

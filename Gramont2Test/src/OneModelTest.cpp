@@ -293,7 +293,7 @@ TEST(Transformable,TranslateByVector)
     Transformable tran;
     glm::vec3 translateVector(2.7f, 4.1f, -0.4f);
     tran.Translate(translateVector);
-    const float * modelMatrix = tran.getModelMatrixfv();
+    const double * modelMatrix = tran.getModelMatrixdv();
     ASSERT_FLOAT_EQ(modelMatrix[12],2.7);
     ASSERT_FLOAT_EQ(modelMatrix[13],4.1);
     ASSERT_FLOAT_EQ(modelMatrix[14],-0.4);
@@ -301,7 +301,7 @@ TEST(Transformable,TranslateByVector)
 TEST(Transformable,Rotate)
 {
     Transformable tran;
-    const float * modelMatrix = tran.getModelMatrixfv(); 
+    const double * modelMatrix = tran.getModelMatrixdv(); 
 //    cout<<"\n";
 //    for(int i = 0; i < 16 ; i++)cout<<modelMatrix[i]<<", ";
     ASSERT_EQ(0.0,modelMatrix[1]);
@@ -313,7 +313,7 @@ TEST(Transformable,Rotate)
 TEST(Transformable,OneModelMockHasIdentityModelMatrixAtBegin)
 {
     OneModelMock model;
-    const float * modMat = model.getModelMatrixfv();
+    const double * modMat = model.getModelMatrixdv();
     float expect[] = {1,0,0,0,
     0,1,0,0,
     0,0,1,0,
@@ -336,4 +336,9 @@ TEST(Transformable,OneModelMockHasIdentityModelMatrixAtBegin_Double)
         ASSERT_EQ(expect[r],modMat[r]);
     }
 }
-//TEST(Transformable,NeedUpdateAfter
+TEST(Transformable,rotationQuatHasZeroesAtContruct)
+{
+    Transformable tr;
+    glm::dquat expect(1.0,0.0,0.0,0.0);
+    ASSERT_EQ(expect,tr.getQ_rotationVal());
+}

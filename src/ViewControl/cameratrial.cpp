@@ -6,9 +6,8 @@
 
 
 
-CameraTrial::CameraTrial()
+CameraTrial::CameraTrial():q_rotation(1.0,0.0,0.0,0.0)
 {
-    q_rotation.w = 1.0f;
     position = dvec3(m_camPosition.x,m_camPosition.y,m_camPosition.z);
     target = dvec3(m_camTarget.x,m_camTarget.y,m_camTarget.z);
     camUp = dvec3(m_camUp.x,m_camUp.y,m_camUp.z);
@@ -157,29 +156,5 @@ void CameraTrial::MoveBackForWard(int distance)
 //    MyPerspective(m_fov, aspect, m_nearD, m_farD, m_dProj);
     UpdateViewMatrix();
 }
-//void CameraTrial::UpdateViewMatrixTwoMatrices()
-//{
-//    transformation = dmat4x4(1.0f);
-//    transformation = translate(transformation, target);
-//    transformation = transformation * toMat4(q_rotation);
-//    transformation = translate(transformation, -target);
-//
-//    dmat4view = lookAt(position,target,camUp);
-//    dmat4view = dmat4view * transformation;
-//}
-//void CameraTrial::UpdateViewMatrixCenterOfRotNotStable()
-//{
-//    dvec3 newCamUp = xyz(toMat4(q_rotation) * dvec4(camUp,0.0));
-//    dvec3 newTarget = xyz(toMat4(q_rotation) * dvec4(target,0.0));
-//    
-//    transformation = dmat4x4(1.0f);
-//    transformation = translate(transformation, newTarget);
-//    transformation = transformation * toMat4(q_rotation);
-//    transformation = translate(transformation, -newTarget);
-//    
-//    dvec3 newPosition = xyz(transformation * dvec4(position,0.0));
-//    
-//    
-//    dmat4view = lookAt(newPosition,newTarget,newCamUp);
-//}
+
 

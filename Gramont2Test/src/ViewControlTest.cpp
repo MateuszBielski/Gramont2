@@ -172,4 +172,9 @@ TEST(CameraTrial,ViewMoveVertical)
     ASSERT_EQ(round_to(firstPointPosition.z,5),round_to(secondPointPosition.z,5));
     ASSERT_NE(round_to(firstPointPosition.y,5),round_to(secondPointPosition.y,5));
 }
-
+TEST(CameraTrial,rotationQuatHasZeroesAtContruct)
+{
+    CameraTrial cam;
+    glm::dquat expect(1.0,0.0,0.0,0.0);
+    ASSERT_EQ(expect,cam.getQ_rotationVal());
+}
