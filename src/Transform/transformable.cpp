@@ -5,10 +5,10 @@
 
 using namespace glm;
 
-Transformable::Transformable()
+Transformable::Transformable():q_rotation(1.0,0.0,0.0,0.0)
 {
     modelMatrix = glm::dmat4(1.0f);
-    q_rotation.w = 1.0f;
+//    q_rotation.w = 1.0f;
 }
 Transformable::~Transformable()
 {
@@ -17,36 +17,26 @@ const double* Transformable::getModelMatrixdv()
 {
     return glm::value_ptr(modelMatrix);
 }
-const float* Transformable::getModelMatrixfv()
-{
-    UpdateFloatMatrix();
-    return mat4f;
-}
+//const float* Transformable::getModelMatrixfv()
+//{
+//    UpdateFloatMatrix();
+//    return mat4f;
+//}
 void Transformable::Translate(glm::dvec3 translateVector)
 {
     position += translateVector;
-    UpdateFloatMatrix();
+    UpdateModelMatrix();
 }
 void Transformable::Rotate(double angle, glm::dvec3 axis)
 {
     q_rotation = angleAxis(glm::radians(angle), axis) * q_rotation;
-    UpdateFloatMatrix();
+    UpdateModelMatrix();
 }
-void Transformable::UpdateFloatMatrix()
+void Transformable::UpdateModelMatrix()
 {
     modelMatrix = dmat4x4(1.0);
     modelMatrix= translate(modelMatrix,position);
     modelMatrix= modelMatrix * glm::toMat4(q_rotation);
-    
-    double * mat4d = glm::value_ptr(modelMatrix);
-//    cout<<"\n";
-    for(short i = 0; i < 16 ; i++) {
-        mat4f[i] = mat4d[i];
-//        cout<<mat4f[i]<<", ";
-//        if(isnan(mat4d[i])) {
-//            int p=8;
-//        }
-    }
 }
 void Transformable::MoveOnScreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX,int  posY,glm::dmat4x4 * dmat4view)
 {
@@ -60,11 +50,11 @@ void Transformable::MoveOnScreenPlane(int m_mousePrevX,int  m_mousePrevY,int  po
         
     position += xyz(moveInWorldCoord);
     
-    UpdateFloatMatrix();
+    UpdateModelMatrix();
 }
 void Transformable::MouseRotation(dquat q_diff)
 {
     q_rotation = q_diff * q_rotation;
 
-    UpdateFloatMatrix();
+    UpdateModelMatrix();
 }

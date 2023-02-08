@@ -61,9 +61,14 @@ dmat4x4* CameraTrial::getViewGlmMatrixdv()
 {
     return &dmat4view;
 }
+dmat4x4* CameraTrial::getProjGlmMatrixdv()
+{
+    return &dmat4proj;
+}
 void CameraTrial::ViewSizeChanged(int newWidth, int newHeight)
 {
     myOGLCamera::ViewSizeChanged(newWidth,newHeight);
+    dmat4proj = glm::make_mat4x4(m_dProj);
     needUpdateProjMat = true;
 }
 void CameraTrial::UpdateViewMatrix()
@@ -79,6 +84,8 @@ void CameraTrial::UpdateViewMatrix()
     dmat4view = lookAt(newPosition + rotCenter,newTarget + rotCenter,newCamUp);
     camDistance = glm::distance(newPosition,newTarget);
     
+    MyPerspective(m_fov, aspect, m_nearD, m_farD, m_dProj);
+    dmat4proj = glm::make_mat4x4(m_dProj);
 }
 
 void CameraTrial::MoveOnScreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX, int posY)
@@ -147,32 +154,32 @@ void CameraTrial::MoveBackForWard(int distance)
     }
     else m_scale /= factor;
     m_farD = m_nearD + camDistance;
-    MyPerspective(m_fov, aspect, m_nearD, m_farD, m_dProj);
+//    MyPerspective(m_fov, aspect, m_nearD, m_farD, m_dProj);
     UpdateViewMatrix();
 }
-void CameraTrial::UpdateViewMatrixTwoMatrices()
-{
-    transformation = dmat4x4(1.0f);
-    transformation = translate(transformation, target);
-    transformation = transformation * toMat4(q_rotation);
-    transformation = translate(transformation, -target);
-
-    dmat4view = lookAt(position,target,camUp);
-    dmat4view = dmat4view * transformation;
-}
-void CameraTrial::UpdateViewMatrixCenterOfRotNotStable()
-{
-    dvec3 newCamUp = xyz(toMat4(q_rotation) * dvec4(camUp,0.0));
-    dvec3 newTarget = xyz(toMat4(q_rotation) * dvec4(target,0.0));
-    
-    transformation = dmat4x4(1.0f);
-    transformation = translate(transformation, newTarget);
-    transformation = transformation * toMat4(q_rotation);
-    transformation = translate(transformation, -newTarget);
-    
-    dvec3 newPosition = xyz(transformation * dvec4(position,0.0));
-    
-    
-    dmat4view = lookAt(newPosition,newTarget,newCamUp);
-}
+//void CameraTrial::UpdateViewMatrixTwoMatrices()
+//{
+//    transformation = dmat4x4(1.0f);
+//    transformation = translate(transformation, target);
+//    transformation = transformation * toMat4(q_rotation);
+//    transformation = translate(transformation, -target);
+//
+//    dmat4view = lookAt(position,target,camUp);
+//    dmat4view = dmat4view * transformation;
+//}
+//void CameraTrial::UpdateViewMatrixCenterOfRotNotStable()
+//{
+//    dvec3 newCamUp = xyz(toMat4(q_rotation) * dvec4(camUp,0.0));
+//    dvec3 newTarget = xyz(toMat4(q_rotation) * dvec4(target,0.0));
+//    
+//    transformation = dmat4x4(1.0f);
+//    transformation = translate(transformation, newTarget);
+//    transformation = transformation * toMat4(q_rotation);
+//    transformation = translate(transformation, -newTarget);
+//    
+//    dvec3 newPosition = xyz(transformation * dvec4(position,0.0));
+//    
+//    
+//    dmat4view = lookAt(newPosition,newTarget,newCamUp);
+//}
 

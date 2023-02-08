@@ -25,7 +25,7 @@ TEST(MatrixStackTestNeedFix,Update_ModelViewProjectionMatrix_multiply)
     bool needUpdateV = true;
     bool needUpdateP = true;
 
-    ms.setModelMatrixdv(matrix_model,&needUpdateM);
+//    ms.setModelMatrixdv(matrix_model,&needUpdateM);
 //    ms.setViewMatrixdv(matrix_view,&needUpdateV); //deleted
     ms.setProjectionMatrixdv(matrix_projection,&needUpdateP);
     matrixResult = ms.getModelViewProjectionMatrixfv();
@@ -62,7 +62,7 @@ TEST(MatrixStackTestNeedFix,NeedUpdateFalse_afterUpdate)
     double matModel[16];
     double matView[16];
     double matProjection[16];
-    ms.setModelMatrixdv(matModel,&needUpdateM);
+//    ms.setModelMatrixdv(matModel,&needUpdateM);
 //    ms.setViewMatrixdv(matView,&needUpdateV); //deleted
     ms.setProjectionMatrixdv(matProjection,&needUpdateP);
     ms.UpdateMatrices();
@@ -85,7 +85,7 @@ TEST(MatrixStackTestNeedFix,Multiply_NoNeedUpdate)
     bool needUpdateV = true;
     bool needUpdateP = true;
 
-    ms.setModelMatrixdv(matrix_model,&needUpdateM);
+//    ms.setModelMatrixdv(matrix_model,&needUpdateM);
 //    ms.setViewMatrixdv(matrix_view,&needUpdateV); //deleted
     ms.setProjectionMatrixdv(matrix_projection,&needUpdateP);
     matrixResult = ms.getModelViewProjectionMatrixfv();
@@ -117,7 +117,7 @@ TEST(MatrixStackTestNeedFix,ChangeProjection_noUpdates_VW)
     bool needUpdateV = true;
     bool needUpdateP = true;
 
-    ms.setModelMatrixdv(matrix_model,&needUpdateM);
+//    ms.setModelMatrixdv(matrix_model,&needUpdateM);
 //    ms.setViewMatrixdv(matrix_view,&needUpdateV); //deleted
     ms.setProjectionMatrixdv(matrix_projection,&needUpdateP);
     matrixResult = ms.getModelViewProjectionMatrixfv();
@@ -154,7 +154,7 @@ TEST(MatrixStackTestNeedFix,ChangeView_Updates_MVP_VW)
     bool needUpdateV = true;
     bool needUpdateP = true;
 
-    ms.setModelMatrixdv(matrix_model,&needUpdateM);
+//    ms.setModelMatrixdv(matrix_model,&needUpdateM);
 //    ms.setViewMatrixdv(matrix_view,&needUpdateV); //deleted
     ms.setProjectionMatrixdv(matrix_projection,&needUpdateP);
 
@@ -203,7 +203,7 @@ TEST(MatrixStackTestNeedFix,ChangeProjection_Updates_MVP)
     bool needUpdateV = true;
     bool needUpdateP = true;
 
-    ms.setModelMatrixdv(matrix_model,&needUpdateM);
+//    ms.setModelMatrixdv(matrix_model,&needUpdateM);
 //    ms.setViewMatrixdv(matrix_view,&needUpdateV); //deleted
     ms.setProjectionMatrixdv(matrix_projection,&needUpdateP);
 

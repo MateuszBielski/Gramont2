@@ -8,6 +8,7 @@
 #include "MultiModelManagerAccess.h"
 #include "glshadersmock.h"
 #include "OglRendererMock.h"
+#include "matrixstackmock.h"
 #include <stack>
 
 
@@ -249,19 +250,35 @@ TEST(MultiModelManager,MatrixStackKnowsCameraMatrices)
     acc.setMatrixStack(ms);
     man.SetShadersAndGeometry();
     auto camera = acc.getPtrCameraForTest();
-    auto camViewMatrix = camera->getViewMatrixdv();
-    auto camProjMatrix = camera->getProjMatrixdv();
-    auto camModeMatrix = camera->getModeMatrixdv();
-//    ASSERT_EQ(camViewMatrix,ms->getViewMatrixdv()); //deleted
-    ASSERT_EQ(camProjMatrix,ms->getProjMatrixdv());
-//    ASSERT_EQ(camModeMatrix,ms->getCamModeMatrixdv()); //deleted
+    auto camViewMatrix = camera->getViewGlmMatrixdv();
+    auto camProjMatrix = camera->getProjGlmMatrixdv();
+    ASSERT_EQ(camViewMatrix,ms->getViewGlmMatrixdv());
+    ASSERT_EQ(camProjMatrix,ms->getProjGlmMatrixdv());
+}
+TEST(MultiModelManager,MatrixStackKnowsEachModelMatrix_inDraw3d)
+{
+    auto model_1 = make_shared<OneModelMock>();
+    auto model_2 = make_shared<OneModelMock>();
+    auto model_3 = make_shared<OneModelMock>();
+    MultiModelManager man(nullptr);
+    man.setModels(vector<spOneModel> {model_1,model_2,model_3});
+    spMatrixStackMock ms = make_shared<MatrixStackMock>();
+    MultiModelManagerAccess acc(man);
+    acc.setMatrixStack(ms);
+    man.Draw3d();
+    stack<glm::dmat4 *> modelMatrices = ms->getStackGivenModelMatricesRef();
+    ASSERT_EQ(model_3->getModelGlmMatrixdv(),modelMatrices.top());
+    modelMatrices.pop();
+    ASSERT_EQ(model_2->getModelGlmMatrixdv(),modelMatrices.top());
+    modelMatrices.pop();
+    ASSERT_EQ(model_1->getModelGlmMatrixdv(),modelMatrices.top());
 }
 TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
 {
     auto model_1 = make_shared<OneModelMock>();
     auto model_2 = make_shared<OneModelMock>();
 
-    auto sum_mat = [](const float * m) {
+    auto sum_mat = [](const double * m) {
         float s = 0;
         for(short i = 0; i < 16 ; i++)
             s += m[i];
@@ -269,7 +286,7 @@ TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
     };
     model_1->Rotate(23, {0,1,1});
     model_2->Rotate(22, {1,0,1});
-    ASSERT_NE(sum_mat(model_1->getModelMatrixfv()),sum_mat(model_2->getModelMatrixfv()));
+    ASSERT_NE(sum_mat(model_1->getModelMatrixdv()),sum_mat(model_2->getModelMatrixdv()));
     spMatrixStack ms = make_shared<MatrixStack>();
     bool need = true;
     double matrix[] = {1,0,0,0,
@@ -302,10 +319,10 @@ TEST(MultiModelManager,updateVWMatrixInStack_OnMouseRotDragging)
 {
     auto ms = make_shared<MatrixStack>();
     MultiModelManager man(nullptr);
-    
+
     MultiModelManagerAccess acc(man);
     acc.setMatrixStack(ms);
-    
+
     auto model_1 = make_shared<OneModelMock>();
     auto model_2 = make_shared<OneModelMock>();
     man.setModels(vector<spOneModel> {model_1,model_2});
@@ -314,18 +331,17 @@ TEST(MultiModelManager,updateVWMatrixInStack_OnMouseRotDragging)
     float msVW_1[16];
     float msVW_2[16];
     auto msVW = ms->getViewMatrixfv();
-    
+
     man.OnMouseRotDragging(45,39);
     man.Draw3d();
     for(short i = 0 ; i < 16 ; i++)msVW_1[i] = msVW[i];
-    
+
     man.OnMouseRotDragging(47,35);
     man.Draw3d();
     for(short i = 0 ; i < 16 ; i++)msVW_2[i] = msVW[i];
-    
+
     bool notEqual = false;
-    for(short i = 0 ; i < 16 ; i++)
-    {
+    for(short i = 0 ; i < 16 ; i++) {
         if((msVW_1[i] - msVW_2[i]) != 0.0f) notEqual = true;
     }
     ASSERT_TRUE(notEqual);
@@ -334,10 +350,10 @@ TEST(MultiModelManager,contentOfMatrices)
 {
     auto ms = make_shared<MatrixStack>();
     MultiModelManager man(nullptr);
-    
+
     MultiModelManagerAccess acc(man);
     acc.setMatrixStack(ms);
-    
+
     auto model_1 = make_shared<OneModelMock>();
     auto model_2 = make_shared<OneModelMock>();
     man.setModels(vector<spOneModel> {model_1,model_2});
@@ -346,27 +362,25 @@ TEST(MultiModelManager,contentOfMatrices)
     man.Draw3d();
     auto camMVP = acc.getPtrCameraForTest()->GetFloatMVP();
     bool camMVPnoZero = false;
-    for(short i = 0 ; i < 16 ; i++)
-    {
+    for(short i = 0 ; i < 16 ; i++) {
 //        cout<<"\n"<<camMVP[i];
         if(camMVP[i] == 0.0f) camMVPnoZero = true;
     }
     ASSERT_FALSE(camMVPnoZero);
-    
+
     auto msMVP = ms->getModelViewProjectionMatrixfv();
     bool msMVPnoZero = false;
-    for(short i = 0 ; i < 16 ; i++)
-    {
+    for(short i = 0 ; i < 16 ; i++) {
         if(msMVP[i] == 0.0f) msMVPnoZero = true;
     }
     ASSERT_FALSE(msMVPnoZero);
-    
+
 }
 TEST(MultiModelManager,SwitchViewControl)
 {
     MultiModelManager man(nullptr);
     MultiModelManagerAccess acc(man);
-    
+
     ASSERT_TRUE(acc.CameraDoesViewControl());
     man.SwitchViewControl();
     ASSERT_FALSE(acc.CameraDoesViewControl());

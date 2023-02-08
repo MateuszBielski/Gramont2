@@ -40,16 +40,6 @@ TEST(MatrixStack,Update_ReturnIdentity)
     }
 }
 
-TEST(MatrixStack,NeedUpdateTrueAfterSet_ModelMat)
-{
-    MatrixStack ms;
-    double matrix_model[16];
-    bool needUpdateM = false;
-
-    ms.setModelMatrixdv(matrix_model,&needUpdateM);
-
-    ASSERT_TRUE(needUpdateM);
-}
 TEST(MatrixStack,NeedUpdateTrueAfterSet_ProjectionMat)
 {
     MatrixStack ms;
@@ -75,7 +65,7 @@ TEST(MatrixStack,ChangeModel_Updates_MVP_VW)
     bool needUpdateV = true;
     bool needUpdateP = true;
 
-    ms.setModelMatrixdv(matrix_model,&needUpdateM);
+//    ms.setModelMatrixdv(matrix_model,&needUpdateM);
 //    ms.setViewMatrixdv(matrix_view,&needUpdateV); //deleted
     ms.setProjectionMatrixdv(matrix_projection,&needUpdateP);
     matrixResult = ms.getModelViewProjectionMatrixfv();
@@ -128,6 +118,22 @@ TEST(MatrixStack,MultiplicationGLM)
         equal &= matResultdv[i] == matExp[i];
     }
     ASSERT_TRUE(equal);
+}
+TEST(MatrixStack,ModelGlmMatrixUsedInStack)
+{
+    glm::dmat4x4 modelMat(1.0);
+    glm::dmat4x4 viewMat(1.0);
+    glm::dmat4x4 projMat(1.0);
+    MatrixStack ms;
+    ms.setModelGlmMatrixdv(&modelMat);
+    ms.setViewGlmMatrixdv(&viewMat);
+    ms.setProjectionGlmMatrixdv(&projMat);
+    ms.UpdateMatrices();
+    const float * matrixToView = ms.getViewMatrixfv();
+    ASSERT_EQ(1.0,matrixToView[0]);
+    ASSERT_EQ(1.0,matrixToView[5]);
+    ASSERT_EQ(1.0,matrixToView[10]);
+    ASSERT_EQ(1.0,matrixToView[15]);
 }
 TEST(CameraTrial,needUpdateProjMat_After_ViewSizeChanged)
 {

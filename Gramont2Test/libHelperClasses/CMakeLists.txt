@@ -8,6 +8,7 @@ set ( CXX_SRCS
     onemodelmock.cpp
     MultiModelManagerAccess.cpp
     OglRendererMock.cpp
+    matrixstackmock.cpp
     )
 set(Includes 
     ${CMAKE_CURRENT_SOURCE_DIR}

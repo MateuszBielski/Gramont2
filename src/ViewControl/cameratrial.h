@@ -27,6 +27,7 @@ private:
     dquat q_rotation;
     dmat4 transformation;
     dmat4 dmat4view;
+    dmat4 dmat4proj;
     dvec3 position;
     dvec3 target;
     dvec3 camUp;
@@ -41,13 +42,12 @@ public:
     virtual void MouseRotation(int fromX, int fromY, int toX, int toY) override;
     dquat RotationFromScreenMove(ScreenMove& ,bool reverseAngle = false);
     void MoveBackForWard(int );
-    void UpdateViewMatrixCenterOfRotNotStable();//?
-    void UpdateViewMatrixTwoMatrices();//?
     virtual void UpdateMatrices() override;//?
     const double * getViewMatrixdv();//?
-    const double * getProjMatrixdv();
+    const double * getProjMatrixdv();//?
     const double * getModeMatrixdv();//?
     dmat4x4 * getViewGlmMatrixdv();
+    dmat4x4 * getProjGlmMatrixdv();
     bool needUpdateViewMat;
     bool needUpdateProjMat;
     bool needUpdateModeMat;
