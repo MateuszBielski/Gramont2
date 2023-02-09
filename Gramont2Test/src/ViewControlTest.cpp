@@ -178,3 +178,4 @@ TEST(CameraTrial,rotationQuatHasZeroesAtContruct)
     glm::dquat expect(1.0,0.0,0.0,0.0);
     ASSERT_EQ(expect,cam.getQ_rotationVal());
 }
+

@@ -18,7 +18,6 @@
   <Dependencies/>
   <VirtualDirectory Name="src">
     <File Name="main.cpp" ExcludeProjConfig=""/>
-    <File Name="src/OneModelTest.cpp" ExcludeProjConfig=""/>
     <File Name="src/TextureForModelTest.cpp"/>
     <File Name="src/OGLmanagerTest.cpp"/>
     <File Name="src/SelectingTest.cpp"/>
@@ -27,6 +26,8 @@
     <File Name="src/BufferLoaderTest.cpp"/>
     <File Name="src/ViewControlTest.cpp"/>
     <File Name="src/ViewControlNeedFixTest.cpp"/>
+    <File Name="src/SurfaceTest.cpp"/>
+    <File Name="src/TransformableTest.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="libTestedClasses">
     <File Name="../src/Surface/surfaceonequad.cpp"/>

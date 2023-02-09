@@ -17,7 +17,8 @@ set(CMAKE_BUILD_TYPE Debug)
 
 set ( CXX_SRCS
     main.cpp
-    src/OneModelTest.cpp
+    src/TransformableTest.cpp
+    src/SurfaceTest.cpp
     src/TextureForModelTest.cpp
     src/OGLmanagerTest.cpp
     src/SelectingTest.cpp

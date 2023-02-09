@@ -5,7 +5,7 @@
 
 using namespace glm;
 
-Transformable::Transformable():q_rotation(1.0,0.0,0.0,0.0)
+Transformable::Transformable():q_rotation(1.0,0.0,0.0,0.0),position(0.0,0.0,0.0)
 {
     modelMatrix = glm::dmat4(1.0f);
 //    q_rotation.w = 1.0f;
@@ -17,11 +17,6 @@ const double* Transformable::getModelMatrixdv()
 {
     return glm::value_ptr(modelMatrix);
 }
-//const float* Transformable::getModelMatrixfv()
-//{
-//    UpdateFloatMatrix();
-//    return mat4f;
-//}
 void Transformable::Translate(glm::dvec3 translateVector)
 {
     position += translateVector;

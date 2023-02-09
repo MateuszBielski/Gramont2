@@ -29,6 +29,7 @@ public:
     bool needUpdateModelMat;
     
     glm::dquat getQ_rotationVal() {return q_rotation;}
+    glm::dvec3 getGlmVecPosition() {return position;}
 protected:
 
 
