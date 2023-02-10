@@ -36,6 +36,7 @@ protected:
     char * textureShaderCode = nullptr;
 
     virtual void setMatricesForRender(upOglRenderer& ) override;
+    void DrawModels(upOglRenderer& renderer);
 };
 
 

@@ -28,8 +28,8 @@ void MultiModelManager::MakeAndSetCustomModels()
 {
 #ifndef TESTOWANIE_F
 //#define TEXTURE_IMAGE "Resources/andromeda.jpg"
-#define TEXTURE_IMAGE "Resources/MB640x400.jpg"
-#define TEXTURE_IMAGE2 "Resources/ksiezyc.jpg"
+#define TEXTURE_IMAGE "../ResourcesGramont2/MB640x400.jpg"
+#define TEXTURE_IMAGE2 "../ResourcesGramont2/ksiezyc.jpg"
     auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
     auto model_2 = make_shared<ConvexSurface>(80,80,100,100,30);
     setModels(vector<spOneModel> {model_1,model_2});
@@ -105,18 +105,19 @@ void MultiModelManager::SetShadersAndGeometry()
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
 }
-
-void MultiModelManager::Draw3d()
+void MultiModelManager::DrawModels(upOglRenderer& renderer)
 {
-//    m_Camera->UpdateMatrices();
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto d = model->GetModelData();
         m_ptrMatrixStack->setModelGlmMatrixdv(model->getModelGlmMatrixdv());
         m_ptrMatrixStack->UpdateMatrices();
-        m_TexRenderer->DrawTextureForSingleModelEntry(tex, d,ptr_TextureShader->getProgramId());
+        renderer->DrawTextureForSingleModelEntry(tex, d,ptr_TextureShader->getProgramId());
     }
-//    cout<<"\nMultiModelManager::Draw3d()";
+}
+void MultiModelManager::Draw3d()
+{
+    DrawModels(m_TexRenderer);
 }
 void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
 {
@@ -154,4 +155,10 @@ void MultiModelManager::OnMouseWheel(int direction)
 
 void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 {
+    //selectedModel = m_picking->PickModelInPoint(models,m_ptrMatrixStack,posX,posY)); ver1
+
+//    m_picking->setReadPosition(posX,posY); //ver 2
+//    DrawModels(m_picking->getRenderer());
+//    auto selected = m_picking->getSelectedFrom(models);
+        
 }

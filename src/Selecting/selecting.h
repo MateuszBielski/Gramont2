@@ -30,10 +30,16 @@ private:
     char * m_fragmentShader = nullptr;
     
     myOGLShaders * m_pickingShader = nullptr;
+    upPickingRenderer m_pickingRenderer;
     void LoadShaders();
 public:
     Selecting();
     ~Selecting();
+   void setReadPosition(posX,posY); //ver 2
+   upOglrenderer& getRenderer(){return m_pickingRenderer;}
+   template<typename ContenerOfPointers>
+   SelectingResult getSelectedFrom(ContenerOfPointers setOfSelectable);
+//    auto selectedModel = m_picking->getSelectedFromModels(models);
     bool Init(); 
     void SetVertexShaderPath(string);
     void SetFragmentShaderPath(string);
