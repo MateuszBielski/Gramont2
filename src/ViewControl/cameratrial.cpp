@@ -4,7 +4,7 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/vec_swizzle.hpp>
 
-
+using namespace std;
 
 CameraTrial::CameraTrial():q_rotation(1.0,0.0,0.0,0.0)
 {

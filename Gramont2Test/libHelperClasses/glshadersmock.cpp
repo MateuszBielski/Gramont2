@@ -1,6 +1,8 @@
 #include "glshadersmock.h"
 
 
+using namespace std;
+
 bool glShadersMock::Compile(GLuint shaId)
 {
     m_usingCompile = true;

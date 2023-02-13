@@ -6,9 +6,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-using namespace std;
-
-
 class MatrixStack
 {
 public:
@@ -42,6 +39,6 @@ private:
     glm::dmat4x4 m_dToVw, m_dMVP;
 
 };
-using spMatrixStack = shared_ptr<MatrixStack>;
-using upMatrixStack = unique_ptr<MatrixStack>;
+using spMatrixStack = std::shared_ptr<MatrixStack>;
+using upMatrixStack = std::unique_ptr<MatrixStack>;
 #endif // MatrixStack_H

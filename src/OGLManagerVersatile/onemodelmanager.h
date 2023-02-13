@@ -3,8 +3,6 @@
 #include "modelmanager.h"
 #include "onemodel.h"
 
-using namespace std;
-
 class OneModelManager : public ModelManager
 {
 //    using spOneModelManager

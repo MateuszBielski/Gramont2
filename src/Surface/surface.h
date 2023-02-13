@@ -5,7 +5,7 @@
 #include <string.h> //memcpy
 #include <vector>
 
-// using namespace std;
+using std::vector;
 
 class Surface : public OneModel
 {

@@ -19,7 +19,7 @@
 //#include "surface1x1normals.h"
 #include "convexsurface.h"
 
-
+using namespace std;
 //#define Model make_shared<Pyramid>()
 //#define Model make_shared<Box>()
 //#define Model make_shared<Triangle>()

@@ -1,6 +1,9 @@
 #include "bufferloader.h"
 #include "oglstuff.h"
 
+
+using namespace std;
+
 void BufferLoader::ClearBuffersForSingleModelEntry(ModelData& d)
 {
     //    if ( m_triangShaders )

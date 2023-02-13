@@ -6,8 +6,6 @@
 #include "textureformodel.h"
 #include "bufferloader.h"
 
-using namespace std;
-
 enum class OglRendererProgress
 {
     Completed,
@@ -41,6 +39,6 @@ protected:
 
 };
 
-using spOglRenderer = shared_ptr<OglRenderer>;
-using upOglRenderer = unique_ptr<OglRenderer>;
+using spOglRenderer = std::shared_ptr<OglRenderer>;
+using upOglRenderer = std::unique_ptr<OglRenderer>;
 #endif // OglRenderer_H

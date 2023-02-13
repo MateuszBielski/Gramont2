@@ -4,7 +4,6 @@
 #include "textureformodel.h"
 #include "transformable.h"
 
-using namespace std;
 
 class OneModel : public Transformable
 {
@@ -18,5 +17,6 @@ protected:
 
 };
 
-using spOneModel = shared_ptr<OneModel>;
+using spOneModel = std::shared_ptr<OneModel>;
+
 #endif // OneModel_H

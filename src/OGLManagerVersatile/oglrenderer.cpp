@@ -1,5 +1,7 @@
 #include "oglrenderer.h"
 
+using namespace std;
+
 OglRendererProgress OglRenderer::DrawSingleModelEntry(ModelData& d, unsigned int gl_ProgramId)
 {
     bool ok = true;

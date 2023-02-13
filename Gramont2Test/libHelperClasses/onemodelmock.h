@@ -1,9 +1,6 @@
 #ifndef OneModelMock_H
 #define OneModelMock_H
 #include "onemodel.h"
-//#include "textureformodel.h"
-
-using namespace std;
 
 class OneModelMock : public OneModel
 {

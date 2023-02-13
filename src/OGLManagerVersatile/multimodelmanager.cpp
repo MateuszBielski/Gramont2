@@ -3,7 +3,7 @@
 #include "textfile.h"
 #include "convexsurface.h"
 
-// using namespace std;
+ using namespace std;
 
 MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
 {

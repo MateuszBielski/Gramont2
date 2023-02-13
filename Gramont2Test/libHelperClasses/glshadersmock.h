@@ -4,8 +4,6 @@
 #include "oglstuff.h"
 #include <memory>
 
-using namespace std;
-
 class glShadersMock : public myOGLShaders
 {
 private:
@@ -28,5 +26,5 @@ protected:
     virtual bool Compile(GLuint shaId) override ;
 
 };
-using spShadersMock = shared_ptr<glShadersMock>;
+using spShadersMock = std::shared_ptr<glShadersMock>;
 #endif // glShadersMock_H

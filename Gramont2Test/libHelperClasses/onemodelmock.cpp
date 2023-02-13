@@ -1,5 +1,7 @@
 #include "onemodelmock.h"
 
+using namespace std;
+
 
 OneModelMock::OneModelMock()
 {

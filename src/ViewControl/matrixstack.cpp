@@ -2,6 +2,8 @@
 #include "mathstuff.h"
 #include "oglstuff.h"
 
+using namespace std;
+
 MatrixStack::MatrixStack():modelViewProjectionMatrix {
     1.0, 0.0, 0.0, 0.0,
     0.0, 1.0, 0.0, 0.0,

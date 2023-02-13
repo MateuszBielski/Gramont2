@@ -8,6 +8,8 @@
 #include <memory>
 #include <vector>
 
+using std::string, std::vector, std::tuple;
+
 using OLoc = OglRenderer::Locations;
 using t_OLoc_str = tuple<int OLoc::*,string>;
 using BLoc = BufferLoader::Locations;
@@ -43,7 +45,7 @@ protected:
 
     virtual void setMatricesForRender(upOglRenderer& );
     template<typename T>
-    void setLocations(unique_ptr<T>&,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );
+    void setLocations(std::unique_ptr<T>&,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );
 
 };
 //using spModelManager = std::shared_ptr<ModelManager>;

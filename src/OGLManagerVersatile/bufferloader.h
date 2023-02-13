@@ -5,8 +5,6 @@
 #include "modeldata.h"
 #include "textureformodel.h"
 
-using namespace std;
-
 enum class BufferLoaderProgress
 {
     Completed,
@@ -42,7 +40,7 @@ protected:
     unsigned loadTextureSuccessCount = 0, loadTextureFailsCount = 0, createBuffersCheckedCount = 0;
 };
 
-using spBufferLoader = shared_ptr<BufferLoader>;
-using upBufferLoader = unique_ptr<BufferLoader>;
+using spBufferLoader = std::shared_ptr<BufferLoader>;
+using upBufferLoader = std::unique_ptr<BufferLoader>;
 
 #endif // BufferLoader_H

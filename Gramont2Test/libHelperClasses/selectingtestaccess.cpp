@@ -1,5 +1,7 @@
 #include "selectingtestaccess.h"
 
+using namespace std;
+
 SelectingTestAccess::SelectingTestAccess(Selecting& ac):accessed(ac)
 {
     

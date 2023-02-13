@@ -1,6 +1,8 @@
 #include "selecting.h"
 #include "textfile.h"
 
+using namespace std;
+
 Selecting::Selecting()
 {
 }

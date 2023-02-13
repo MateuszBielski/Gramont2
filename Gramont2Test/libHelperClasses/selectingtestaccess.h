@@ -4,8 +4,6 @@
 #include "selecting.h"
 #include "oglstuff.h"
 
-using namespace std;
-
 class SelectingTestAccess
 {
 private:

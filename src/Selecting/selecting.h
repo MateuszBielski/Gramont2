@@ -4,7 +4,6 @@
 #include <string>
 #include "oglstuff.h"
 
-using namespace std;
 
 class SelectingResult
 {

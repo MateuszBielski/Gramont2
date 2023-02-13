@@ -3,6 +3,8 @@
 #include "glFunctionsMock.h"
 #endif
 
+using namespace std;
+
 ModelManager::ModelManager():myOGLManager()
 {
 #ifdef TESTOWANIE_F

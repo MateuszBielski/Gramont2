@@ -9,7 +9,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <stack>
 
-using namespace std;
 using namespace glm;
 struct ScreenMove
 {
@@ -19,7 +18,7 @@ struct ScreenMove
     int toY = 0;
 };
 
-using dmat_stack = stack<glm::dmat4x4 *>;
+using dmat_stack = std::stack<glm::dmat4x4 *>;
 
 class CameraTrial : public myOGLCamera
 {
@@ -56,5 +55,5 @@ public:
 protected:
 };
 
-using spCameraTrial = shared_ptr<CameraTrial>;
+using spCameraTrial = std::shared_ptr<CameraTrial>;
 #endif // CameraTrial_H
