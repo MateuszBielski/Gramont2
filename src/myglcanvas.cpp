@@ -106,10 +106,10 @@ bool MyGLCanvas::oglInit()
     }
 
     // Create our OGL manager, pass our OGL error handler
-//    m_oglManager = new myOGLManager(&fOGLErrHandler);
-//    m_oglManager = new myOGLManagerPyramid(&fOGLErrHandler);
-    auto fun = &fOGLErrHandler;
-    m_oglManager = new OGLManager(&fOGLErrHandler);
+//    auto fun = &fOGLErrHandler;
+    
+//    m_oglManager = new OGLManager(&fOGLErrHandler);
+    m_oglManager = new MultiModelManager(&fOGLErrHandler);
 
 
     // Get the GL version for the current OGL context

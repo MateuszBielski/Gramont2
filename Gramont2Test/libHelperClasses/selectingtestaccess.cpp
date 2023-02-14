@@ -24,3 +24,13 @@ void SelectingTestAccess::setShadersLoaded(bool f)
 {
     accessed.shadersLoaded = f;
 }
+
+int SelectingTestAccess::getClickedPosX()
+{
+    return accessed.clickedPosX;
+}
+
+int SelectingTestAccess::getClickedPosY()
+{
+    return accessed.clickedPosY;
+}

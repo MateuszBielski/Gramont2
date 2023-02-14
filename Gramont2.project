@@ -47,6 +47,7 @@
       <File Name="src/OGLManagerVersatile/oglrenderer.cpp"/>
       <File Name="src/OGLManagerVersatile/bufferloader.h"/>
       <File Name="src/OGLManagerVersatile/oglrenderer.h"/>
+      <File Name="src/OGLManagerVersatile/ModelManagerTemplatesForLinker.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="GeometryModel">
       <File Name="src/GeometryModel/onemodel.h"/>
@@ -208,6 +209,8 @@
     <File Name="ShaderyGLSL120/textureVertexShader.c"/>
     <File Name="ShaderyGLSL120/triangFragmentShader.c"/>
     <File Name="ShaderyGLSL120/triangVertexShader.c"/>
+    <File Name="ShaderyGLSL120/picking.fs"/>
+    <File Name="ShaderyGLSL120/picking.vs"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>

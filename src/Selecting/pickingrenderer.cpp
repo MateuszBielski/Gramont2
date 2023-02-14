@@ -3,5 +3,6 @@
 
 OglRendererProgress PickingRenderer::DrawTextureForSingleModelEntry(TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId)
 {
-	return OglRendererProgress::Completed;
+	startCallCount++;
+    return OglRendererProgress::Completed;
 }

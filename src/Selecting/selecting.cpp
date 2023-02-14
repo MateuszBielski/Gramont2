@@ -1,31 +1,35 @@
 #include "selecting.h"
 #include "textfile.h"
+#include "shadersPath.h"
 
 using namespace std;
 
 Selecting::Selecting()
 {
-    m_pickingRenderer = make_unique<PickingRenderer>();
+    m_pickingRenderer = make_shared<PickingRenderer>();
+    ptr_PickingShader = make_shared<myOGLShaders>();
 }
 
 Selecting::~Selecting()
 {
-	if(m_pickingShader)delete m_pickingShader;
 }
 void Selecting::SetVertexShaderPath(string p)
 {
-    m_vertexShaderPath = p;
+//    m_vertexShaderPath = p;
 }
 
 void Selecting::SetFragmentShaderPath(string p)
 {
-    m_fragmentShaderPath = p;
+//    m_fragmentShaderPath = p;
 }
 bool Selecting::Init()
 {
-    LoadShaders();
-    if(!m_pickingShader)m_pickingShader = new myOGLShaders;
-    if(shadersLoaded)m_pickingShader->Init();
+//    LoadShaders();
+//    if(!m_pickingShader)m_pickingShader = new myOGLShaders;
+//    if(shadersLoaded)m_pickingShader->Init();
+    ptr_PickingShader->AddCode(textFileRead(d_vertexPickingShaderPath),GL_VERTEX_SHADER);
+    ptr_PickingShader->AddCode(textFileRead(d_fragmentPickingShaderPath),GL_FRAGMENT_SHADER);
+    ptr_PickingShader->Init();
     return false;
 }
 
@@ -35,11 +39,17 @@ SelectingResult Selecting::getResult()
 }
 void Selecting::LoadShaders()
 {
-    m_vertexShader = textFileRead(m_vertexShaderPath.c_str());
-    m_fragmentShader = textFileRead(m_fragmentShaderPath.c_str());
-    shadersLoaded = (m_vertexShader != nullptr) &&  (m_fragmentShader != nullptr);
+//    m_vertexShader = textFileRead(d_vertexPickingShaderPath);
+//    m_fragmentShader = textFileRead(d_fragmentPickingShaderPath);
+//    shadersLoaded = (m_vertexShader != nullptr) &&  (m_fragmentShader != nullptr);
+    
 }
 spOglRenderer Selecting::getRenderer()
 {
-   return m_pickingRenderer;
+    return m_pickingRenderer;
+}
+void Selecting::setReadPosition(int posX, int posY)
+{
+    clickedPosX = posX;
+    clickedPosY = posY;
 }

@@ -28,13 +28,11 @@ bool MyOnGLError(int err, const GLchar* glMsg)
 }
 void myOGLManager::setErrHandler(myOGLErrHandler* extErrHnd)
 {
-    //    externalMyOGLErrHandler = extErrHnd;
+    externalMyOGLErrHandler = extErrHnd;
     MyOnGLError(myoglERR_CLEAR); //clear error stack
 }
-myOGLManager::myOGLManager(myOGLErrHandler* extErrHnd)
+myOGLManager::myOGLManager()
 {
-    if(extErrHnd)
-        setErrHandler(extErrHnd);
 }
 
 myOGLManager::~myOGLManager()

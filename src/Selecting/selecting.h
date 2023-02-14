@@ -24,14 +24,19 @@ private:
     bool shadersLoaded = false;
     bool readyForRendering = false;
 
-    string m_vertexShaderPath;
-    string m_fragmentShaderPath;
+//    string m_vertexShaderPath;
+//    string m_fragmentShaderPath;
 
-    char * m_vertexShader = nullptr;
-    char * m_fragmentShader = nullptr;
+//    char * m_vertexShader = nullptr;
+//    char * m_fragmentShader = nullptr;
 
-    myOGLShaders * m_pickingShader = nullptr;
+//     * m_vertexShader = nullptr;
+    spMyOGLShaders ptr_PickingShader;
+
     spPickingRenderer m_pickingRenderer;
+    int clickedPosX = 0;
+    int clickedPosY = 0;
+    
     void LoadShaders();
 public:
     Selecting();

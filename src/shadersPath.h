@@ -8,5 +8,7 @@
 #define d_textureVertexShaderPath d_path"textureVertexShader.c"
 #define d_textureFragmentShaderPath d_path"textureFragmentShader.c"
 #define d_illuminationShaderPath d_path"illuminationShader.c"
+#define d_vertexPickingShaderPath d_path"picking.vs"
+#define d_fragmentPickingShaderPath d_path"picking.fs"
 
 #endif

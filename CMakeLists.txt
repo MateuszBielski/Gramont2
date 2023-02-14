@@ -45,8 +45,8 @@ set ( CXX_SRCS
     src/myglcanvas.cpp
 	lib/funcs/funkcje.cpp
 	lib/funcs/textfile.cpp
-    src/OGLManagerVersatile/multimodelmanager.cpp
     src/OGLManagerVersatile/modelmanager.cpp
+    src/OGLManagerVersatile/multimodelmanager.cpp
     src/OGLManagerVersatile/oglrenderer.cpp
     src/OGLManagerVersatile/bufferloader.cpp
     src/Textures/textureformodel.cpp
@@ -58,6 +58,7 @@ set ( CXX_SRCS
     src/ViewControl/cameratrial.cpp
     src/Selecting/selecting.cpp
     src/Selecting/selectingresult.cpp
+    src/Selecting/pickingrenderer.cpp
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS})

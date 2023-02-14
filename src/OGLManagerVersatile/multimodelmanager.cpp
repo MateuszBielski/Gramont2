@@ -7,7 +7,8 @@ using namespace std;
 
 MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
 {
-    setErrHandler(extErrHnd);
+    if(extErrHnd)
+        setErrHandler(extErrHnd);
     ptr_TextureShader = make_shared<myOGLShaders>();
     int i = 7;
     cameraTrial = make_shared<CameraTrial>();
@@ -78,6 +79,8 @@ void MultiModelManager::SetShadersAndGeometry()
         {&BLoc::normal_tex,"in_sNormal"},
         {&BLoc::textureCoord,"in_TextPos"},
     };
+    
+    m_selecting->Init();
     setLocations<BufferLoader>(m_BufferLoader,locNamsTexBuff,*ptr_TextureShader,&myOGLShaders::GetAttribLoc);
     int a = models.size();
 
@@ -104,6 +107,7 @@ void MultiModelManager::SetShadersAndGeometry()
     setMatricesForRender(m_TexRenderer);
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
+    
 }
 void MultiModelManager::DrawModels(spOglRenderer renderer)
 {
@@ -157,7 +161,7 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 {
     //selectedModel = m_picking->PickModelInPoint(models,m_ptrMatrixStack,posX,posY)); ver1
 
-//    m_picking->setReadPosition(posX,posY); //ver 2
+    m_selecting->setReadPosition(posX,posY);
     DrawModels(m_selecting->getRenderer());
 //    auto selected = m_picking->getSelectedFrom(models);
 

@@ -218,7 +218,8 @@ bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, M
     glActiveTexture(GL_TEXTURE0);
 
     // Some log
-    MyOnGLError(myoglERR_JUSTLOG, "Texture loaded into GPU.");
+    std::string str_log = "Texture buffers loaded into GPU for model Id = ";
+    MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
     ++loadTextureSuccessCount;
     return true;
 }

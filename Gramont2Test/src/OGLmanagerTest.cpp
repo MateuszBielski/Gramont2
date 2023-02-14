@@ -2,6 +2,7 @@
 #include "onemodelmanager.h"
 #include "triangle.h"
 //#include <glad/glad.h>
+#include <stack>
 #include "glFunctionsMock.h"
 #include "onemodelmock.h"
 #include "multimodelmanager.h"
@@ -9,7 +10,7 @@
 #include "glshadersmock.h"
 #include "OglRendererMock.h"
 #include "matrixstackmock.h"
-#include <stack>
+#include "selectingtestaccess.h"
 
 
 TEST(GlFunctionsMock,StaticDefine_SuccesOnFirstDefine)
@@ -399,6 +400,22 @@ TEST(MultiModelManager,DLeftClickUsesDrawOfPickingRendererForEachModel)
     
     ASSERT_EQ(3,renderer->StartCallCount());
 }
+TEST(MultiModelManager,SelectingMeetsPositionOfDLeftClick)
+{
+    MultiModelManager man(nullptr);
+    MultiModelManagerAccess manAcc(man);
+    SelectingTestAccess selAcc(*manAcc.getModelSelecting());
+    man.OnMouseLeftDClick(21, 39);
+    ASSERT_EQ(21,selAcc.getClickedPosX());
+    ASSERT_EQ(39,selAcc.getClickedPosY());
+}
+//TEST(MultiModelManager,DLeftClickSelectingResultIsAmongOwnedModels)
+//{
+//   MultiModelManager man(nullptr);
+//   man.OnMouseLeftDClick(42, 23);
+//    
+//}
+
 //class functorGlUniformMatrix4fv
 //    {
 //

@@ -14,6 +14,8 @@ public:
     void setShadersLoaded(bool);
     void setShadersMock(myOGLShaders * shad_mock);
     bool ShadersLoaded();
+    int getClickedPosX();
+    int getClickedPosY();
 protected:
 
 };

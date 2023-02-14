@@ -11,7 +11,7 @@ using sha_FunGetStr = GLuint (myOGLShaders::*)(const std::string& name);
 class myOGLManager
 {
 public:
-    myOGLManager(myOGLErrHandler* extErrHnd = NULL);
+    myOGLManager();
     ~myOGLManager();
 
     // Constants, prototypes and pointers to OGL functions
