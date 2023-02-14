@@ -5,6 +5,7 @@ using namespace std;
 
 Selecting::Selecting()
 {
+    m_pickingRenderer = make_unique<PickingRenderer>();
 }
 
 Selecting::~Selecting()
@@ -37,4 +38,8 @@ void Selecting::LoadShaders()
     m_vertexShader = textFileRead(m_vertexShaderPath.c_str());
     m_fragmentShader = textFileRead(m_fragmentShaderPath.c_str());
     shadersLoaded = (m_vertexShader != nullptr) &&  (m_fragmentShader != nullptr);
+}
+spOglRenderer Selecting::getRenderer()
+{
+   return m_pickingRenderer;
 }

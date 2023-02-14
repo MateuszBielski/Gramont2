@@ -3,6 +3,7 @@
 #include "oglrenderer.h"
 #include <stack>
 
+using std::stack;
 
 class OglRendererMock : public OglRenderer
 {
@@ -16,5 +17,6 @@ private:
     stack<float> sumsOfmatMVP;
 };
 
-using upOglRendererMock = unique_ptr<OglRendererMock>;
+using upOglRendererMock = std::unique_ptr<OglRendererMock>;
+using spOglRendererMock = std::shared_ptr<OglRendererMock>;
 #endif // OGLRENDERERMOCK_H

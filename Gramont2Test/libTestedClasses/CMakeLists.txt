@@ -15,6 +15,7 @@ set ( CXX_SRCS
     ../../src/OGLManagerVersatile/oglrenderer.cpp
     ../../src/Selecting/selecting.cpp
     ../../src/Selecting/selectingresult.cpp
+    ../../src/Selecting/pickingrenderer.cpp
     ../../src/ViewControl/cameratrial.cpp
     ../../src/ViewControl/matrixstack.cpp
     ../../src/Transform/transformable.cpp

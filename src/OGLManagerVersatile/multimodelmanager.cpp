@@ -3,7 +3,7 @@
 #include "textfile.h"
 #include "convexsurface.h"
 
- using namespace std;
+using namespace std;
 
 MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
 {
@@ -13,7 +13,7 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     cameraTrial = make_shared<CameraTrial>();
     m_Camera = cameraTrial;
     m_ptrMatrixStack = make_shared<MatrixStack>();
-
+    m_selecting = make_shared<Selecting>();
     MakeAndSetCustomModels();
 }
 
@@ -40,7 +40,7 @@ void MultiModelManager::MakeAndSetCustomModels()
     model_2->MyTexture()->LoadImageFile(TEXTURE_IMAGE);
 #endif
 }
-void MultiModelManager::setMatricesForRender(upOglRenderer& rend)
+void MultiModelManager::setMatricesForRender(spOglRenderer rend)
 {
     //OLD VERSION
 //myOGLManager::setMatricesForRender(rend);
@@ -105,7 +105,7 @@ void MultiModelManager::SetShadersAndGeometry()
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
 }
-void MultiModelManager::DrawModels(upOglRenderer& renderer)
+void MultiModelManager::DrawModels(spOglRenderer renderer)
 {
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
@@ -158,7 +158,7 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
     //selectedModel = m_picking->PickModelInPoint(models,m_ptrMatrixStack,posX,posY)); ver1
 
 //    m_picking->setReadPosition(posX,posY); //ver 2
-//    DrawModels(m_picking->getRenderer());
+    DrawModels(m_selecting->getRenderer());
 //    auto selected = m_picking->getSelectedFrom(models);
-        
+
 }

@@ -4,6 +4,8 @@
 #include "oglstuff.h"
 #include <memory>
 
+using std::string;
+
 class glShadersMock : public myOGLShaders
 {
 private:

@@ -20,7 +20,7 @@ private:
     void InitTextureShader();
 
     static bool isStaticManagerInitialized;
-    static unique_ptr<OneModelManager> ptr_OneModelManagerStatic;
+    static std::unique_ptr<OneModelManager> ptr_OneModelManagerStatic;
 #ifdef TESTOWANIE_F
     static OneModelManager m_OMM_static_inst;
 #endif

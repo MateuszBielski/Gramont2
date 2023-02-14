@@ -53,7 +53,7 @@ set ( CXX_SRCS
     src/SurfaceTest.cpp
     src/TextureForModelTest.cpp
     src/OGLmanagerTest.cpp
-    # src/SelectingTest.cpp
+    src/SelectingTest.cpp
     src/ShaderTest.cpp
     src/OglRendererTest.cpp
     src/BufferLoaderTest.cpp

@@ -4,8 +4,8 @@
 #include "modelmanager.h"
 #include "onemodel.h"
 #include "matrixstack.h"
-
 #include "cameratrial.h"
+#include "selecting.h"
 
 class MultiModelManager : public ModelManager
 {
@@ -15,6 +15,7 @@ class MultiModelManager : public ModelManager
 
 private:
     spCameraTrial cameraTrial;
+    spSelecting m_selecting;
     void MakeAndSetCustomModels();
 public:
     MultiModelManager(myOGLErrHandler* extErrHnd);
@@ -35,8 +36,8 @@ protected:
     spMyOGLShaders ptr_TextureShader;
     char * textureShaderCode = nullptr;
 
-    virtual void setMatricesForRender(upOglRenderer& ) override;
-    void DrawModels(upOglRenderer& renderer);
+    virtual void setMatricesForRender(spOglRenderer ) override;
+    void DrawModels(spOglRenderer renderer);
 };
 
 

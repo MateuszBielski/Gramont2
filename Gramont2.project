@@ -67,6 +67,8 @@
       <File Name="src/Selecting/selecting.h"/>
       <File Name="src/Selecting/selecting.cpp"/>
       <File Name="src/Selecting/selectingresult.cpp"/>
+      <File Name="src/Selecting/pickingrenderer.h"/>
+      <File Name="src/Selecting/pickingrenderer.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="ViewControl">
       <File Name="src/ViewControl/cameratrial.h"/>

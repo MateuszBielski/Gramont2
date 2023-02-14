@@ -15,7 +15,7 @@ enum class OglRendererProgress
 class OglRenderer
 {
 private:
-    unsigned int startCallCount = 0;
+    
 public:
     struct Matrices {
         const float * matMVP = nullptr;
@@ -36,7 +36,7 @@ public:
     virtual OglRendererProgress DrawTextureForSingleModelEntry(TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId);
     unsigned int StartCallCount(){return startCallCount;}
 protected:
-
+    unsigned int startCallCount = 0;
 };
 
 using spOglRenderer = std::shared_ptr<OglRenderer>;

@@ -298,15 +298,14 @@ TEST(MultiModelManager,UpdateMatricesMultiplingByEachModel)
     ms->setProjectionMatrixdv(matrix,&need);
     MultiModelManager man(nullptr);
     MultiModelManagerAccess acc(man);
-
-    acc.setTexRenderer(make_unique<OglRendererMock>());
+    spOglRendererMock rend = make_shared<OglRendererMock>();
+    acc.setTexRenderer(rend);
     acc.setMatrixStack(ms);
     acc.setMatricesForTexRender();
     man.setModels(vector<spOneModel> {model_1,model_2});
 
     man.Draw3d();
 
-    upOglRendererMock rend = acc.getTexRenderer<OglRendererMock>();
     auto sum = rend->getSumsOfmatMVP();
     ASSERT_EQ(2,sum.size());
     float sum2 = sum.top();
@@ -386,6 +385,19 @@ TEST(MultiModelManager,SwitchViewControl)
     ASSERT_FALSE(acc.CameraDoesViewControl());
     man.SwitchViewControl();
     ASSERT_TRUE(acc.CameraDoesViewControl());
+}
+TEST(MultiModelManager,DLeftClickUsesDrawOfPickingRendererForEachModel)
+{
+    MultiModelManager man(nullptr);
+    MultiModelManagerAccess acc(man);
+    auto model_1 = make_shared<OneModelMock>();
+    auto model_2 = make_shared<OneModelMock>();
+    auto model_3 = make_shared<OneModelMock>();
+    man.setModels(vector<spOneModel> {model_1,model_2,model_3});
+    man.OnMouseLeftDClick(20, 40);
+    auto renderer = acc.getModelSelecting()->getRenderer();
+    
+    ASSERT_EQ(3,renderer->StartCallCount());
 }
 //class functorGlUniformMatrix4fv
 //    {

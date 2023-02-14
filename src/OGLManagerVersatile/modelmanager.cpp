@@ -22,13 +22,13 @@ ModelManager::ModelManager():myOGLManager()
 //}
 
 template<typename T>
-void ModelManager::setLocations(unique_ptr<T>& rend, vec_locations_T<T> vec, myOGLShaders& shader,  sha_FunGetStr FunGetByString)
+void ModelManager::setLocations(shared_ptr<T> rend, vec_locations_T<T> vec, myOGLShaders& shader,  sha_FunGetStr FunGetByString)
 {
     for(auto& name : vec) {
         rend->m_loc.*(get<0>(name)) = (shader.*FunGetByString)(get<1>(name));//ok
     }
 }
-void ModelManager::setMatricesForRender(upOglRenderer& rend)
+void ModelManager::setMatricesForRender(spOglRenderer rend)
 {
     rend->m_matrices.matMVP = m_Camera->GetFloatMVP();
     rend->m_matrices.matToVw = m_Camera->GetFloatToVw();
@@ -38,5 +38,5 @@ void ModelManager::setMatricesForRender(upOglRenderer& rend)
 
 
 //for linker
-template void ModelManager::setLocations<OglRenderer>(unique_ptr<OglRenderer>&, vec_locations_T<OglRenderer>, myOGLShaders&, sha_FunGetStr);
-template void ModelManager::setLocations<BufferLoader>(unique_ptr<BufferLoader>&, vec_locations_T<BufferLoader>, myOGLShaders&, sha_FunGetStr);
+template void ModelManager::setLocations<OglRenderer>(shared_ptr<OglRenderer>, vec_locations_T<OglRenderer>, myOGLShaders&, sha_FunGetStr);
+template void ModelManager::setLocations<BufferLoader>(shared_ptr<BufferLoader>, vec_locations_T<BufferLoader>, myOGLShaders&, sha_FunGetStr);

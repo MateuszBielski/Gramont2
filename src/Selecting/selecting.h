@@ -3,7 +3,9 @@
 
 #include <string>
 #include "oglstuff.h"
+#include "pickingrenderer.h"
 
+using std::string;
 
 class SelectingResult
 {
@@ -21,25 +23,25 @@ class Selecting
 private:
     bool shadersLoaded = false;
     bool readyForRendering = false;
-    
+
     string m_vertexShaderPath;
     string m_fragmentShaderPath;
-    
+
     char * m_vertexShader = nullptr;
     char * m_fragmentShader = nullptr;
-    
+
     myOGLShaders * m_pickingShader = nullptr;
-    upPickingRenderer m_pickingRenderer;
+    spPickingRenderer m_pickingRenderer;
     void LoadShaders();
 public:
     Selecting();
     ~Selecting();
-   void setReadPosition(posX,posY); //ver 2
-   upOglrenderer& getRenderer(){return m_pickingRenderer;}
-   template<typename ContenerOfPointers>
-   SelectingResult getSelectedFrom(ContenerOfPointers setOfSelectable);
+    void setReadPosition(int posX, int posY);
+    spOglRenderer getRenderer();
+    template<typename ContenerOfPointers>
+    SelectingResult getSelectedFrom(ContenerOfPointers setOfSelectable);
 //    auto selectedModel = m_picking->getSelectedFromModels(models);
-    bool Init(); 
+    bool Init();
     void SetVertexShaderPath(string);
     void SetFragmentShaderPath(string);
     SelectingResult getResult();
@@ -47,4 +49,5 @@ public:
 protected:
 };
 
+using spSelecting = std::shared_ptr<Selecting>;
 #endif // Selecting_H

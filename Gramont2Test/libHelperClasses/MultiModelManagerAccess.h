@@ -11,11 +11,10 @@ public:
     spCameraTrial getPtrCameraForTest(){return manager.cameraTrial;}
     void setTextureShaderForTest(spMyOGLShaders sh){manager.ptr_TextureShader = sh;}
     void setMatrixStack(spMatrixStack ms){manager.m_ptrMatrixStack = ms;}
-    void setTexRenderer(upOglRenderer );
+    void setTexRenderer(spOglRenderer );
     void setMatricesForTexRender();
     bool CameraDoesViewControl();
-    template<typename T>
-    unique_ptr<T> getTexRenderer();
+    spSelecting getModelSelecting();
 private:
     MultiModelManager& manager;
 };

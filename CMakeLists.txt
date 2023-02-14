@@ -30,11 +30,7 @@ endif(UNIX)
 
 set(includes 
     ${CMAKE_CURRENT_SOURCE_DIR}/src
-	#../glad/include
 	../include
-	#lib/oglstuff
-	#lib/mathstuff
-	#lib/wxApp
 	lib/funcs
     src/OGLManagerVersatile
     src/GeometryModel
@@ -42,19 +38,13 @@ set(includes
     src/Transform
     src/ViewControl
     src/Surface
-    # oglstuff
+    src/Selecting
 )
 
 set ( CXX_SRCS
-	#../glad/src/glad.c
     src/myglcanvas.cpp
-    #lib/oglstuff/myoglmanager.cpp
-    #lib/oglstuff/oglstuff.cpp
-	#lib/mathstuff/mathstuff.cpp
 	lib/funcs/funkcje.cpp
 	lib/funcs/textfile.cpp
-	#lib/wxApp/myframe.cpp
-	#lib/wxApp/wxAppMain.cpp
     src/OGLManagerVersatile/multimodelmanager.cpp
     src/OGLManagerVersatile/modelmanager.cpp
     src/OGLManagerVersatile/oglrenderer.cpp
@@ -66,7 +56,8 @@ set ( CXX_SRCS
     src/GeometryModel/onemodel.cpp
     src/ViewControl/matrixstack.cpp
     src/ViewControl/cameratrial.cpp
-    # OGLManagerVersatile/onemodelmanager.cpp
+    src/Selecting/selecting.cpp
+    src/Selecting/selectingresult.cpp
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS})

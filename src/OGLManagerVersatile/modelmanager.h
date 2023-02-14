@@ -27,11 +27,11 @@ public:
     ModelManager();
 //    ~ModelManager();
 #ifdef TESTOWANIE_F
-    upBufferLoader getBufferLoaderForTest() {
-        return move(m_BufferLoader);
+    spBufferLoader getBufferLoaderForTest() {
+        return m_BufferLoader;
     };
-    upOglRenderer getTexRendererForTest() {
-        return move(m_TexRenderer);
+    spOglRenderer getTexRendererForTest() {
+        return m_TexRenderer;
     };
     myOGLCamera& getCameraRefForTest() {
         return *m_Camera;
@@ -39,13 +39,13 @@ public:
 #endif
 
 protected:
-    upBufferLoader m_BufferLoader;//should be settable
-    upOglRenderer m_TexRenderer;//j/w
-    upOglRenderer m_OglRenderer;
+    spBufferLoader m_BufferLoader;//should be settable
+    spOglRenderer m_TexRenderer;//j/w
+    spOglRenderer m_OglRenderer;
 
-    virtual void setMatricesForRender(upOglRenderer& );
+    virtual void setMatricesForRender(spOglRenderer );
     template<typename T>
-    void setLocations(std::unique_ptr<T>&,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );
+    void setLocations(std::shared_ptr<T>,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );
 
 };
 //using spModelManager = std::shared_ptr<ModelManager>;
