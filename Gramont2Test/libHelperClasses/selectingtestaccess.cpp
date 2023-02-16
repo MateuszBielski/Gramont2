@@ -16,9 +16,9 @@ bool SelectingTestAccess::ShadersLoaded()
 	
     return accessed.shadersLoaded;
 }
-void SelectingTestAccess::setShadersMock(myOGLShaders* shad_mock)
+void SelectingTestAccess::setShader(spMyOGLShaders shader)
 {
-    accessed.m_pickingShader = shad_mock;
+    accessed.ptr_PickingShader = shader;
 }
 void SelectingTestAccess::setShadersLoaded(bool f)
 {

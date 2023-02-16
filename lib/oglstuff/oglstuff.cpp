@@ -116,7 +116,11 @@ GLuint myOGLShaders::GetUnifLoc(const std::string& name)
 
     return (GLuint) -1;
 }
-
+void myOGLShaders::Init(string funName)
+{
+    nameOfOuterFunctionCalling = funName;
+    Init();
+}
 // Create a GPU program from the given shaders
 void myOGLShaders::Init()
 {
@@ -160,7 +164,8 @@ void myOGLShaders::Init()
         return;
 
     // Log that shaders are OK
-    MyOnGLError(myoglERR_JUSTLOG, "Shaders successfully compiled and linked.");
+    std::string message = "Shaders, called from "+nameOfOuterFunctionCalling+" successfully compiled and linked.";
+    MyOnGLError(myoglERR_JUSTLOG,message.c_str() );
 
     // After linking, we can get locations for uniforms
     m_SHAinitializated = AskUnifLocations();
@@ -240,6 +245,7 @@ GLuint myOGLShaders::getProgramId()
 {
 	return m_proId;
 }
+
 
 
 // ----------------------------------------------------------------------------

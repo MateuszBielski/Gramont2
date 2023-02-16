@@ -209,8 +209,8 @@
     <File Name="ShaderyGLSL120/textureVertexShader.c"/>
     <File Name="ShaderyGLSL120/triangFragmentShader.c"/>
     <File Name="ShaderyGLSL120/triangVertexShader.c"/>
-    <File Name="ShaderyGLSL120/picking.fs"/>
-    <File Name="ShaderyGLSL120/picking.vs"/>
+    <File Name="ShaderyGLSL120/pickingFragmentShader.c"/>
+    <File Name="ShaderyGLSL120/pickingVertexShader.c"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>

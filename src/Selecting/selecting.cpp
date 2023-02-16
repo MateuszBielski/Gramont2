@@ -27,9 +27,17 @@ bool Selecting::Init()
 //    LoadShaders();
 //    if(!m_pickingShader)m_pickingShader = new myOGLShaders;
 //    if(shadersLoaded)m_pickingShader->Init();
+
     ptr_PickingShader->AddCode(textFileRead(d_vertexPickingShaderPath),GL_VERTEX_SHADER);
     ptr_PickingShader->AddCode(textFileRead(d_fragmentPickingShaderPath),GL_FRAGMENT_SHADER);
-    ptr_PickingShader->Init();
+    ptr_PickingShader->AddAttrib("Position");
+    ptr_PickingShader->AddUnif("gDrawIndex");
+    ptr_PickingShader->AddUnif("gObjectIndex");
+    ptr_PickingShader->AddUnif("gWVP");
+    string nameOfFunction = typeid(*this).name();
+    nameOfFunction +="::";
+    nameOfFunction += __FUNCTION__;
+    ptr_PickingShader->Init(nameOfFunction);
     return false;
 }
 

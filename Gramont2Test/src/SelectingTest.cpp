@@ -3,6 +3,10 @@
 #include "selecting.h"
 #include "glshadersmock.h"
 #include "glFunctionsMock.h"
+#include "shadersPath.h"
+#include <stdio.h> //rename
+
+using namespace std;
 
 //
 //TEST(Selecting,LoadingShaders_undefinedShaderPath)
@@ -12,11 +16,65 @@
 //    SelectingTestAccess access(select);
 //    ASSERT_FALSE(access.ShadersLoaded());
 //}
+
+TEST(Selecting,initializeShaderOnInit)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    spShadersMock shad_mock = make_shared<glShadersMock>();
+    access.setShader(shad_mock);
+    select.Init();
+    ASSERT_TRUE(shad_mock->InitUsed());
+}
+TEST(Selecting,addUniformsForShaderOnInit)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    spShadersMock shad_mock = make_shared<glShadersMock>();
+    access.setShader(shad_mock);
+    select.Init();
+    ASSERT_TRUE(shad_mock->hasUnif("gDrawIndex"));
+    ASSERT_TRUE(shad_mock->hasUnif("gObjectIndex"));
+    ASSERT_TRUE(shad_mock->hasUnif("gWVP"));
+}
+TEST(Selecting,addAttribForShaderOnInit)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    spShadersMock shad_mock = make_shared<glShadersMock>();
+    access.setShader(shad_mock);
+    select.Init();
+    ASSERT_TRUE(shad_mock->hasAttrib("Position"));
+}
+TEST(Selecting,addCodeForShaderOnInit)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    spShadersMock shad_mock = make_shared<glShadersMock>();
+    access.setShader(shad_mock);
+    select.Init();
+    ASSERT_TRUE(shad_mock->hasCodeOfType(GL_VERTEX_SHADER));
+    ASSERT_TRUE(shad_mock->hasCodeOfType(GL_FRAGMENT_SHADER));
+}
+TEST(Selecting,NoInitializeShaderIfShaderFilesNotExist)
+{
+    string pathVertexFile = d_vertexPickingShaderPath;
+    string pathFragmentFile = d_fragmentPickingShaderPath;
+    
+    ASSERT_EQ("Gramont2Test/ShaderyGLSL120/pickingVertexShader.c",pathVertexFile);
+//    string newPathVertexFile = pathVertexFile+".noExist";
+    Selecting select;
+    SelectingTestAccess access(select);
+    spShadersMock shad_mock = make_shared<glShadersMock>();
+    access.setShader(shad_mock);
+    select.Init();
+    ASSERT_FALSE(shad_mock->InitUsed());
+}
 TEST(Selecting,LoadingShaders_incorrectPath)
 {
     GlFunctionsMock funMock;
     funMock.Define();
-    
+
     Selecting select;
     select.SetVertexShaderPath("vs");
     select.SetFragmentShaderPath("fs");
@@ -37,8 +95,8 @@ TEST(Selecting,noCompilingShaders_ifNoShadersCode)
 {
     Selecting select;
     SelectingTestAccess access(select);
-    glShadersMock * shad_mock = new glShadersMock;
-    access.setShadersMock(shad_mock);
+    spShadersMock shad_mock = make_shared<glShadersMock>();
+    access.setShader(shad_mock);
     select.Init();
     ASSERT_FALSE(shad_mock->UsingCompile());
 }
@@ -46,8 +104,8 @@ TEST(Selecting,CompilingShaders)
 {
     Selecting select;
     SelectingTestAccess access(select);
-    glShadersMock * shad_mock = new glShadersMock;
-    access.setShadersMock(shad_mock);
+    spShadersMock shad_mock = make_shared<glShadersMock>();
+    access.setShader(shad_mock);
     access.setShadersLoaded(true);
     select.Init();
     ASSERT_TRUE(shad_mock->UsingCompile());

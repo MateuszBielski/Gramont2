@@ -72,7 +72,9 @@ void MultiModelManager::SetShadersAndGeometry()
     ptr_TextureShader->AddUnif("lightProps");
     ptr_TextureShader->AddUnif("lightColour");
     ptr_TextureShader->AddUnif("stringTexture");
-    ptr_TextureShader->Init();
+    
+    string nameOfFunction = "MultiModelManager::SetShadersAndGeometry";
+    ptr_TextureShader->Init(nameOfFunction);
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
     vector<t_BLoc_str> locNamsTexBuff {
         {&BLoc::position_tex,"in_sPosition"},

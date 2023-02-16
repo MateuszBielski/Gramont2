@@ -12,7 +12,7 @@ public:
     SelectingTestAccess(Selecting& );
     void SetReadyForRendering(bool);
     void setShadersLoaded(bool);
-    void setShadersMock(myOGLShaders * shad_mock);
+    void setShader(spMyOGLShaders);
     bool ShadersLoaded();
     int getClickedPosX();
     int getClickedPosY();

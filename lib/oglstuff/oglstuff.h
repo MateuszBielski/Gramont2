@@ -17,7 +17,7 @@
 // This file allows access to OpenGL functions used in this sample.
 #include <glad/glad.h>
 
-// using namespace std;
+ using std::string;
 
 enum {
     myoglERR_CLEAR = 0,
@@ -69,6 +69,7 @@ public:
     virtual
 #endif
     void Init();
+    void Init(string );
     bool Use();
     void StopUse();
     void CleanUp();
@@ -97,6 +98,7 @@ protected:
     GLuint m_proId; // program Id
 
     bool m_SHAinitializated;
+    string nameOfOuterFunctionCalling;
 };
 using spMyOGLShaders = std::shared_ptr<myOGLShaders>;
 //-----------------------------------------------------------------------------
