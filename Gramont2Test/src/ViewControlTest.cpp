@@ -88,7 +88,7 @@ TEST(MatrixStack,ChangeModel_Updates_MVP_VW)
 TEST(MatrixStack,CreateRandomMatrix)
 {
     double matrix[16];
-    CreateRandomMatrixTv(matrix,0.5d,240.0d);
+    CreateRandomMatrixTv(matrix,0.5,240.0);
     double first = matrix[0];
     bool outOfRange = false;
     bool equal = true;
@@ -104,9 +104,9 @@ TEST(MatrixStack,CreateRandomMatrix)
 TEST(MatrixStack,MultiplicationGLM)
 {
     double mat4dv_1[16];
-    CreateRandomMatrixTv(mat4dv_1,-9.3d,21.43d);
+    CreateRandomMatrixTv(mat4dv_1,-9.3,21.43);
     double mat4dv_2[16];
-    CreateRandomMatrixTv(mat4dv_1,-8.3d,24.43d);
+    CreateRandomMatrixTv(mat4dv_1,-8.3,24.43);
     auto mat1 = glm::make_mat4x4(mat4dv_1);
     auto mat2 = glm::make_mat4x4(mat4dv_2);
     auto matResult = mat1 * mat2;

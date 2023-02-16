@@ -3,8 +3,18 @@ cmake_minimum_required(VERSION 3.16)
 project(Gramont2Test)
 
 set(CMAKE_CXX_STANDARD 20)
-#set(CMAKE_BUILD_TYPE Debug) włączyć gdy zadziała pozostałe
+set(CMAKE_BUILD_TYPE Debug)# włączyć gdy zadziała pozostałe
 
+if (MSVC)
+	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+    # set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:WINDOWS")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /SUBSYSTEM:CONSOLE")
+	set(LIBRARY_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+    set(EXECUTABLE_OUTPUT_PATH "${CMAKE_BINARY_DIR}")
+	
+	#add_compile_options(/W0)
+    # add_compile_options(/showIncludes)
+endif (MSVC)
 
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in
@@ -33,6 +43,11 @@ if (CMAKE_VERSION VERSION_LESS 2.8.11)
     include_directories("${gtest_SOURCE_DIR}/include"
             "${gmock_SOURCE_DIR}/include")
 endif()
+
+if (MSVC)
+set(wxWidgets_ROOT_DIR D:\\programy\\wxWidgets)
+set(wxWidgets_CONFIGURATION mswud)
+endif (MSVC)
 
 find_package(wxWidgets REQUIRED gl core base)
 include(${wxWidgets_USE_FILE})

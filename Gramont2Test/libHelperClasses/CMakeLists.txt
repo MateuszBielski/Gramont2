@@ -23,4 +23,5 @@ OglStuff
 target_include_directories(${TargetName} 
     PUBLIC 
     ${Includes}
+	${CMAKE_CURRENT_SOURCE_DIR}/../../../include
     )

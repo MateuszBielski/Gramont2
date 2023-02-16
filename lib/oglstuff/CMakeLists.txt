@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 
 add_library(OglStuff 
-SHARED 
+STATIC 
 oglstuff.cpp
 myoglmanager.cpp
 )
