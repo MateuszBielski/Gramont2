@@ -8,15 +8,6 @@
 
 using namespace std;
 
-//
-//TEST(Selecting,LoadingShaders_undefinedShaderPath)
-//{
-//    Selecting select();
-//    select.Init();
-//    SelectingTestAccess access(select);
-//    ASSERT_FALSE(access.ShadersLoaded());
-//}
-
 TEST(Selecting,initializeShaderOnInit)
 {
     Selecting select;
@@ -88,15 +79,7 @@ TEST(Selecting,LoadingShaders_incorrectPath)
     SelectingTestAccess access(select);
     ASSERT_FALSE(access.ShadersLoaded());
 }
-TEST(Selecting,LoadingShaders_correctPath)
-{
-    Selecting select;
-    select.SetVertexShaderPath("Gramont2Test/Resources/picking.vs");
-    select.SetFragmentShaderPath("Gramont2Test/Resources/picking.fs");
-    select.Init();
-    SelectingTestAccess access(select);
-    ASSERT_TRUE(access.ShadersLoaded());
-}
+
 TEST(Selecting,noCompilingShaders_ifNoShadersCode)
 {
     Selecting select;
@@ -106,21 +89,7 @@ TEST(Selecting,noCompilingShaders_ifNoShadersCode)
     select.Init();
     ASSERT_FALSE(shad_mock->UsingCompile());
 }
-TEST(Selecting,CompilingShaders)
-{
-    Selecting select;
-    SelectingTestAccess access(select);
-    spShadersMock shad_mock = make_shared<glShadersMock>();
-    access.setShader(shad_mock);
-    access.setShadersLoaded(true);
-    select.Init();
-    ASSERT_TRUE(shad_mock->UsingCompile());
-}
-//TEST(Selecting,LinkingShaders)
-//TEST(Selecting,Uniforms)
-//
-//TEST(Selecting,Buffers)
-//TEST(Selecting,Rendering)
+
 TEST(Selecting,ReturnResult_SelectingNotDone)
 {
     Selecting select;

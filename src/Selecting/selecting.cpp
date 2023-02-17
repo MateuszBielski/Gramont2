@@ -24,12 +24,12 @@ void Selecting::SetFragmentShaderPath(string p)
 }
 bool Selecting::Init()
 {
-//    LoadShaders();
-//    if(!m_pickingShader)m_pickingShader = new myOGLShaders;
-//    if(shadersLoaded)m_pickingShader->Init();
+    const char * vertCode = textFileRead(d_vertexPickingShaderPath);
+    const char * fragCode = textFileRead(d_fragmentPickingShaderPath);
+    if(!vertCode || !fragCode)return false;
 
-    ptr_PickingShader->AddCode(textFileRead(d_vertexPickingShaderPath),GL_VERTEX_SHADER);
-    ptr_PickingShader->AddCode(textFileRead(d_fragmentPickingShaderPath),GL_FRAGMENT_SHADER);
+    ptr_PickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
+    ptr_PickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
     ptr_PickingShader->AddAttrib("Position");
     ptr_PickingShader->AddUnif("gDrawIndex");
     ptr_PickingShader->AddUnif("gObjectIndex");
@@ -38,7 +38,7 @@ bool Selecting::Init()
     nameOfFunction +="::";
     nameOfFunction += __FUNCTION__;
     ptr_PickingShader->Init(nameOfFunction);
-    return false;
+    return true;
 }
 
 SelectingResult Selecting::getResult()
