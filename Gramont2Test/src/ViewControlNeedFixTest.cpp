@@ -7,6 +7,7 @@
 #include "funkcje.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include "textfile.h" //fileReadCount::statFileReadCount
 
 
 
@@ -224,6 +225,7 @@ TEST(MatrixStackTestNeedFix,ChangeProjection_Updates_MVP)
         }
 //        cout<<matrixExpectVW_1fv[u]<<", "<<matrixResultVW_1[u]<<"\n";
     }
+    ASSERT_EQ(-1,fileReadCount::statFileReadCount);
     ASSERT_FALSE(notEqual);
     notEqual = false;
     for(short u = 0; u < 16 ; u++) {

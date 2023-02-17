@@ -5,11 +5,13 @@
 #include "glFunctionsMock.h"
 #include "shadersPath.h"
 #include <stdio.h> //rename
+#include "textfile.h" //AccessFileForTest
 
 using namespace std;
 
 TEST(Selecting,initializeShaderOnInit)
 {
+    AccessFileForTest enableAcc;
     Selecting select;
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
@@ -19,6 +21,7 @@ TEST(Selecting,initializeShaderOnInit)
 }
 TEST(Selecting,addUniformsForShaderOnInit)
 {
+    AccessFileForTest enableAcc;
     Selecting select;
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
@@ -30,6 +33,7 @@ TEST(Selecting,addUniformsForShaderOnInit)
 }
 TEST(Selecting,addAttribForShaderOnInit)
 {
+    AccessFileForTest enableAcc;
     Selecting select;
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
@@ -39,6 +43,7 @@ TEST(Selecting,addAttribForShaderOnInit)
 }
 TEST(Selecting,addCodeForShaderOnInit)
 {
+    AccessFileForTest enableAcc;
     Selecting select;
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
@@ -104,17 +109,6 @@ TEST(Selecting,ReturnResult_SelectingDone)
     SelectingResult result = select.getResult();
     ASSERT_TRUE(result.selectingDone());
 }
+
 //select.ReadInPositionXY(3,6);
 
-//#ifndef d_pickingVertexShaderPath
-//#define d_pickingVertexShaderPath vspath
-//#endif
-//
-//#ifndef d_pickingFragmentShaderPath
-//#define d_pickingFragmentShaderPath fspath
-//#endif
-//    select.setVertexShaderPath("vs");
-//    select.setFragmentShaderPath("fs");
-//    select.
-//#undef  d_pickingVertexShaderPath
-//#undef  d_pickingFragmentShaderPath

@@ -11,7 +11,7 @@
 #include "OglRendererMock.h"
 #include "matrixstackmock.h"
 #include "selectingtestaccess.h"
-
+#include "textfile.h" //AccessFileForTest
 
 TEST(GlFunctionsMock,StaticDefine_SuccesOnFirstDefine)
 {
@@ -144,6 +144,7 @@ TEST(MultiModelManager,SetShadersAndGeometry_LightSettedAndBindToRenderMatrix)
 }
 TEST(MultiModelManager,TextureAddShadersCode)
 {
+    AccessFileForTest enableAcc;
     MultiModelManager man(nullptr);
     spShadersMock shader = make_shared<glShadersMock>();
     MultiModelManagerAccess acc(man);
@@ -397,7 +398,7 @@ TEST(MultiModelManager,DLeftClickUsesDrawOfPickingRendererForEachModel)
     man.setModels(vector<spOneModel> {model_1,model_2,model_3});
     man.OnMouseLeftDClick(20, 40);
     auto renderer = acc.getModelSelecting()->getRenderer();
-    
+
     ASSERT_EQ(3,renderer->StartCallCount());
 }
 TEST(MultiModelManager,SelectingMeetsPositionOfDLeftClick)
@@ -409,11 +410,19 @@ TEST(MultiModelManager,SelectingMeetsPositionOfDLeftClick)
     ASSERT_EQ(21,selAcc.getClickedPosX());
     ASSERT_EQ(39,selAcc.getClickedPosY());
 }
+TEST(MultiModelManager,InitSelectingOnSetShaders)
+{
+//    MultiModelManager man(nullptr);
+//    MultiModelManagerAccess manAcc(man);
+//    man.SetShadersAndGeometry();
+    
+}
+
 //TEST(MultiModelManager,DLeftClickSelectingResultIsAmongOwnedModels)
 //{
 //   MultiModelManager man(nullptr);
 //   man.OnMouseLeftDClick(42, 23);
-//    
+//
 //}
 
 //class functorGlUniformMatrix4fv

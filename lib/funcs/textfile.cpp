@@ -1,23 +1,18 @@
-// textfile.cpp
-//
-// simple reading and writing for text files
-//
-// www.lighthouse3d.com
-//
-// You may use these functions freely.
-// they are provided as is, and no warranties, either implicit,
-// or explicit are given
-//////////////////////////////////////////////////////////////////////
-
-
+#include "textfile.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+int fileReadCount::statFileReadCount = 0;
+bool AccessFileForTest::isEanabled = false;
 
 char *textFileRead(const char *fn)
 {
 
+#ifdef TESTOWANIE_F
+    if (!AccessFileForTest::IsEnabled())
+        return nullptr;
+#endif
     FILE *fp;
     char *content = NULL;
 
@@ -27,7 +22,7 @@ char *textFileRead(const char *fn)
         fp = fopen(fn,"rt");
 
         if (fp != NULL) {
-
+            fileReadCount::statFileReadCount++;
             fseek(fp, 0, SEEK_END);
             count = ftell(fp);
             rewind(fp);
