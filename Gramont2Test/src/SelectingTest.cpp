@@ -60,14 +60,20 @@ TEST(Selecting,NoInitializeShaderIfShaderFilesNotExist)
 {
     string pathVertexFile = d_vertexPickingShaderPath;
     string pathFragmentFile = d_fragmentPickingShaderPath;
+    string newPathVertexFile = pathVertexFile+".noExist";
+    string newPathFragmentFile = pathFragmentFile+".noExist";
+    rename(pathVertexFile.c_str(),newPathVertexFile.c_str());
+    rename(pathFragmentFile.c_str(),newPathFragmentFile.c_str());
     
-    ASSERT_EQ("Gramont2Test/ShaderyGLSL120/pickingVertexShader.c",pathVertexFile);
-//    string newPathVertexFile = pathVertexFile+".noExist";
     Selecting select;
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
     select.Init();
+    
+    rename(newPathVertexFile.c_str(),pathVertexFile.c_str());
+    rename(newPathFragmentFile.c_str(),pathFragmentFile.c_str());
+    
     ASSERT_FALSE(shad_mock->InitUsed());
 }
 TEST(Selecting,LoadingShaders_incorrectPath)
