@@ -3,7 +3,8 @@ cmake_minimum_required(VERSION 3.16)
 project(Gramont2Test)
 
 set(CMAKE_CXX_STANDARD 20)
-set(CMAKE_BUILD_TYPE Debug)# włączyć gdy zadziała pozostałe
+set(CMAKE_BUILD_TYPE Debug)
+set(gtestExterernDir ${CMAKE_CURRENT_SOURCE_DIR}/../../gtest)
 
 if (MSVC)
 	set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
@@ -18,11 +19,11 @@ endif (MSVC)
 
 # Download and unpack googletest at configure time
 configure_file(CMakeLists.txt.in
-        googletest-download/CMakeLists.txt)
+        ${gtestExterernDir}/googletest-download/CMakeLists.txt)
 execute_process(COMMAND ${CMAKE_COMMAND} -G "${CMAKE_GENERATOR}" .
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+        WORKING_DIRECTORY ${gtestExterernDir}/googletest-download )
 execute_process(COMMAND ${CMAKE_COMMAND} --build .
-        WORKING_DIRECTORY ${CMAKE_BINARY_DIR}/googletest-download )
+        WORKING_DIRECTORY ${gtestExterernDir}/googletest-download )
 
 # Prevent GoogleTest from overriding our compiler/linker options
 # when building with Visual Studio
@@ -33,7 +34,7 @@ set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 # Add googletest directly to our build. This adds
 # the following targets: gtest, gtest_main, gmock
 # and gmock_main
-add_subdirectory(${CMAKE_BINARY_DIR}/googletest-src
+add_subdirectory(${gtestExterernDir}/googletest-src
         ${CMAKE_BINARY_DIR}/googletest-build)
 
 # The gtest/gmock targets carry header search path
