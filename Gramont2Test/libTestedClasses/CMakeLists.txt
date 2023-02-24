@@ -16,6 +16,8 @@ set ( CXX_SRCS
     ../../src/Selecting/selecting.cpp
     ../../src/Selecting/selectingresult.cpp
     ../../src/Selecting/pickingrenderer.cpp
+    ../../src/Selecting/pickingbuffloader.cpp
+    ../../src/Selecting/selectable.cpp
     ../../src/ViewControl/cameratrial.cpp
     ../../src/ViewControl/matrixstack.cpp
     ../../src/Transform/transformable.cpp

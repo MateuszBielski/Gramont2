@@ -21,6 +21,7 @@ public:
     MultiModelManager(myOGLErrHandler* extErrHnd);
     ~MultiModelManager();
     virtual void SetShadersAndGeometry() override;
+    virtual void SetViewport(int x, int y, int width, int height) override;
     virtual void Draw3d() override;
     virtual void OnMouseRotDragging(int posX, int posY) override;
     virtual void OnMouseLeftDClick(int posX, int posY) override;
@@ -35,9 +36,6 @@ protected:
     vector<spOneModel> models;
     spMyOGLShaders ptr_TextureShader;
     char * textureShaderCode = nullptr;
-
-    virtual void setMatricesForRender(spOglRenderer ) override;
-    void DrawModels(spOglRenderer renderer);
 };
 
 

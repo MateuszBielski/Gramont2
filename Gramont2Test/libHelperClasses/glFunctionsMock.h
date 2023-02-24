@@ -60,4 +60,10 @@ void glUniform1i_Mock(GLint location, GLint v0);
 void glDrawElements_Mock(GLenum mode, GLsizei count, GLenum type, const void *indices);
 void glFlush_Mock();
 void glFinish_Mock();
+void glGenFramebuffers_Mock(GLsizei n, GLuint *framebuffers);
+void glBindFramebuffer_Mock(GLenum target, GLuint framebuffer);
+void glFramebufferTexture2_Mock(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level);
+GLenum glCheckFramebufferStatus_Mock(GLenum target);
+void glReadBuffer_Mock(GLenum src);
+void glDrawBuffer_Mock(GLenum buf);
 #endif

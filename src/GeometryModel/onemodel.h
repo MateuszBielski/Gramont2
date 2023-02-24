@@ -3,9 +3,10 @@
 #include "modeldata.h"
 #include "textureformodel.h"
 #include "transformable.h"
+#include "selectable.h"
 
 
-class OneModel : public Transformable
+class OneModel : public Transformable, public Selectable
 {
 private:
 public:

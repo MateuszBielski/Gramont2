@@ -42,8 +42,10 @@ protected:
     spBufferLoader m_BufferLoader;//should be settable
     spOglRenderer m_TexRenderer;//j/w
     spOglRenderer m_OglRenderer;
+    spOglRenderer activeRenderer;
+    spMyOGLShaders activeShader;
 
-    virtual void setMatricesForRender(spOglRenderer );
+    
     template<typename T>
     void setLocations(std::shared_ptr<T>,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );
 

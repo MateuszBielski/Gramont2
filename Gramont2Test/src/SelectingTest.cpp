@@ -6,6 +6,7 @@
 #include "shadersPath.h"
 #include <stdio.h> //rename
 #include "textfile.h" //AccessFileForTest
+#include "selectable.h"
 
 using namespace std;
 
@@ -108,6 +109,19 @@ TEST(Selecting,ReturnResult_SelectingDone)
     access.SetReadyForRendering(true);
     SelectingResult result = select.getResult();
     ASSERT_TRUE(result.selectingDone());
+}
+TEST(Selecting,SelectableNotDistinguishableAtConstruct)
+{
+    Selectable sel1,sel2;
+    ASSERT_EQ(sel1.getUniqueId(),sel2.getUniqueId());
+}
+TEST(Selecting,SelectableIsdistinguishableAfterRegister)
+{
+    spSelectable sel1 = make_shared<Selectable>();
+    spSelectable sel2 = make_shared<Selectable>();
+    Selecting select;
+    select.RegisterSelectable({sel1,sel2});
+    ASSERT_NE(sel1->getUniqueId(),sel2->getUniqueId());
 }
 
 //select.ReadInPositionXY(3,6);

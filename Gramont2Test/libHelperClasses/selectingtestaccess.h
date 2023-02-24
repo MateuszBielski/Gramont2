@@ -16,6 +16,9 @@ public:
     bool ShadersLoaded();
     int getClickedPosX();
     int getClickedPosY();
+    unsigned int getWindowWidth();
+    unsigned int getWindowHeight();
+    bool Inited();
 protected:
 
 };

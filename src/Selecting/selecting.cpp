@@ -7,7 +7,8 @@ using namespace std;
 Selecting::Selecting()
 {
     m_pickingRenderer = make_shared<PickingRenderer>();
-    ptr_PickingShader = make_shared<myOGLShaders>();
+    m_pickingShader = make_shared<myOGLShaders>();
+    m_pickingBuffLoader = make_shared<PickingBuffLoader>();
 }
 
 Selecting::~Selecting()
@@ -28,16 +29,19 @@ bool Selecting::Init()
     const char * fragCode = textFileRead(d_fragmentPickingShaderPath);
     if(!vertCode || !fragCode)return false;
 
-    ptr_PickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
-    ptr_PickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
-    ptr_PickingShader->AddAttrib("Position");
-    ptr_PickingShader->AddUnif("gDrawIndex");
-    ptr_PickingShader->AddUnif("gObjectIndex");
-    ptr_PickingShader->AddUnif("gWVP");
+    m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
+    m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
+    m_pickingShader->AddAttrib("Position");
+    m_pickingShader->AddUnif("gDrawIndex");
+    m_pickingShader->AddUnif("gObjectIndex");
+    m_pickingShader->AddUnif("gWVP");
     string nameOfFunction = typeid(*this).name();
     nameOfFunction +="::";
     nameOfFunction += __FUNCTION__;
-    ptr_PickingShader->Init(nameOfFunction);
+    m_pickingShader->Init(nameOfFunction);
+    LoadFrameBuffer();
+    m_pickingRenderer->setLocationsFrom(m_pickingShader);
+    inited = true;
     return true;
 }
 
@@ -45,19 +49,105 @@ SelectingResult Selecting::getResult()
 {
     return SelectingResult(readyForRendering);
 }
-void Selecting::LoadShaders()
+spBufferLoader Selecting::getBufferLoader()
 {
-//    m_vertexShader = textFileRead(d_vertexPickingShaderPath);
-//    m_fragmentShader = textFileRead(d_fragmentPickingShaderPath);
-//    shadersLoaded = (m_vertexShader != nullptr) &&  (m_fragmentShader != nullptr);
-    
+	return m_pickingBuffLoader;
 }
 spOglRenderer Selecting::getRenderer()
 {
     return m_pickingRenderer;
 }
+spMyOGLShaders Selecting::getShader()
+{
+    return m_pickingShader;
+}
+void Selecting::setWindowSize(unsigned int w, unsigned int h)
+{
+    WindowWidth = w;
+    WindowHeight = h;
+}
 void Selecting::setReadPosition(int posX, int posY)
 {
     clickedPosX = posX;
     clickedPosY = posY;
+}
+void Selecting::EnableWritingToFrameBuffer()
+{
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
+//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+void Selecting::DisableWritingToFrameBuffer()
+{
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+}
+void Selecting::LoadFrameBuffer()
+{
+    //całość można przenieść do buffLoadera;
+    std::string str_log;
+//    Create the FBO
+
+    glGenFramebuffers(1, &m_fbo);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+
+    // Create the texture object for the primitive information buffer
+    glGenTextures(1, &m_pickingTexture);
+    glBindTexture(GL_TEXTURE_2D, m_pickingTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, WindowWidth, WindowHeight,
+                 0, GL_RGB, GL_FLOAT, NULL);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           m_pickingTexture, 0);
+
+    // Create the texture object for the depth buffer
+    glGenTextures(1, &m_depthTexture);
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, WindowWidth, WindowHeight,
+                 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                           m_depthTexture, 0);
+
+    // Disable reading to avoid problems with older GPUs
+    glReadBuffer(GL_NONE);
+
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+    // Verify that the FBO is correct
+    GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+    if (Status != GL_FRAMEBUFFER_COMPLETE) {
+        str_log = "Selecting::LoadFrameBuffer error ";
+        str_log += Status;
+        return;
+    }
+
+    // Restore the default framebuffer
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//
+//    return GLCheckError();
+    str_log = "FrameBufferLoaded";
+    MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
+}
+void Selecting::RegisterSelectable(vector<spSelectable>&& selectables)
+{
+    registeredForSelection = selectables;
+    int count = registeredForSelection.size();
+    int counter = 0;
+    for(counter; counter < count; counter++)
+    {
+        selectables[counter]->setUniqueId(counter);
+    }
+}
+
+Selecting::PixelInfo Selecting::ReadPixel(unsigned int x, unsigned int y)
+{
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
+    glReadBuffer(GL_COLOR_ATTACHMENT0);
+    PixelInfo Pixel;
+    glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, &Pixel);
+    cout<<"\n"<<Pixel.DrawID<<" "<<Pixel.ObjectID<<" "<<Pixel.PrimID;
+    glReadBuffer(GL_NONE);
+
+    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+
+    return Pixel;
 }

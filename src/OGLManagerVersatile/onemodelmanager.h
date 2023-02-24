@@ -28,7 +28,7 @@ private:
     static unsigned short nuDestructors;
     static unsigned short nuInstantions;
     static unsigned short maxNuInstantions;
-
+    void setMatricesForRender(spOglRenderer );
 public:
     OneModelManager(myOGLErrHandler* extErrHnd = NULL);
     ~OneModelManager();

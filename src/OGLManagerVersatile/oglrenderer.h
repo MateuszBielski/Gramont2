@@ -5,12 +5,15 @@
 #include "modeldata.h"
 #include "textureformodel.h"
 #include "bufferloader.h"
+#include "matrixstack.h"
+#include "oglstuff.h"
 
 enum class OglRendererProgress
 {
     Completed,
     BeforeOgl,
 };
+class MultiModelManager;
 
 class OglRenderer
 {
@@ -34,7 +37,11 @@ public:
     Locations m_loc;
     OglRendererProgress DrawSingleModelEntry(ModelData& d, unsigned int gl_ProgramId);
     virtual OglRendererProgress DrawTextureForSingleModelEntry(TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId);
+    virtual OglRendererProgress DrawModel(spOneModel, unsigned int  );
     unsigned int StartCallCount(){return startCallCount;}
+    virtual void setViewMatrices(spMatrixStack );
+    virtual void setLightMatrices(myLight * );
+    virtual void setLocationsFrom(spMyOGLShaders){};
 protected:
     unsigned int startCallCount = 0;
 };

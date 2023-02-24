@@ -107,7 +107,7 @@ bool MyGLCanvas::oglInit()
 
     // Create our OGL manager, pass our OGL error handler
 //    auto fun = &fOGLErrHandler;
-    
+
 //    m_oglManager = new OGLManager(&fOGLErrHandler);
     m_oglManager = new MultiModelManager(&fOGLErrHandler);
 
@@ -200,6 +200,9 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
             Refresh(false);
         }
     }
+    if( event.LeftDClick()) {
+        m_oglManager->OnMouseLeftDClick(event.GetX(),oglwinY);
+    }
 
     if(event.MiddleIsDown()) {
         if ( ! event.Dragging() ) {
@@ -208,9 +211,7 @@ void MyGLCanvas::OnMouse(wxMouseEvent& event)
             m_oglManager->OnMouseMiddleClick(event.GetX(),oglwinY);
             Refresh(false);
         }
-        if( event.LeftDClick()) {
-            m_oglManager->OnMouseLeftDClick(event.GetX(),oglwinY);
-        }
+
     }
 }
 void MyGLCanvas::OnMouseWheel(wxMouseEvent &event )
@@ -221,10 +222,7 @@ void MyGLCanvas::OnMouseWheel(wxMouseEvent &event )
 }
 void MyGLCanvas::OnKeyDown(wxKeyEvent& event)
 {
-	if(event.GetKeyCode() == 83)//"s"
-    {
+    if(event.GetKeyCode() == 83) { //"s"
         m_oglManager->SwitchViewControl();
     }
 }
-
- 

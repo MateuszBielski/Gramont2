@@ -21,7 +21,8 @@ void MultiModelManagerAccess::setTexRenderer(spOglRenderer r)
 
 void MultiModelManagerAccess::setMatricesForTexRender()
 {
-	manager.setMatricesForRender(manager.m_TexRenderer);
+    manager.m_TexRenderer->setViewMatrices(manager.m_ptrMatrixStack);
+    manager.m_TexRenderer->setLightMatrices(&manager.m_Light);
 }
 bool MultiModelManagerAccess::CameraDoesViewControl()
 {

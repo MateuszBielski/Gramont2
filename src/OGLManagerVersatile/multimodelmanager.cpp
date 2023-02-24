@@ -16,6 +16,8 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     m_ptrMatrixStack = make_shared<MatrixStack>();
     m_selecting = make_shared<Selecting>();
     MakeAndSetCustomModels();
+    activeShader = ptr_TextureShader;
+    activeRenderer = m_TexRenderer;
 }
 
 MultiModelManager::~MultiModelManager()
@@ -33,24 +35,17 @@ void MultiModelManager::MakeAndSetCustomModels()
 #define TEXTURE_IMAGE2 "../ResourcesGramont2/ksiezyc.jpg"
     auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
     auto model_2 = make_shared<ConvexSurface>(80,80,100,100,30);
-    setModels(vector<spOneModel> {model_1,model_2});
+//    setModels(vector<spOneModel> {model_1,model_2});
+    setModels({model_1,model_2});
     model_1->Translate( {60.0f,0.0f,0.0f});
     model_2->Rotate(60.0f, {0.0f,0.3f,0.8f});
     model_2->Translate( {-60.0f,0.0f,0.0f});
     model_1->MyTexture()->LoadImageFile(TEXTURE_IMAGE2);
     model_2->MyTexture()->LoadImageFile(TEXTURE_IMAGE);
+    m_selecting->RegisterSelectable({model_1,model_2});
 #endif
 }
-void MultiModelManager::setMatricesForRender(spOglRenderer rend)
-{
-    //OLD VERSION
-//myOGLManager::setMatricesForRender(rend);
-    //NEW VERSION
-    rend->m_matrices.matMVP = m_ptrMatrixStack->getModelViewProjectionMatrixfv();
-    rend->m_matrices.matToVw = m_ptrMatrixStack->getViewMatrixfv();
-    rend->m_matrices.light_position = m_Light.GetFLightPos();
-    rend->m_matrices.light_colour = m_Light.GetFLightColour();
-}
+
 void MultiModelManager::SetShadersAndGeometry()
 {
 
@@ -83,6 +78,7 @@ void MultiModelManager::SetShadersAndGeometry()
     };
     
     m_selecting->Init();
+    m_selecting->getRenderer()->setViewMatrices(m_ptrMatrixStack);
     setLocations<BufferLoader>(m_BufferLoader,locNamsTexBuff,*ptr_TextureShader,&myOGLShaders::GetAttribLoc);
     int a = models.size();
 
@@ -94,6 +90,7 @@ void MultiModelManager::SetShadersAndGeometry()
 #endif
         m_BufferLoader->CreateBuffersForSingleModelEntry(d);
         m_BufferLoader->LoadTextureBuffersForSingleModelEntry(tex, d);
+        m_selecting->getBufferLoader()->LoadBuffers(model);
 //        model->GetModelData();
     }
 
@@ -106,24 +103,25 @@ void MultiModelManager::SetShadersAndGeometry()
         {&OLoc::stringTexture,"stringTexture"}
     };
     setLocations<OglRenderer>(m_TexRenderer,tnames,*ptr_TextureShader,&myOGLShaders::GetUnifLoc);
-    setMatricesForRender(m_TexRenderer);
+    
+    m_TexRenderer->setViewMatrices(m_ptrMatrixStack);
+    m_TexRenderer->setLightMatrices(&m_Light);
+    
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
-    
-}
-void MultiModelManager::DrawModels(spOglRenderer renderer)
+}  
+
+void MultiModelManager::Draw3d()
 {
+    
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto d = model->GetModelData();
         m_ptrMatrixStack->setModelGlmMatrixdv(model->getModelGlmMatrixdv());
         m_ptrMatrixStack->UpdateMatrices();
-        renderer->DrawTextureForSingleModelEntry(tex, d,ptr_TextureShader->getProgramId());
+        activeRenderer->DrawModel(model,activeShader->getProgramId());
+//        activeRenderer->DrawTextureForSingleModelEntry(tex, d,activeShader->getProgramId());
     }
-}
-void MultiModelManager::Draw3d()
-{
-    DrawModels(m_TexRenderer);
 }
 void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
 {
@@ -164,7 +162,21 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
     //selectedModel = m_picking->PickModelInPoint(models,m_ptrMatrixStack,posX,posY)); ver1
 
     m_selecting->setReadPosition(posX,posY);
-    DrawModels(m_selecting->getRenderer());
+    m_selecting->EnableWritingToFrameBuffer();
+    activeRenderer = m_selecting->getRenderer();
+    activeShader = m_selecting->getShader();
+    Draw3d();
+    m_selecting->DisableWritingToFrameBuffer();
+    m_selecting->ReadPixel(posX, posY);
+    activeRenderer = m_TexRenderer;
+    activeShader = ptr_TextureShader;
+//    Draw3d();
+//    DrawModels(m_selecting->getRenderer());
 //    auto selected = m_picking->getSelectedFrom(models);
 
+}
+void MultiModelManager::SetViewport(int x, int y, int width, int height)
+{
+    myOGLManager::SetViewport(x,y,width,height);
+    m_selecting->setWindowSize(width,height);
 }

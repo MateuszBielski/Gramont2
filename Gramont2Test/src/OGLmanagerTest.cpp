@@ -410,14 +410,27 @@ TEST(MultiModelManager,SelectingMeetsPositionOfDLeftClick)
     ASSERT_EQ(21,selAcc.getClickedPosX());
     ASSERT_EQ(39,selAcc.getClickedPosY());
 }
+TEST(MultiModelManager,SelectingKnowsCurrentViewDimension)
+{
+    MultiModelManager man(nullptr);
+    MultiModelManagerAccess manAcc(man);
+    SelectingTestAccess selAcc(*manAcc.getModelSelecting());
+    man.SetViewport(0,0,356,239);
+    ASSERT_EQ(356,selAcc.getWindowWidth());
+    ASSERT_EQ(239,selAcc.getWindowHeight());
+    man.SetViewport(0,0,346,219);
+    ASSERT_EQ(346,selAcc.getWindowWidth());
+    ASSERT_EQ(219,selAcc.getWindowHeight());
+}
 TEST(MultiModelManager,InitSelectingOnSetShaders)
 {
-//    MultiModelManager man(nullptr);
-//    MultiModelManagerAccess manAcc(man);
-//    man.SetShadersAndGeometry();
-    
+    AccessFileForTest enableAcc;
+    MultiModelManager man(nullptr);
+    MultiModelManagerAccess manAcc(man);
+    SelectingTestAccess selAcc(*manAcc.getModelSelecting());
+    man.SetShadersAndGeometry();
+    ASSERT_TRUE(selAcc.Inited());
 }
-
 //TEST(MultiModelManager,DLeftClickSelectingResultIsAmongOwnedModels)
 //{
 //   MultiModelManager man(nullptr);

@@ -28,13 +28,7 @@ void ModelManager::setLocations(shared_ptr<T> rend, vec_locations_T<T> vec, myOG
         rend->m_loc.*(get<0>(name)) = (shader.*FunGetByString)(get<1>(name));//ok
     }
 }
-void ModelManager::setMatricesForRender(spOglRenderer rend)
-{
-    rend->m_matrices.matMVP = m_Camera->GetFloatMVP();
-    rend->m_matrices.matToVw = m_Camera->GetFloatToVw();
-    rend->m_matrices.light_position = m_Light.GetFLightPos();
-    rend->m_matrices.light_colour = m_Light.GetFLightColour();
-}
+
 
 
 //for linker

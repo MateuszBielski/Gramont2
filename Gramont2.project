@@ -70,6 +70,10 @@
       <File Name="src/Selecting/selectingresult.cpp"/>
       <File Name="src/Selecting/pickingrenderer.h"/>
       <File Name="src/Selecting/pickingrenderer.cpp"/>
+      <File Name="src/Selecting/selectable.h"/>
+      <File Name="src/Selecting/selectable.cpp"/>
+      <File Name="src/Selecting/pickingbuffloader.h"/>
+      <File Name="src/Selecting/pickingbuffloader.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="ViewControl">
       <File Name="src/ViewControl/cameratrial.h"/>

@@ -8,5 +8,5 @@ uniform int gObjectIndex;
 void main()                                                                         
 {                                                                                   
 //   FragColor = vec3(float(gObjectIndex), float(gDrawIndex),float(TriangleID + 1)); 
-   gl_FragColor = vec4(float(gObjectIndex), float(gDrawIndex),0.0,0.0);
+   gl_FragColor = vec4(float(gObjectIndex), float(gDrawIndex),float(gObjectIndex),0.0);
 }

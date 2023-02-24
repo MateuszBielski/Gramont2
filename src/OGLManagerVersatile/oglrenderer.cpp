@@ -1,4 +1,5 @@
 #include "oglrenderer.h"
+#include "multimodelmanager.h"
 
 using namespace std;
 
@@ -57,4 +58,20 @@ OglRendererProgress OglRenderer::DrawTextureForSingleModelEntry(TextureForModel&
     glActiveTexture(GL_TEXTURE0);
     glUseProgram(0);
     return OglRendererProgress::Completed;
+}
+OglRendererProgress OglRenderer::DrawModel(spOneModel model, unsigned int gl_ProgramId)
+{
+    auto& tex = *model->MyTexture();
+    auto d = model->GetModelData();
+    return DrawTextureForSingleModelEntry(tex, d,gl_ProgramId);
+}
+void OglRenderer::setViewMatrices(spMatrixStack ms)
+{
+    m_matrices.matMVP = ms->getModelViewProjectionMatrixfv();
+    m_matrices.matToVw = ms->getViewMatrixfv();
+}
+void OglRenderer::setLightMatrices(myLight* light)
+{
+    m_matrices.light_position = light->GetFLightPos();
+    m_matrices.light_colour = light->GetFLightColour();
 }

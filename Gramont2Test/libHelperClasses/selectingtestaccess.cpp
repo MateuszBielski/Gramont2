@@ -18,7 +18,7 @@ bool SelectingTestAccess::ShadersLoaded()
 }
 void SelectingTestAccess::setShader(spMyOGLShaders shader)
 {
-    accessed.ptr_PickingShader = shader;
+    accessed.m_pickingShader = shader;
 }
 void SelectingTestAccess::setShadersLoaded(bool f)
 {
@@ -34,3 +34,16 @@ int SelectingTestAccess::getClickedPosY()
 {
     return accessed.clickedPosY;
 }
+unsigned int SelectingTestAccess::getWindowHeight()
+{
+	return accessed.WindowHeight;
+}
+unsigned int SelectingTestAccess::getWindowWidth()
+{
+	return accessed.WindowWidth;
+}
+bool SelectingTestAccess::Inited()
+{
+	return accessed.inited;
+}
+

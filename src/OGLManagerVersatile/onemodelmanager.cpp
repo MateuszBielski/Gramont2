@@ -78,7 +78,13 @@ void OneModelManager::InitModelShader()
     m_ModelShader.AddCode(modelFragmentShader, GL_FRAGMENT_SHADER);
     m_ModelShader.Init();
 }
-
+void OneModelManager::setMatricesForRender(spOglRenderer rend)
+{
+    rend->m_matrices.matMVP = m_Camera->GetFloatMVP();
+    rend->m_matrices.matToVw = m_Camera->GetFloatToVw();
+    rend->m_matrices.light_position = m_Light.GetFLightPos();
+    rend->m_matrices.light_colour = m_Light.GetFLightColour();
+}
 void OneModelManager::InitTextureShader()
 {
     m_TextureShader.AddAttrib("in_sPosition");

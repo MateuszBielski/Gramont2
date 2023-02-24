@@ -59,6 +59,8 @@ set ( CXX_SRCS
     src/Selecting/selecting.cpp
     src/Selecting/selectingresult.cpp
     src/Selecting/pickingrenderer.cpp
+    src/Selecting/pickingbuffloader.cpp
+    src/Selecting/selectable.cpp
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS})

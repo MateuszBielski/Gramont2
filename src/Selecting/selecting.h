@@ -2,10 +2,13 @@
 #define Selecting_H
 
 #include <string>
+#include <vector>
 #include "oglstuff.h"
 #include "pickingrenderer.h"
+#include "pickingbuffloader.h"
+#include "selectable.h"
 
-using std::string;
+using std::string, std::vector;
 
 class SelectingResult
 {
@@ -24,32 +27,55 @@ private:
     bool shadersLoaded = false;
     bool readyForRendering = false;
 
-//    string m_vertexShaderPath;
-//    string m_fragmentShaderPath;
+    unsigned int m_fbo;
+    unsigned int m_pickingTexture;
+    unsigned int m_depthTexture;
+    unsigned int WindowWidth = 1, WindowHeight = 1;
 
-//    char * m_vertexShader = nullptr;
-//    char * m_fragmentShader = nullptr;
-
-//     * m_vertexShader = nullptr;
-    spMyOGLShaders ptr_PickingShader;
-
+    spMyOGLShaders m_pickingShader;
     spPickingRenderer m_pickingRenderer;
+    spPickingBuffLoader m_pickingBuffLoader;
+
     int clickedPosX = 0;
     int clickedPosY = 0;
-    
+    bool inited = false;
+    vector<spSelectable> registeredForSelection;
+
     void LoadShaders();
+    void LoadFrameBuffer();
 public:
     Selecting();
     ~Selecting();
+    void EnableWritingToFrameBuffer();
+    void DisableWritingToFrameBuffer();
+    bool Init();
     void setReadPosition(int posX, int posY);
     spOglRenderer getRenderer();
-    template<typename ContenerOfPointers>
-    SelectingResult getSelectedFrom(ContenerOfPointers setOfSelectable);
+    spMyOGLShaders getShader();
+    spBufferLoader getBufferLoader();
+    void RegisterSelectable(vector<spSelectable>&& );
+//    template<typename ContenerOfPointers>
+//    SelectingResult getSelectedFrom(ContenerOfPointers setOfSelectable);
 //    auto selectedModel = m_picking->getSelectedFromModels(models);
-    bool Init();
+    struct PixelInfo {
+        float ObjectID;
+        float DrawID;
+        float PrimID;
+
+        PixelInfo() {
+            ObjectID = 0.0f;
+            DrawID = 0.0f;
+            PrimID = 0.0f;
+        }
+    };
+
+    PixelInfo ReadPixel(unsigned int x, unsigned int y);
+
+
     void SetVertexShaderPath(string);
     void SetFragmentShaderPath(string);
     SelectingResult getResult();
+    void setWindowSize(unsigned int, unsigned int);
 
 protected:
 };
