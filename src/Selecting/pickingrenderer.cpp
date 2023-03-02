@@ -14,8 +14,8 @@ void PickingRenderer::setLocationsFrom(spMyOGLShaders shader)
      * */
     m_loc.mMVP = shader->GetUnifLoc("mMVP");
     m_loc.mToViewSpace = shader->GetUnifLoc("mToViewSpace");
-    m_loc.lightProps = shader->GetUnifLoc("lightProps");
-    m_loc.lightColour = shader->GetUnifLoc("lightColour");
+//    m_loc.lightProps = shader->GetUnifLoc("lightProps");
+//    m_loc.lightColour = shader->GetUnifLoc("lightColour");
     m_loc.stringTexture = shader->GetUnifLoc("stringTexture");
 
 }
@@ -45,8 +45,8 @@ OglRendererProgress PickingRenderer::DrawModel(spOneModel model, unsigned int gl
 
     glUniformMatrix4fv(m_loc.mMVP, 1, GL_FALSE, m_matrices.matMVP);
     glUniformMatrix4fv(m_loc.mToViewSpace, 1, GL_FALSE, m_matrices.matToVw);
-    glUniform4fv(m_loc.lightProps, 1, m_matrices.light_position);
-    glUniform3fv(m_loc.lightColour, 1, m_matrices.light_colour);
+//    glUniform4fv(m_loc.lightProps, 1, m_matrices.light_position);
+//    glUniform3fv(m_loc.lightColour, 1, m_matrices.light_colour);
     //without two following models are black rendered
     glActiveTexture(GL_TEXTURE0 + tex.textureUnit);
     glBindTexture(GL_TEXTURE_2D, tex.textureId);

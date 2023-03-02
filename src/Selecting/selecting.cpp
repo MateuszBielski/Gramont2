@@ -164,16 +164,12 @@ bool Selecting::ConfigurePickingShader()
     m_pickingShader->AddUnif("gWVP");
     */
     
-    m_pickingShader->AddCode(textFileRead(d_textureVertexShaderPath),GL_VERTEX_SHADER);//tu ma być vertCode
-    m_pickingShader->AddCode(textFileRead(d_illuminationShaderPath),GL_FRAGMENT_SHADER);
-    m_pickingShader->AddCode(textFileRead(d_textureFragmentShaderPath),GL_FRAGMENT_SHADER);
+    m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
+    m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
     m_pickingShader->AddAttrib("in_sPosition");
     m_pickingShader->AddAttrib("in_sNormal");
     m_pickingShader->AddAttrib("in_TextPos");
     m_pickingShader->AddUnif("mMVP");
-    m_pickingShader->AddUnif("mToViewSpace");
-    m_pickingShader->AddUnif("lightProps");
-    m_pickingShader->AddUnif("lightColour");
     m_pickingShader->AddUnif("stringTexture");
     return true;
 }

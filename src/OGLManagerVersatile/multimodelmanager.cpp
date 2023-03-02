@@ -175,10 +175,10 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
     Draw3d();
     m_selecting->DisableWritingToFrameBuffer();
     m_selecting->ReadPixel(posX, posY);
-//    activeRenderer = m_TexRenderer;
-//    activeShader = ptr_TextureShader;
+    activeRenderer = m_TexRenderer;
+    activeShader = ptr_TextureShader;
 
-//    Draw3d();
+    Draw3d();
 //    DrawModels(m_selecting->getRenderer());
 //    auto selected = m_picking->getSelectedFrom(models);
 

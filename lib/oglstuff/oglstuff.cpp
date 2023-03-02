@@ -99,6 +99,8 @@ bool myOGLShaders::AskUnifLocations()
         if ( glret == -1 ) {
             // Return now, this GPU program can not be used because we will
             // pass data to unknown/unused uniform locations
+            string err = "uniform " + it->name + " not found";
+            MyOnGLError(myoglERR_SHADERLOCATION, err.c_str());
             return false;
         }
         it->loc = glret;
