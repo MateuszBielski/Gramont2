@@ -10,7 +10,7 @@ class PickingBuffLoader : public BufferLoader
     PickingBuffLoader();
     virtual ~PickingBuffLoader();
     virtual void LoadBuffers(spOneModel model) override;
-    void LocationsFrom(spMyOGLShaders);
+    void setLocationsFrom(spMyOGLShaders);
 protected:
 
 private:

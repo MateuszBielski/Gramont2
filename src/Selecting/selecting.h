@@ -31,6 +31,8 @@ private:
     unsigned int m_pickingTexture;
     unsigned int m_depthTexture;
     unsigned int WindowWidth = 1, WindowHeight = 1;
+    const char * vertCode = nullptr;
+    const char * fragCode = nullptr; 
 
     spMyOGLShaders m_pickingShader;
     spPickingRenderer m_pickingRenderer;
@@ -43,6 +45,7 @@ private:
 
     void LoadShaders();
     void LoadFrameBuffer();
+    bool ConfigurePickingShader();
 public:
     Selecting();
     ~Selecting();

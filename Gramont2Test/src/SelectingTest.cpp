@@ -123,6 +123,18 @@ TEST(Selecting,SelectableIsdistinguishableAfterRegister)
     select.RegisterSelectable({sel1,sel2});
     ASSERT_NE(sel1->getUniqueId(),sel2->getUniqueId());
 }
-
+TEST(Selecting,PickingBuffLoaderKnowsShaderLocationAfterInit)
+{
+    AccessFileForTest enableAcc;
+    Selecting select;
+    SelectingTestAccess access(select);
+    spShadersMock shader = make_shared<glShadersMock>();
+    shader->setAttribLoc("Position",12);
+    access.setShader(shader);
+    
+    select.Init();
+    
+    ASSERT_EQ(12,select.getBufferLoader()->m_loc.position);
+}
 //select.ReadInPositionXY(3,6);
 

@@ -66,4 +66,5 @@ void glFramebufferTexture2_Mock(GLenum target, GLenum attachment, GLenum textarg
 GLenum glCheckFramebufferStatus_Mock(GLenum target);
 void glReadBuffer_Mock(GLenum src);
 void glDrawBuffer_Mock(GLenum buf);
+void glReadPixels_Mock(GLint x,GLint y,GLsizei width,GLsizei height,GLenum format,GLenum type,void * data);
 #endif

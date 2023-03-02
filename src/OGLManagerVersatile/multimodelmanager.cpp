@@ -16,8 +16,10 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     m_ptrMatrixStack = make_shared<MatrixStack>();
     m_selecting = make_shared<Selecting>();
     MakeAndSetCustomModels();
-    activeShader = ptr_TextureShader;
-    activeRenderer = m_TexRenderer;
+//    activeShader = ptr_TextureShader;
+//    activeRenderer = m_TexRenderer;
+    activeRenderer = m_selecting->getRenderer();
+    activeShader = m_selecting->getShader();
 }
 
 MultiModelManager::~MultiModelManager()
@@ -36,13 +38,13 @@ void MultiModelManager::MakeAndSetCustomModels()
     auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
     auto model_2 = make_shared<ConvexSurface>(80,80,100,100,30);
 //    setModels(vector<spOneModel> {model_1,model_2});
-    setModels({model_1,model_2});
+    setModels( {model_1,model_2});
     model_1->Translate( {60.0f,0.0f,0.0f});
     model_2->Rotate(60.0f, {0.0f,0.3f,0.8f});
     model_2->Translate( {-60.0f,0.0f,0.0f});
     model_1->MyTexture()->LoadImageFile(TEXTURE_IMAGE2);
     model_2->MyTexture()->LoadImageFile(TEXTURE_IMAGE);
-    m_selecting->RegisterSelectable({model_1,model_2});
+    m_selecting->RegisterSelectable( {model_1,model_2});
 #endif
 }
 
@@ -67,7 +69,7 @@ void MultiModelManager::SetShadersAndGeometry()
     ptr_TextureShader->AddUnif("lightProps");
     ptr_TextureShader->AddUnif("lightColour");
     ptr_TextureShader->AddUnif("stringTexture");
-    
+
     string nameOfFunction = "MultiModelManager::SetShadersAndGeometry";
     ptr_TextureShader->Init(nameOfFunction);
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
@@ -76,7 +78,7 @@ void MultiModelManager::SetShadersAndGeometry()
         {&BLoc::normal_tex,"in_sNormal"},
         {&BLoc::textureCoord,"in_TextPos"},
     };
-    
+
     m_selecting->Init();
     m_selecting->getRenderer()->setViewMatrices(m_ptrMatrixStack);
     setLocations<BufferLoader>(m_BufferLoader,locNamsTexBuff,*ptr_TextureShader,&myOGLShaders::GetAttribLoc);
@@ -103,17 +105,22 @@ void MultiModelManager::SetShadersAndGeometry()
         {&OLoc::stringTexture,"stringTexture"}
     };
     setLocations<OglRenderer>(m_TexRenderer,tnames,*ptr_TextureShader,&myOGLShaders::GetUnifLoc);
-    
+
     m_TexRenderer->setViewMatrices(m_ptrMatrixStack);
     m_TexRenderer->setLightMatrices(&m_Light);
     
+    /*tymczasowe*/
+    m_selecting->getRenderer()->setViewMatrices(m_ptrMatrixStack);
+    m_selecting->getRenderer()->setLightMatrices(&m_Light);
+    /*koniec tymczasowe*/
+    
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
-}  
+}
 
 void MultiModelManager::Draw3d()
 {
-    
+
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto d = model->GetModelData();
@@ -168,8 +175,9 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
     Draw3d();
     m_selecting->DisableWritingToFrameBuffer();
     m_selecting->ReadPixel(posX, posY);
-    activeRenderer = m_TexRenderer;
-    activeShader = ptr_TextureShader;
+//    activeRenderer = m_TexRenderer;
+//    activeShader = ptr_TextureShader;
+
 //    Draw3d();
 //    DrawModels(m_selecting->getRenderer());
 //    auto selected = m_picking->getSelectedFrom(models);

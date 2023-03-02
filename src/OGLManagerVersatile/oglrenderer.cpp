@@ -47,8 +47,10 @@ OglRendererProgress OglRenderer::DrawTextureForSingleModelEntry(TextureForModel&
     glUniformMatrix4fv(m_loc.mToViewSpace, 1, GL_FALSE, m_matrices.matToVw);
     glUniform4fv(m_loc.lightProps, 1, m_matrices.light_position);
     glUniform3fv(m_loc.lightColour, 1, m_matrices.light_colour);
+    //without two following models are black rendered
     glActiveTexture(GL_TEXTURE0 + tex.textureUnit);
     glBindTexture(GL_TEXTURE_2D, tex.textureId);
+    
     glUniform1i(m_loc.stringTexture, tex.textureUnit);
 
     glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);

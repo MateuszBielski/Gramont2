@@ -155,13 +155,13 @@ bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, M
 //    ok &= (bool)m_loc.textureCoord;
 //    ok &= (bool)m_loc.normal_tex;
     if(!ok)return false;
+
     GLsizeiptr nBytes = 2 * tex.nuTexCoord * sizeof(GLfloat);
 
     glGenBuffers(1, &tex.bufTexCoordId);
     glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
     // Populate the buffer with the array "vert"
     glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
-
 
     MyOnGLError(myoglERR_CLEAR); //clear error stack
 

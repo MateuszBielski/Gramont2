@@ -59,6 +59,7 @@ void glFramebufferTexture2_Mock(GLenum target, GLenum attachment, GLenum textarg
 GLenum glCheckFramebufferStatus_Mock(GLenum target){return 1;};
 void glReadBuffer_Mock(GLenum src){};
 void glDrawBuffer_Mock(GLenum buf){};
+void glReadPixels_Mock(GLint x,GLint y,GLsizei width,GLsizei height,GLenum format,GLenum type,void * data){};
 
 GlFunctionsMock::GlFunctionsMock()
 {
@@ -124,6 +125,7 @@ bool GlFunctionsMock::Define()
     glCheckFramebufferStatus = &glCheckFramebufferStatus_Mock;
     glReadBuffer = &glReadBuffer_Mock;
     glDrawBuffer = &glDrawBuffer_Mock;
+    glReadPixels = &glReadPixels_Mock;
     
     defined = true;
     return true;

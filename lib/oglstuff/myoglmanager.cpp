@@ -93,7 +93,7 @@ void myOGLManager::Render()
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-    glClearColor((GLfloat)0.15, (GLfloat)0.15, 0.0, (GLfloat)1.0); // Dark, but not black.
+    glClearColor((GLfloat)0.11, (GLfloat)0.12, 0.13, (GLfloat)1.0); // Dark, but not black.
     glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
 
     Draw3d();

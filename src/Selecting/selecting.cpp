@@ -25,22 +25,19 @@ void Selecting::SetFragmentShaderPath(string p)
 }
 bool Selecting::Init()
 {
-    const char * vertCode = textFileRead(d_vertexPickingShaderPath);
-    const char * fragCode = textFileRead(d_fragmentPickingShaderPath);
-    if(!vertCode || !fragCode)return false;
-
-    m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
-    m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
-    m_pickingShader->AddAttrib("Position");
-    m_pickingShader->AddUnif("gDrawIndex");
-    m_pickingShader->AddUnif("gObjectIndex");
-    m_pickingShader->AddUnif("gWVP");
+    vertCode = textFileRead(d_vertexPickingShaderPath);
+    fragCode = textFileRead(d_fragmentPickingShaderPath);
+    
+    if(!ConfigurePickingShader()) return false;
+    
     string nameOfFunction = typeid(*this).name();
     nameOfFunction +="::";
     nameOfFunction += __FUNCTION__;
     m_pickingShader->Init(nameOfFunction);
+    
     LoadFrameBuffer();
     m_pickingRenderer->setLocationsFrom(m_pickingShader);
+    m_pickingBuffLoader->setLocationsFrom(m_pickingShader);
     inited = true;
     return true;
 }
@@ -51,7 +48,7 @@ SelectingResult Selecting::getResult()
 }
 spBufferLoader Selecting::getBufferLoader()
 {
-	return m_pickingBuffLoader;
+    return m_pickingBuffLoader;
 }
 spOglRenderer Selecting::getRenderer()
 {
@@ -74,18 +71,19 @@ void Selecting::setReadPosition(int posX, int posY)
 void Selecting::EnableWritingToFrameBuffer()
 {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
-//    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void Selecting::DisableWritingToFrameBuffer()
 {
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 void Selecting::LoadFrameBuffer()
 {
     //całość można przenieść do buffLoadera;
     std::string str_log;
 //    Create the FBO
-
+    WindowWidth = 500;
+    WindowHeight = 400;
     glGenFramebuffers(1, &m_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
@@ -132,8 +130,7 @@ void Selecting::RegisterSelectable(vector<spSelectable>&& selectables)
     registeredForSelection = selectables;
     int count = registeredForSelection.size();
     int counter = 0;
-    for(counter; counter < count; counter++)
-    {
+    for(counter; counter < count; counter++) {
         selectables[counter]->setUniqueId(counter);
     }
 }
@@ -144,10 +141,39 @@ Selecting::PixelInfo Selecting::ReadPixel(unsigned int x, unsigned int y)
     glReadBuffer(GL_COLOR_ATTACHMENT0);
     PixelInfo Pixel;
     glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, &Pixel);
-    cout<<"\n"<<Pixel.DrawID<<" "<<Pixel.ObjectID<<" "<<Pixel.PrimID;
     glReadBuffer(GL_NONE);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
+    string str_log = to_string(Pixel.DrawID) + " " +
+                     to_string(Pixel.ObjectID) + " " +
+                     to_string(Pixel.PrimID);
+    MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
+
     return Pixel;
+}
+bool Selecting::ConfigurePickingShader()
+{
+    if(!vertCode || !fragCode)return false;
+    /*
+    m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
+    m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
+    m_pickingShader->AddAttrib("Position");
+    m_pickingShader->AddUnif("gDrawIndex");
+    m_pickingShader->AddUnif("gObjectIndex");
+    m_pickingShader->AddUnif("gWVP");
+    */
+    
+    m_pickingShader->AddCode(textFileRead(d_textureVertexShaderPath),GL_VERTEX_SHADER);//tu ma być vertCode
+    m_pickingShader->AddCode(textFileRead(d_illuminationShaderPath),GL_FRAGMENT_SHADER);
+    m_pickingShader->AddCode(textFileRead(d_textureFragmentShaderPath),GL_FRAGMENT_SHADER);
+    m_pickingShader->AddAttrib("in_sPosition");
+    m_pickingShader->AddAttrib("in_sNormal");
+    m_pickingShader->AddAttrib("in_TextPos");
+    m_pickingShader->AddUnif("mMVP");
+    m_pickingShader->AddUnif("mToViewSpace");
+    m_pickingShader->AddUnif("lightProps");
+    m_pickingShader->AddUnif("lightColour");
+    m_pickingShader->AddUnif("stringTexture");
+    return true;
 }
