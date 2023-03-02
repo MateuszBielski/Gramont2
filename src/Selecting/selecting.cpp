@@ -145,8 +145,8 @@ Selecting::PixelInfo Selecting::ReadPixel(unsigned int x, unsigned int y)
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
-    string str_log = to_string(Pixel.DrawID) + " " +
-                     to_string(Pixel.ObjectID) + " " +
+    string str_log = to_string(Pixel.ObjectID) + " " +
+                     to_string(Pixel.DrawID) + " " +
                      to_string(Pixel.PrimID);
     MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
 
