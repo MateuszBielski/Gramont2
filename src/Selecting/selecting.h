@@ -26,8 +26,10 @@ class Selecting
 private:
     bool shadersLoaded = false;
     bool readyForRendering = false;
+    bool needUpdateFrameBuffer = true;
+    bool frameBufferUpdated = false;
 
-    unsigned int m_fbo;
+    unsigned int m_fbo = 0;
     unsigned int m_pickingTexture;
     unsigned int m_depthTexture;
     unsigned int WindowWidth = 1, WindowHeight = 1;
@@ -44,7 +46,8 @@ private:
     vector<spSelectable> registeredForSelection;
 
     void LoadShaders();
-    void LoadFrameBuffer();
+    void CreateAndLoadFrameBuffer();
+    void UpdateFrameBuffer();
     bool ConfigurePickingShader();
 public:
     Selecting();

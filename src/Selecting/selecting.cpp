@@ -27,15 +27,15 @@ bool Selecting::Init()
 {
     vertCode = textFileRead(d_vertexPickingShaderPath);
     fragCode = textFileRead(d_fragmentPickingShaderPath);
-    
+
     if(!ConfigurePickingShader()) return false;
-    
+
     string nameOfFunction = typeid(*this).name();
     nameOfFunction +="::";
     nameOfFunction += __FUNCTION__;
     m_pickingShader->Init(nameOfFunction);
-    
-    LoadFrameBuffer();
+
+    CreateAndLoadFrameBuffer();
     m_pickingRenderer->setLocationsFrom(m_pickingShader);
     m_pickingBuffLoader->setLocationsFrom(m_pickingShader);
     inited = true;
@@ -60,8 +60,15 @@ spMyOGLShaders Selecting::getShader()
 }
 void Selecting::setWindowSize(unsigned int w, unsigned int h)
 {
+    if(WindowWidth == w
+       && WindowHeight == h
+       && frameBufferUpdated) {
+        needUpdateFrameBuffer = false;
+        return;
+    }
     WindowWidth = w;
     WindowHeight = h;
+    needUpdateFrameBuffer = true;
 }
 void Selecting::setReadPosition(int posX, int posY)
 {
@@ -70,6 +77,7 @@ void Selecting::setReadPosition(int posX, int posY)
 }
 void Selecting::EnableWritingToFrameBuffer()
 {
+    UpdateFrameBuffer();
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
@@ -77,13 +85,13 @@ void Selecting::DisableWritingToFrameBuffer()
 {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
-void Selecting::LoadFrameBuffer()
+void Selecting::CreateAndLoadFrameBuffer()
 {
     //całość można przenieść do buffLoadera;
     std::string str_log;
 //    Create the FBO
-    WindowWidth = 500;
-    WindowHeight = 400;
+//    WindowWidth = 500;
+//    WindowHeight = 400;
     glGenFramebuffers(1, &m_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
@@ -125,6 +133,47 @@ void Selecting::LoadFrameBuffer()
     str_log = "FrameBufferLoaded";
     MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
 }
+void Selecting::UpdateFrameBuffer()
+{
+    if(!needUpdateFrameBuffer || !m_fbo) {
+        frameBufferUpdated = false;
+        return;
+    }
+
+    glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
+
+    glBindTexture(GL_TEXTURE_2D, m_pickingTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, WindowWidth, WindowHeight,
+                    0, GL_RGB, GL_FLOAT, NULL);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                           m_pickingTexture, 0);
+
+    glBindTexture(GL_TEXTURE_2D, m_depthTexture);
+    glTexSubImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, WindowWidth, WindowHeight,
+                    0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
+                           m_depthTexture, 0);
+    // Disable reading to avoid problems with older GPUs
+    glReadBuffer(GL_NONE);
+
+    glDrawBuffer(GL_COLOR_ATTACHMENT0);
+
+    // Verify that the FBO is correct
+    GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+
+    if (Status != GL_FRAMEBUFFER_COMPLETE) {
+        string str_log = "Selecting::UpdateFrameBuffer error ";
+        str_log += Status;
+        MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
+        return;
+    }
+
+    // Restore the default framebuffer
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    needUpdateFrameBuffer = false;
+    frameBufferUpdated = true;
+}
 void Selecting::RegisterSelectable(vector<spSelectable>&& selectables)
 {
     registeredForSelection = selectables;
@@ -163,7 +212,7 @@ bool Selecting::ConfigurePickingShader()
     m_pickingShader->AddUnif("gObjectIndex");
     m_pickingShader->AddUnif("gWVP");
     */
-    
+
     m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
     m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
     m_pickingShader->AddAttrib("in_sPosition");

@@ -3,6 +3,7 @@
 #include <random>
 
 bool GlFunctionsMock::defined = false;
+unsigned int GlFunctionsMock::framebufferStatus = GL_FRAMEBUFFER_COMPLETE;
 unsigned int glGetError_Mock(){ return 0;}
 GLuint glCreateProgram_Mock(){return 1;} //1?
 const GLubyte* glGetString_Mock(GLenum name){ return nullptr;}
@@ -46,6 +47,7 @@ void glGenTextures_Mock(GLsizei n, GLuint *textures){}
 void glBindTexture_Mock(GLenum target, GLuint texture){}
 void glTexParameteri_Mock(GLenum target, GLenum pname, GLint param){}
 void glTexImage2D_Mock(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels){}
+void glTexSubImage2D_Mock(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels){}
 void glUniformMatrix4fv_Mock(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value){}
 void glUniform4fv_Mock(GLint location, GLsizei count, const GLfloat *value){}
 void glUniform3fv_Mock(GLint location, GLsizei count, const GLfloat *value){}
@@ -56,7 +58,7 @@ void glFinish_Mock(){};
 void glGenFramebuffers_Mock(GLsizei n, GLuint *framebuffers){};
 void glBindFramebuffer_Mock(GLenum target, GLuint framebuffer){};
 void glFramebufferTexture2_Mock(GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level){};
-GLenum glCheckFramebufferStatus_Mock(GLenum target){return 1;};
+GLenum glCheckFramebufferStatus_Mock(GLenum target){return GlFunctionsMock::framebufferStatus;};
 void glReadBuffer_Mock(GLenum src){};
 void glDrawBuffer_Mock(GLenum buf){};
 void glReadPixels_Mock(GLint x,GLint y,GLsizei width,GLsizei height,GLenum format,GLenum type,void * data){};
@@ -114,6 +116,7 @@ bool GlFunctionsMock::Define()
     glBindTexture = &glBindTexture_Mock;
     glTexParameteri = &glTexParameteri_Mock;
     glTexImage2D = &glTexImage2D_Mock;
+    glTexSubImage2D = &glTexSubImage2D_Mock;
     glUniformMatrix4fv = &glUniformMatrix4fv_Mock;
     glUniform4fv = &glUniform4fv_Mock;
     glUniform3fv = &glUniform3fv_Mock;
@@ -135,3 +138,4 @@ bool GlFunctionsMock::IsDefined()
 {
 	return defined;
 }
+

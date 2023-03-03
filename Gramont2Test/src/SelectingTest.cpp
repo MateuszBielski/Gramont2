@@ -136,5 +136,73 @@ TEST(Selecting,PickingBuffLoaderKnowsShaderLocationAfterInit)
     
     ASSERT_EQ(12,select.getBufferLoader()->m_loc.position);
 }
+TEST(Selecting,needUpdateFrameBuffer_FalseAfterUpdatingFrameBuffer)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    access.setFBO(3);
+    GlFunctionsMock::framebufferStatus = GL_FRAMEBUFFER_COMPLETE;
+    access.UpdateFrameBuffer();
+    ASSERT_FALSE(access.needUpdateFrameBuffer());
+}
+TEST(Selecting,needUpdateFrameBufferFalseIfWindowSizeNotChanged)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    select.setWindowSize(100,100);
+    access.setNeedUpdateFrameBuffer(true);
+    access.setFramebufferUpdated(true);
+    select.setWindowSize(100,100);
+    ASSERT_FALSE(access.needUpdateFrameBuffer());
+}
+TEST(Selecting,needUpdateFrameBufferTrue_IfWindowSizeNotChangedAndFramBufNotUpdated)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    select.setWindowSize(100,100);
+    access.setNeedUpdateFrameBuffer(true);
+    access.setFramebufferUpdated(false);
+    select.setWindowSize(100,100);
+    ASSERT_TRUE(access.needUpdateFrameBuffer());
+}
+TEST(Selecting,frameBufferUpdatedFalseAtStart)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    ASSERT_FALSE(access.FrameBufferUpdated());
+}
+TEST(Selecting,needUpdateFrameBufferTrueIfWindowSizeChanged)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    select.setWindowSize(100,100);
+    access.setNeedUpdateFrameBuffer(false);
+    select.setWindowSize(100,130);
+    ASSERT_TRUE(access.needUpdateFrameBuffer());
+}
+//TEST(Selecting,FrameBuffer_Not_Updated)
+//{
+//    Selecting select;
+//    SelectingTestAccess access(select);
+//}
+TEST(Selecting,NoUpdatedFrameBuffer_In_EnableWritingToFrameBuffer)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    access.setNeedUpdateFrameBuffer(false);
+    select.EnableWritingToFrameBuffer();
+    ASSERT_FALSE(access.FrameBufferUpdated());
+}
+TEST(Selecting,UpdatingFrameBuffer_In_EnableWritingToFrameBuffer)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    access.setNeedUpdateFrameBuffer(true);
+    access.setFBO(3);
+    GlFunctionsMock::framebufferStatus = GL_FRAMEBUFFER_COMPLETE;
+    select.EnableWritingToFrameBuffer();
+    ASSERT_TRUE(access.FrameBufferUpdated());
+}
+
 //select.ReadInPositionXY(3,6);
 

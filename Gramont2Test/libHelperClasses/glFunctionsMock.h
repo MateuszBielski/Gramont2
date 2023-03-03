@@ -11,6 +11,7 @@ public:
     ~GlFunctionsMock();
     bool Define();
     bool IsDefined();
+    static unsigned int framebufferStatus;
 };
 
 unsigned int glGetError_Mock();
@@ -53,6 +54,7 @@ void glGenTextures_Mock(GLsizei n, GLuint *textures);
 void glBindTexture_Mock(GLenum target, GLuint texture);
 void glTexParameteri_Mock(GLenum target, GLenum pname, GLint param);
 void glTexImage2D_Mock(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels);
+void glTexSubImage2D_Mock(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels);
 void glUniformMatrix4fv_Mock(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value);
 void glUniform4fv_Mock(GLint location, GLsizei count, const GLfloat *value);
 void glUniform3fv_Mock(GLint location, GLsizei count, const GLfloat *value);

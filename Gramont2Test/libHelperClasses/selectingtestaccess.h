@@ -13,12 +13,18 @@ public:
     void SetReadyForRendering(bool);
     void setShadersLoaded(bool);
     void setShader(spMyOGLShaders);
+    void setFBO(unsigned int);
+    void setNeedUpdateFrameBuffer(bool);
+    void setFramebufferUpdated(bool);
+    void UpdateFrameBuffer();
     bool ShadersLoaded();
     int getClickedPosX();
     int getClickedPosY();
     unsigned int getWindowWidth();
     unsigned int getWindowHeight();
     bool Inited();
+    bool needUpdateFrameBuffer();
+    bool FrameBufferUpdated();
 protected:
 
 };
