@@ -79,19 +79,18 @@ void Selecting::EnableWritingToFrameBuffer()
 {
     UpdateFrameBuffer();
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
+    glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void Selecting::DisableWritingToFrameBuffer()
 {
+    glDisable(GL_DEPTH_TEST);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 void Selecting::CreateAndLoadFrameBuffer()
 {
     //całość można przenieść do buffLoadera;
     std::string str_log;
-//    Create the FBO
-//    WindowWidth = 500;
-//    WindowHeight = 400;
     glGenFramebuffers(1, &m_fbo);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
@@ -139,17 +138,19 @@ void Selecting::UpdateFrameBuffer()
         frameBufferUpdated = false;
         return;
     }
-
+    glDeleteTextures(1, &m_pickingTexture);
+    glDeleteTextures(1, &m_depthTexture);
     glBindFramebuffer(GL_FRAMEBUFFER, m_fbo);
 
+    glGenTextures(1, &m_pickingTexture);
     glBindTexture(GL_TEXTURE_2D, m_pickingTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, WindowWidth, WindowHeight,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, WindowWidth, WindowHeight,
                     0, GL_RGB, GL_FLOAT, NULL);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                            m_pickingTexture, 0);
-
+    glGenTextures(1, &m_depthTexture);
     glBindTexture(GL_TEXTURE_2D, m_depthTexture);
-    glTexSubImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, WindowWidth, WindowHeight,
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, WindowWidth, WindowHeight,
                     0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
                            m_depthTexture, 0);
@@ -216,9 +217,7 @@ bool Selecting::ConfigurePickingShader()
     m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
     m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
     m_pickingShader->AddAttrib("in_sPosition");
-    m_pickingShader->AddAttrib("in_sNormal");
-    m_pickingShader->AddAttrib("in_TextPos");
     m_pickingShader->AddUnif("mMVP");
-    m_pickingShader->AddUnif("stringTexture");
+    m_pickingShader->AddUnif("modelUniqueId");
     return true;
 }

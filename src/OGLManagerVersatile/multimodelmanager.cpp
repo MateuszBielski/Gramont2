@@ -16,10 +16,10 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     m_ptrMatrixStack = make_shared<MatrixStack>();
     m_selecting = make_shared<Selecting>();
     MakeAndSetCustomModels();
-//    activeShader = ptr_TextureShader;
-//    activeRenderer = m_TexRenderer;
-    activeRenderer = m_selecting->getRenderer();
-    activeShader = m_selecting->getShader();
+    activeShader = ptr_TextureShader;
+    activeRenderer = m_TexRenderer;
+//    activeRenderer = m_selecting->getRenderer();
+//    activeShader = m_selecting->getShader();
 }
 
 MultiModelManager::~MultiModelManager()
