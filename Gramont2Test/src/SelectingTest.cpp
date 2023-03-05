@@ -28,9 +28,8 @@ TEST(Selecting,addUniformsForShaderOnInit)
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
     select.Init();
-    ASSERT_TRUE(shad_mock->hasUnif("gDrawIndex"));
-    ASSERT_TRUE(shad_mock->hasUnif("gObjectIndex"));
-    ASSERT_TRUE(shad_mock->hasUnif("gWVP"));
+    ASSERT_TRUE(shad_mock->hasUnif("modelUniqueId"));
+    ASSERT_TRUE(shad_mock->hasUnif("mMVP"));
 }
 TEST(Selecting,addAttribForShaderOnInit)
 {
@@ -40,7 +39,7 @@ TEST(Selecting,addAttribForShaderOnInit)
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
     select.Init();
-    ASSERT_TRUE(shad_mock->hasAttrib("Position"));
+    ASSERT_TRUE(shad_mock->hasAttrib("position"));
 }
 TEST(Selecting,addCodeForShaderOnInit)
 {
@@ -129,7 +128,7 @@ TEST(Selecting,PickingBuffLoaderKnowsShaderLocationAfterInit)
     Selecting select;
     SelectingTestAccess access(select);
     spShadersMock shader = make_shared<glShadersMock>();
-    shader->setAttribLoc("Position",12);
+    shader->setAttribLoc("position",12);
     access.setShader(shader);
     
     select.Init();

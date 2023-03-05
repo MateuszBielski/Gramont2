@@ -30,6 +30,7 @@ void glDisableVertexAttribArray_Mock(GLuint index){}
 void glViewport_Mock(GLint x, GLint y, GLsizei width, GLsizei height){}
 void glDepthFunc_Mock(GLenum func){}
 void glEnable_Mock(GLenum cap){}
+void glDisable_Mock(GLenum cap){};
 void glBlendFunc_Mock(GLenum sfactor, GLenum dfactor){}
 void glClearColor_Mock(GLfloat red, GLfloat green, GLfloat blue, GLfloat alpha){}
 void glClear_Mock(GLbitfield mask){}
@@ -44,6 +45,7 @@ void glEnableVertexAttribArray_Mock(GLuint index){}
 void glVertexAttribPointer_Mock(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer){}
 void glActiveTexture_Mock(GLenum texture){}
 void glGenTextures_Mock(GLsizei n, GLuint *textures){}
+void glDeleteTextures_Mock(GLsizei n,const GLuint *textures){}
 void glBindTexture_Mock(GLenum target, GLuint texture){}
 void glTexParameteri_Mock(GLenum target, GLenum pname, GLint param){}
 void glTexImage2D_Mock(GLenum target, GLint level, GLint internalformat, GLsizei width, GLsizei height, GLint border, GLenum format, GLenum type, const void *pixels){}
@@ -98,6 +100,7 @@ bool GlFunctionsMock::Define()
     glViewport = &glViewport_Mock;
     glDepthFunc = &glDepthFunc_Mock;
     glEnable = &glEnable_Mock;
+    glDisable = &glDisable_Mock;
     glBlendFunc = &glBlendFunc_Mock;
     glClearColor = &glClearColor_Mock;
     glClear = &glClear_Mock;
@@ -113,6 +116,7 @@ bool GlFunctionsMock::Define()
     glVertexAttribPointer = &glVertexAttribPointer_Mock;
     glActiveTexture = &glActiveTexture_Mock;
     glGenTextures = &glGenTextures_Mock;
+    glDeleteTextures = &glDeleteTextures_Mock;
     glBindTexture = &glBindTexture_Mock;
     glTexParameteri = &glTexParameteri_Mock;
     glTexImage2D = &glTexImage2D_Mock;

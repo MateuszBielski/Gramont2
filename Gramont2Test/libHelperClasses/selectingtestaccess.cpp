@@ -64,7 +64,7 @@ void SelectingTestAccess::setFramebufferUpdated(bool f)
 }
 void SelectingTestAccess::UpdateFrameBuffer()
 {
-	return accessed.UpdateFrameBuffer(); 
+    return accessed.UpdateFrameBuffer();
 }
 void SelectingTestAccess::setFBO(unsigned int n)
 {

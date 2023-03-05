@@ -216,7 +216,7 @@ bool Selecting::ConfigurePickingShader()
 
     m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
     m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
-    m_pickingShader->AddAttrib("in_sPosition");
+    m_pickingShader->AddAttrib("position");
     m_pickingShader->AddUnif("mMVP");
     m_pickingShader->AddUnif("modelUniqueId");
     return true;

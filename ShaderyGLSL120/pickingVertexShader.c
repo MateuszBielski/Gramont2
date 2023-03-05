@@ -1,10 +1,9 @@
 #version 120
 
-attribute vec3 in_sPosition;
+attribute vec3 position;
 uniform mat4 mMVP;
 
-varying vec2 textCoord;
 void main(void)
 {
-    gl_Position = mMVP * vec4(in_sPosition, 1.0);
+    gl_Position = mMVP * vec4(position, 1.0);
 }

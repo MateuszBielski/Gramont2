@@ -85,7 +85,7 @@ void MultiModelManager::SetShadersAndGeometry()
     int a = models.size();
 
     for(auto& model : models) {
-        auto& tex = *model->MyTexture();// czy auto& ?
+        auto& tex = *model->MyTexture();
         auto& d = model->GetModelData();
 #ifdef TESTOWANIE_F
         tex.LoadImageFile(TEXTURE_IMAGE);
@@ -93,7 +93,6 @@ void MultiModelManager::SetShadersAndGeometry()
         m_BufferLoader->CreateBuffersForSingleModelEntry(d);
         m_BufferLoader->LoadTextureBuffersForSingleModelEntry(tex, d);
         m_selecting->getBufferLoader()->LoadBuffers(model);
-//        model->GetModelData();
     }
 
     auto auccessBufferLoadedCount = m_BufferLoader->LoadTextureSuccessCount();
@@ -109,11 +108,6 @@ void MultiModelManager::SetShadersAndGeometry()
     m_TexRenderer->setViewMatrices(m_ptrMatrixStack);
     m_TexRenderer->setLightMatrices(&m_Light);
     
-    /*tymczasowe*/
-    m_selecting->getRenderer()->setViewMatrices(m_ptrMatrixStack);
-    m_selecting->getRenderer()->setLightMatrices(&m_Light);
-    /*koniec tymczasowe*/
-    
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
 }
@@ -127,7 +121,6 @@ void MultiModelManager::Draw3d()
         m_ptrMatrixStack->setModelGlmMatrixdv(model->getModelGlmMatrixdv());
         m_ptrMatrixStack->UpdateMatrices();
         activeRenderer->DrawModel(model,activeShader->getProgramId());
-//        activeRenderer->DrawTextureForSingleModelEntry(tex, d,activeShader->getProgramId());
     }
 }
 void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
@@ -166,8 +159,6 @@ void MultiModelManager::OnMouseWheel(int direction)
 
 void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 {
-    //selectedModel = m_picking->PickModelInPoint(models,m_ptrMatrixStack,posX,posY)); ver1
-
     m_selecting->setReadPosition(posX,posY);
     m_selecting->EnableWritingToFrameBuffer();
     activeRenderer = m_selecting->getRenderer();
@@ -178,7 +169,7 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
     activeRenderer = m_TexRenderer;
     activeShader = ptr_TextureShader;
 
-    Draw3d();
+//    Draw3d();
 //    DrawModels(m_selecting->getRenderer());
 //    auto selected = m_picking->getSelectedFrom(models);
 
