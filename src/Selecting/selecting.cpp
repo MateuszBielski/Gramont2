@@ -44,7 +44,14 @@ bool Selecting::Init()
 
 SelectingResult Selecting::getResult()
 {
-    return SelectingResult(readyForRendering);
+    if(selectedModelId > -1 && selectedModelId < registeredForSelection.size())
+    {
+        
+        spSelectable sel = registeredForSelection.at(selectedModelId);
+        return SelectingResult(sel);
+    }else{
+        return SelectingResult();
+    }
 }
 spBufferLoader Selecting::getBufferLoader()
 {
@@ -81,6 +88,7 @@ void Selecting::EnableWritingToFrameBuffer()
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_fbo);
     glEnable(GL_DEPTH_TEST);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor((GLfloat)0.08, (GLfloat)0.07, 0.06, (GLfloat)1.0);
 }
 void Selecting::DisableWritingToFrameBuffer()
 {
@@ -190,16 +198,18 @@ Selecting::PixelInfo Selecting::ReadPixel(unsigned int x, unsigned int y)
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
     glReadBuffer(GL_COLOR_ATTACHMENT0);
     PixelInfo Pixel;
+    float beginValueId = Pixel.ObjectID;
     glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, &Pixel);
+    if(beginValueId != Pixel.ObjectID)selectedModelId = static_cast<int>(Pixel.ObjectID);
     glReadBuffer(GL_NONE);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 
     string str_log = to_string(Pixel.ObjectID) + " " +
-                     to_string(Pixel.DrawID) + " " +
-                     to_string(Pixel.PrimID);
+                     to_string(Pixel.notUsed_1) + " " +
+                     to_string(Pixel.notUsed_2);
     MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
-
+    
     return Pixel;
 }
 bool Selecting::ConfigurePickingShader()
@@ -221,3 +231,4 @@ bool Selecting::ConfigurePickingShader()
     m_pickingShader->AddUnif("modelUniqueId");
     return true;
 }
+

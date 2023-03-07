@@ -13,9 +13,12 @@ using std::string, std::vector;
 class SelectingResult
 {
     bool m_selectingDone;
+    spSelectable selected;
 public:
-    SelectingResult(bool sd = false);
+    SelectingResult();
+    SelectingResult(spSelectable sel);
     bool selectingDone();
+    spSelectable getSelected();
 };
 
 class Selecting
@@ -25,10 +28,11 @@ class Selecting
 #endif
 private:
     bool shadersLoaded = false;
-    bool readyForRendering = false;
+//    bool readyForRendering = false;
     bool needUpdateFrameBuffer = true;
     bool frameBufferUpdated = false;
 
+    int selectedModelId = -1;
     unsigned int m_fbo = 0;
     unsigned int m_pickingTexture;
     unsigned int m_depthTexture;
@@ -64,19 +68,19 @@ public:
 //    SelectingResult getSelectedFrom(ContenerOfPointers setOfSelectable);
 //    auto selectedModel = m_picking->getSelectedFromModels(models);
     struct PixelInfo {
+        float notUsed_1;
         float ObjectID;
-        float DrawID;
-        float PrimID;
+        float notUsed_2;
 
         PixelInfo() {
+            notUsed_1 = 0.0f;
             ObjectID = 0.0f;
-            DrawID = 0.0f;
-            PrimID = 0.0f;
+            notUsed_2 = 0.0f;
         }
     };
 
     PixelInfo ReadPixel(unsigned int x, unsigned int y);
-
+    void UpdateSelectedModelId(PixelInfo& pxi);
 
     void SetVertexShaderPath(string);
     void SetFragmentShaderPath(string);

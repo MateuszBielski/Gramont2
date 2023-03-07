@@ -95,20 +95,6 @@ TEST(Selecting,noCompilingShaders_ifNoShadersCode)
     ASSERT_FALSE(shad_mock->UsingCompile());
 }
 
-TEST(Selecting,ReturnResult_SelectingNotDone)
-{
-    Selecting select;
-    SelectingResult result = select.getResult();
-    ASSERT_FALSE(result.selectingDone());
-}
-TEST(Selecting,ReturnResult_SelectingDone)
-{
-    Selecting select;
-    SelectingTestAccess access(select);
-    access.SetReadyForRendering(true);
-    SelectingResult result = select.getResult();
-    ASSERT_TRUE(result.selectingDone());
-}
 TEST(Selecting,SelectableNotDistinguishableAtConstruct)
 {
     Selectable sel1,sel2;
@@ -202,6 +188,42 @@ TEST(Selecting,UpdatingFrameBuffer_In_EnableWritingToFrameBuffer)
     select.EnableWritingToFrameBuffer();
     ASSERT_TRUE(access.FrameBufferUpdated());
 }
-
-//select.ReadInPositionXY(3,6);
-
+TEST(Selecting,ReturnResult_SelectingNotDone)
+{
+    SelectingResult result;
+    ASSERT_FALSE(result.selectingDone());
+}
+TEST(Selecting,ReturnResult_SelectingDone)
+{
+    SelectingResult result(make_shared<Selectable>());
+    ASSERT_TRUE(result.selectingDone());
+}
+TEST(Selecting,selectingDone_False_IfModelNotRegistered)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    access.setSelectedModelId(1);
+    ASSERT_FALSE(select.getResult().selectingDone());
+}
+TEST(Selecting,selectingDoneIfModelRegistered)
+{
+    Selecting select;
+    spSelectable sel1 = make_shared<Selectable>();
+    spSelectable sel2 = make_shared<Selectable>();
+    spSelectable sel3 = make_shared<Selectable>();
+    select.RegisterSelectable({sel1,sel2,sel3});
+    SelectingTestAccess access(select);
+    unsigned int givenId = sel3->getUniqueId();
+    access.setSelectedModelId(givenId);
+    ASSERT_EQ(givenId,select.getResult().getSelected()->getUniqueId());
+}
+TEST(Selecting,UpdateSelectedModelId_notAffectIfPixelInfoNotInitialized)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    access.setSelectedModelId(2549);
+    Selecting::PixelInfo pxi;
+    select.UpdateSelectedModelId(pxi);
+    ASSERT_EQ(2549,)
+}
+//    select.ReadInClickedPosition();

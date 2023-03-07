@@ -10,12 +10,14 @@ private:
     Selecting& accessed;
 public:
     SelectingTestAccess(Selecting& );
-    void SetReadyForRendering(bool);
+//    void SetReadyForRendering(bool);
     void setShadersLoaded(bool);
     void setShader(spMyOGLShaders);
     void setFBO(unsigned int);
     void setNeedUpdateFrameBuffer(bool);
     void setFramebufferUpdated(bool);
+    void setSelectedModelId(int);
+    int selectedModelId();
     void UpdateFrameBuffer();
     bool ShadersLoaded();
     int getClickedPosX();

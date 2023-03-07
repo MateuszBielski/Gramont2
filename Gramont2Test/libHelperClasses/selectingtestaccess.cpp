@@ -7,10 +7,10 @@ SelectingTestAccess::SelectingTestAccess(Selecting& ac):accessed(ac)
 
 }
 
-void SelectingTestAccess::SetReadyForRendering(bool fl)
-{
-    accessed.readyForRendering = fl;
-}
+//void SelectingTestAccess::SetReadyForRendering(bool fl)
+//{
+//    accessed.readyForRendering = fl;
+//}
 bool SelectingTestAccess::ShadersLoaded()
 {
 
@@ -69,5 +69,13 @@ void SelectingTestAccess::UpdateFrameBuffer()
 void SelectingTestAccess::setFBO(unsigned int n)
 {
 	accessed.m_fbo = n;
+}
+void SelectingTestAccess::setSelectedModelId(int id)
+{
+	accessed.selectedModelId = id;
+}
+int SelectingTestAccess::selectedModelId()
+{
+	return accessed.selectedModelId;
 }
 
