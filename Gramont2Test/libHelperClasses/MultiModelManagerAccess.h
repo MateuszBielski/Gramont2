@@ -14,7 +14,10 @@ public:
     void setTexRenderer(spOglRenderer );
     void setMatricesForTexRender();
     bool CameraDoesViewControl();
+    void CameraDoesViewControl(bool f);
     spSelecting getModelSelecting();
+    spTransformable getSelectedTransformable();
+    void setSelectedTransformable(spTransformable );
 private:
     MultiModelManager& manager;
 };

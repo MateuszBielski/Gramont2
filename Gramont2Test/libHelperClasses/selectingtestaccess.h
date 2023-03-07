@@ -17,7 +17,7 @@ public:
     void setNeedUpdateFrameBuffer(bool);
     void setFramebufferUpdated(bool);
     void setSelectedModelId(int);
-    int selectedModelId();
+    int SelectedModelId();
     void UpdateFrameBuffer();
     bool ShadersLoaded();
     int getClickedPosX();

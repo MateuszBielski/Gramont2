@@ -74,7 +74,7 @@ void SelectingTestAccess::setSelectedModelId(int id)
 {
 	accessed.selectedModelId = id;
 }
-int SelectingTestAccess::selectedModelId()
+int SelectingTestAccess::SelectedModelId()
 {
 	return accessed.selectedModelId;
 }

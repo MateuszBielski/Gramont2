@@ -107,7 +107,7 @@ void MultiModelManager::SetShadersAndGeometry()
 
     m_TexRenderer->setViewMatrices(m_ptrMatrixStack);
     m_TexRenderer->setLightMatrices(&m_Light);
-    
+
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
 }
@@ -128,7 +128,8 @@ void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
     if(doesCameraViewControl) {
         cameraTrial->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY);
     } else {
-        models[0]->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewGlmMatrixdv());
+//        models[0]->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewGlmMatrixdv());
+        selectedTransformable->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewGlmMatrixdv());
     }
     m_mousePrevX = posX;
     m_mousePrevY = posY;
@@ -147,7 +148,7 @@ void MultiModelManager::OnMouseRotDragging(int posX, int posY)
         move.fromY = m_mousePrevY;
         move.toX = posX;
         move.toY = posY;
-        models[0]->MouseRotation(cameraTrial->RotationFromScreenMove(move));
+        selectedTransformable->MouseRotation(cameraTrial->RotationFromScreenMove(move));
     }
     m_mousePrevX = posX;
     m_mousePrevY = posY;
@@ -165,17 +166,32 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
     activeShader = m_selecting->getShader();
     Draw3d();
     m_selecting->DisableWritingToFrameBuffer();
-    m_selecting->ReadPixel(posX, posY);
+    m_selecting->ReadInClickedPosition();
     activeRenderer = m_TexRenderer;
     activeShader = ptr_TextureShader;
-
-//    Draw3d();
-//    DrawModels(m_selecting->getRenderer());
-//    auto selected = m_picking->getSelectedFrom(models);
-
+    setSelectingResult(m_selecting->getResult());
 }
 void MultiModelManager::SetViewport(int x, int y, int width, int height)
 {
     myOGLManager::SetViewport(x,y,width,height);
     m_selecting->setWindowSize(width,height);
+}
+void MultiModelManager::setSelectingResult(SelectingResult&& res)
+{
+    if(!res.selectingDone()) {
+        doesCameraViewControl = true;
+        return;
+    }
+    doesCameraViewControl = false;
+    spOneModel mod =  static_pointer_cast<OneModel>(res.getSelected());
+    selectedTransformable = static_pointer_cast<Transformable>(mod);
+}
+void MultiModelManager::SwitchViewControl()
+{
+	if(!selectedTransformable) 
+    {
+        doesCameraViewControl = true;
+        return;
+    }
+    myOGLManager::SwitchViewControl();
 }

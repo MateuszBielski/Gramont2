@@ -38,7 +38,7 @@ private:
     unsigned int m_depthTexture;
     unsigned int WindowWidth = 1, WindowHeight = 1;
     const char * vertCode = nullptr;
-    const char * fragCode = nullptr; 
+    const char * fragCode = nullptr;
 
     spMyOGLShaders m_pickingShader;
     spPickingRenderer m_pickingRenderer;
@@ -56,17 +56,6 @@ private:
 public:
     Selecting();
     ~Selecting();
-    void EnableWritingToFrameBuffer();
-    void DisableWritingToFrameBuffer();
-    bool Init();
-    void setReadPosition(int posX, int posY);
-    spOglRenderer getRenderer();
-    spMyOGLShaders getShader();
-    spBufferLoader getBufferLoader();
-    void RegisterSelectable(vector<spSelectable>&& );
-//    template<typename ContenerOfPointers>
-//    SelectingResult getSelectedFrom(ContenerOfPointers setOfSelectable);
-//    auto selectedModel = m_picking->getSelectedFromModels(models);
     struct PixelInfo {
         float notUsed_1;
         float ObjectID;
@@ -74,20 +63,28 @@ public:
 
         PixelInfo() {
             notUsed_1 = 0.0f;
-            ObjectID = 0.0f;
+            ObjectID = -2.0f;
             notUsed_2 = 0.0f;
         }
     };
-
-    PixelInfo ReadPixel(unsigned int x, unsigned int y);
+    
+    bool Init();
+    void RegisterSelectable(vector<spSelectable>&& );
+    void setWindowSize(unsigned int, unsigned int);
+    void setReadPosition(int posX, int posY);
     void UpdateSelectedModelId(PixelInfo& pxi);
-
+    void EnableWritingToFrameBuffer();
+    void DisableWritingToFrameBuffer();
+    void ReadInClickedPosition();
+    SelectingResult getResult();
+    
+    spOglRenderer getRenderer();
+    spMyOGLShaders getShader();
+    spBufferLoader getBufferLoader();
     void SetVertexShaderPath(string);
     void SetFragmentShaderPath(string);
-    SelectingResult getResult();
-    void setWindowSize(unsigned int, unsigned int);
-
 protected:
+    PixelInfo ReadPixel(unsigned int x, unsigned int y);
 };
 
 using spSelecting = std::shared_ptr<Selecting>;

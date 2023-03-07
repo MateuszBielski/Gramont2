@@ -28,9 +28,21 @@ bool MultiModelManagerAccess::CameraDoesViewControl()
 {
 	return manager.doesCameraViewControl;
 }
+void MultiModelManagerAccess::CameraDoesViewControl(bool f)
+{
+    manager.doesCameraViewControl = f;
+}
 spSelecting MultiModelManagerAccess::getModelSelecting()
 {
 	return manager.m_selecting;
+}
+spTransformable MultiModelManagerAccess::getSelectedTransformable()
+{
+	return manager.selectedTransformable;
+}
+void MultiModelManagerAccess::setSelectedTransformable(spTransformable tr)
+{
+	manager.selectedTransformable = tr;
 }
 //do wykorzystania w innym miejscu
 //template<typename T>

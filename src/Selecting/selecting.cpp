@@ -1,6 +1,7 @@
 #include "selecting.h"
 #include "textfile.h"
 #include "shadersPath.h"
+//#include "funkcje.h" //round_to
 
 using namespace std;
 
@@ -13,15 +14,6 @@ Selecting::Selecting()
 
 Selecting::~Selecting()
 {
-}
-void Selecting::SetVertexShaderPath(string p)
-{
-//    m_vertexShaderPath = p;
-}
-
-void Selecting::SetFragmentShaderPath(string p)
-{
-//    m_fragmentShaderPath = p;
 }
 bool Selecting::Init()
 {
@@ -41,17 +33,16 @@ bool Selecting::Init()
     inited = true;
     return true;
 }
-
-SelectingResult Selecting::getResult()
+bool Selecting::ConfigurePickingShader()
 {
-    if(selectedModelId > -1 && selectedModelId < registeredForSelection.size())
-    {
-        
-        spSelectable sel = registeredForSelection.at(selectedModelId);
-        return SelectingResult(sel);
-    }else{
-        return SelectingResult();
-    }
+    if(!vertCode || !fragCode)return false;
+
+    m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
+    m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
+    m_pickingShader->AddAttrib("position");
+    m_pickingShader->AddUnif("mMVP");
+    m_pickingShader->AddUnif("modelUniqueId");
+    return true;
 }
 spBufferLoader Selecting::getBufferLoader()
 {
@@ -153,13 +144,13 @@ void Selecting::UpdateFrameBuffer()
     glGenTextures(1, &m_pickingTexture);
     glBindTexture(GL_TEXTURE_2D, m_pickingTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, WindowWidth, WindowHeight,
-                    0, GL_RGB, GL_FLOAT, NULL);
+                 0, GL_RGB, GL_FLOAT, NULL);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
                            m_pickingTexture, 0);
     glGenTextures(1, &m_depthTexture);
     glBindTexture(GL_TEXTURE_2D, m_depthTexture);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, WindowWidth, WindowHeight,
-                    0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+                 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,
                            m_depthTexture, 0);
     // Disable reading to avoid problems with older GPUs
@@ -198,9 +189,7 @@ Selecting::PixelInfo Selecting::ReadPixel(unsigned int x, unsigned int y)
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
     glReadBuffer(GL_COLOR_ATTACHMENT0);
     PixelInfo Pixel;
-    float beginValueId = Pixel.ObjectID;
     glReadPixels(x, y, 1, 1, GL_RGB, GL_FLOAT, &Pixel);
-    if(beginValueId != Pixel.ObjectID)selectedModelId = static_cast<int>(Pixel.ObjectID);
     glReadBuffer(GL_NONE);
 
     glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
@@ -209,26 +198,43 @@ Selecting::PixelInfo Selecting::ReadPixel(unsigned int x, unsigned int y)
                      to_string(Pixel.notUsed_1) + " " +
                      to_string(Pixel.notUsed_2);
     MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
-    
+
     return Pixel;
 }
-bool Selecting::ConfigurePickingShader()
+void Selecting::UpdateSelectedModelId(PixelInfo& pxi)
 {
-    if(!vertCode || !fragCode)return false;
-    /*
-    m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
-    m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
-    m_pickingShader->AddAttrib("Position");
-    m_pickingShader->AddUnif("gDrawIndex");
-    m_pickingShader->AddUnif("gObjectIndex");
-    m_pickingShader->AddUnif("gWVP");
-    */
+    if(pxi.ObjectID == -2.0) return;
+    if(pxi.ObjectID > -2.0 && pxi.ObjectID <= 1.0) {
+        selectedModelId = -1;
+        return;
+    }
+    selectedModelId = static_cast<int>(round(pxi.ObjectID)) - BACKGROUND_COMPENSATION;
+}
+void Selecting::ReadInClickedPosition()
+{
+	PixelInfo Pixel = ReadPixel(clickedPosX,clickedPosY);
+    UpdateSelectedModelId(Pixel);
+    string str_log = to_string(Pixel.ObjectID) + " " +
+                     to_string(Pixel.notUsed_1) + " " +
+                     to_string(Pixel.notUsed_2);
+    MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
+}
+SelectingResult Selecting::getResult()
+{
+    if(selectedModelId > -1 && selectedModelId < registeredForSelection.size()) {
 
-    m_pickingShader->AddCode(vertCode,GL_VERTEX_SHADER);
-    m_pickingShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
-    m_pickingShader->AddAttrib("position");
-    m_pickingShader->AddUnif("mMVP");
-    m_pickingShader->AddUnif("modelUniqueId");
-    return true;
+        spSelectable sel = registeredForSelection.at(selectedModelId);
+        return SelectingResult(sel);
+    } else {
+        return SelectingResult();
+    }
+}
+void Selecting::SetVertexShaderPath(string p)
+{
+//    m_vertexShaderPath = p;
 }
 
+void Selecting::SetFragmentShaderPath(string p)
+{
+//    m_fragmentShaderPath = p;
+}

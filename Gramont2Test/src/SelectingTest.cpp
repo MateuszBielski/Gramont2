@@ -60,16 +60,16 @@ TEST(Selecting,NoInitializeShaderIfShaderFilesNotExist)
     string newPathFragmentFile = pathFragmentFile+".noExist";
     rename(pathVertexFile.c_str(),newPathVertexFile.c_str());
     rename(pathFragmentFile.c_str(),newPathFragmentFile.c_str());
-    
+
     Selecting select;
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
     select.Init();
-    
+
     rename(newPathVertexFile.c_str(),pathVertexFile.c_str());
     rename(newPathFragmentFile.c_str(),pathFragmentFile.c_str());
-    
+
     ASSERT_FALSE(shad_mock->InitUsed());
 }
 TEST(Selecting,LoadingShaders_incorrectPath)
@@ -105,7 +105,7 @@ TEST(Selecting,SelectableIsdistinguishableAfterRegister)
     spSelectable sel1 = make_shared<Selectable>();
     spSelectable sel2 = make_shared<Selectable>();
     Selecting select;
-    select.RegisterSelectable({sel1,sel2});
+    select.RegisterSelectable( {sel1,sel2});
     ASSERT_NE(sel1->getUniqueId(),sel2->getUniqueId());
 }
 TEST(Selecting,PickingBuffLoaderKnowsShaderLocationAfterInit)
@@ -116,9 +116,9 @@ TEST(Selecting,PickingBuffLoaderKnowsShaderLocationAfterInit)
     spShadersMock shader = make_shared<glShadersMock>();
     shader->setAttribLoc("position",12);
     access.setShader(shader);
-    
+
     select.Init();
-    
+
     ASSERT_EQ(12,select.getBufferLoader()->m_loc.position);
 }
 TEST(Selecting,needUpdateFrameBuffer_FalseAfterUpdatingFrameBuffer)
@@ -211,7 +211,7 @@ TEST(Selecting,selectingDoneIfModelRegistered)
     spSelectable sel1 = make_shared<Selectable>();
     spSelectable sel2 = make_shared<Selectable>();
     spSelectable sel3 = make_shared<Selectable>();
-    select.RegisterSelectable({sel1,sel2,sel3});
+    select.RegisterSelectable( {sel1,sel2,sel3});
     SelectingTestAccess access(select);
     unsigned int givenId = sel3->getUniqueId();
     access.setSelectedModelId(givenId);
@@ -224,6 +224,53 @@ TEST(Selecting,UpdateSelectedModelId_notAffectIfPixelInfoNotInitialized)
     access.setSelectedModelId(2549);
     Selecting::PixelInfo pxi;
     select.UpdateSelectedModelId(pxi);
-    ASSERT_EQ(2549,)
+    ASSERT_EQ(2549,access.SelectedModelId());
 }
-//    select.ReadInClickedPosition();
+TEST(Selecting,SelectedModelId_OneNegative_HitBackground099)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    access.setSelectedModelId(2549);
+    Selecting::PixelInfo pxi;
+    pxi.ObjectID = 0.99;
+    select.UpdateSelectedModelId(pxi);
+    ASSERT_EQ(-1,access.SelectedModelId());
+}
+TEST(Selecting,SelectedModelId_OneNegative_HitBackground1_0)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    access.setSelectedModelId(2549);
+    Selecting::PixelInfo pxi;
+    pxi.ObjectID = 1.0;
+    select.UpdateSelectedModelId(pxi);
+    ASSERT_EQ(-1,access.SelectedModelId());
+}
+TEST(Selecting,SelectedModelId_IncludeBackgroundCompensation_nearZeroRead)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    access.setSelectedModelId(2549);
+    Selecting::PixelInfo pxi;
+    int compensation = BACKGROUND_COMPENSATION;
+    pxi.ObjectID = 0.0009995 + (float)compensation;
+    select.UpdateSelectedModelId(pxi);
+    ASSERT_EQ(0,access.SelectedModelId());
+}
+TEST(Selecting,SelectedModelId_IncludeBackgroundCompensation_nearOneRead)
+{
+    Selecting select;
+    SelectingTestAccess access(select);
+    access.setSelectedModelId(2549);
+    Selecting::PixelInfo pxi;
+    int compensation = BACKGROUND_COMPENSATION;
+    pxi.ObjectID = 0.993 + (float)compensation;
+    select.UpdateSelectedModelId(pxi);
+    ASSERT_EQ(1,access.SelectedModelId());
+}
+TEST(Selecting,ReadInClickedPosition)
+{
+    Selecting select;
+    select.ReadInClickedPosition();
+    
+}

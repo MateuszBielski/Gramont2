@@ -18,7 +18,7 @@ OglRendererProgress PickingRenderer::DrawModel(spOneModel model, unsigned int gl
     glBindVertexArray(model->getVAOforSelect());
 
     glUniformMatrix4fv(m_loc.mMVP, 1, GL_FALSE, m_matrices.matMVP);
-    glUniform1i(m_objectIndexLocation, model->getUniqueId());
+    glUniform1i(m_objectIndexLocation, model->getUniqueId() + BACKGROUND_COMPENSATION);
 
     glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);
     

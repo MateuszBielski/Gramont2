@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include "oglrenderer.h"
+#define BACKGROUND_COMPENSATION 2
 
 class PickingRenderer : public OglRenderer
 {

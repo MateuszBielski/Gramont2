@@ -381,10 +381,22 @@ TEST(MultiModelManager,SwitchViewControl)
 {
     MultiModelManager man(nullptr);
     MultiModelManagerAccess acc(man);
+    spTransformable model = make_shared<Transformable>();
+    acc.setSelectedTransformable(model);
 
     ASSERT_TRUE(acc.CameraDoesViewControl());
     man.SwitchViewControl();
     ASSERT_FALSE(acc.CameraDoesViewControl());
+    man.SwitchViewControl();
+    ASSERT_TRUE(acc.CameraDoesViewControl());
+}
+TEST(MultiModelManager,CameraViewControl_ifNoSelectedTransformable)
+{
+    MultiModelManager man(nullptr);
+    MultiModelManagerAccess acc(man);
+    spTransformable emptyModel;
+    acc.setSelectedTransformable(emptyModel);
+    acc.CameraDoesViewControl(true);
     man.SwitchViewControl();
     ASSERT_TRUE(acc.CameraDoesViewControl());
 }
@@ -431,7 +443,76 @@ TEST(MultiModelManager,InitSelectingOnSetShaders)
     man.SetShadersAndGeometry();
     ASSERT_TRUE(selAcc.Inited());
 }
-//TEST(MultiModelManager,DLeftClickSelectingResultIsAmongOwnedModels)
+TEST(MultiModelManager,setSelectingResult_Background)
+{
+    SelectingResult result;//empty
+    MultiModelManager man(nullptr);
+    man.setSelectingResult(move(result));
+    MultiModelManagerAccess manAcc(man);
+    ASSERT_TRUE(manAcc.CameraDoesViewControl());
+}
+TEST(MultiModelManager,setSelectingResult_Background_consecutively)
+{
+    spOneModel model1 = make_shared<OneModel>();
+    SelectingResult resultEmpty1;
+    SelectingResult resultEmpty2;
+    SelectingResult resultNotEmpty(model1);
+    
+    MultiModelManager man(nullptr);
+    man.setModels({model1});
+    man.setSelectingResult(move(resultEmpty1));
+    man.setSelectingResult(move(resultNotEmpty));
+    man.setSelectingResult(move(resultEmpty2));
+    MultiModelManagerAccess manAcc(man);
+    ASSERT_TRUE(manAcc.CameraDoesViewControl());
+}
+TEST(MultiModelManager,setSelectingResult_NoCameraViewControl)
+{
+    spOneModel model1 = make_shared<OneModel>();
+    SelectingResult result(model1);
+    
+    MultiModelManager man(nullptr);
+    man.setModels({model1});
+    man.setSelectingResult(move(result));
+    MultiModelManagerAccess manAcc(man);
+    ASSERT_FALSE(manAcc.CameraDoesViewControl());
+}
+TEST(MultiModelManager,setSelectingResult_NoCameraViewControl_consecutively)
+{
+    spOneModel model1 = make_shared<OneModel>();
+    spOneModel model2 = make_shared<OneModel>();
+    SelectingResult resultM1(model1);
+    SelectingResult resultEmpty;
+    SelectingResult resultM2(model2);
+    
+    MultiModelManager man(nullptr);
+    man.setModels({model1,model2});
+    man.setSelectingResult(move(resultM1));
+    man.setSelectingResult(move(resultEmpty));
+    man.setSelectingResult(move(resultM2));
+    MultiModelManagerAccess manAcc(man);
+    ASSERT_FALSE(manAcc.CameraDoesViewControl());
+}
+TEST(MultiModelManager,setSelectingResult_SelectedModelViewControl)
+{
+    spOneModel model1 = make_shared<OneModel>();
+    spOneModel model2 = make_shared<OneModel>();
+    SelectingResult resultM1(model1);
+    SelectingResult resultEmpty;
+    SelectingResult resultM2(model2);
+    
+    MultiModelManager man(nullptr);
+    man.setModels({model1,model2});
+    man.setSelectingResult(move(resultM1));
+    man.setSelectingResult(move(resultEmpty));
+    man.setSelectingResult(move(resultM2));
+    
+    MultiModelManagerAccess manAcc(man);
+    spTransformable selTrans= manAcc.getSelectedTransformable();
+    OneModel * selectedModel = static_cast<OneModel *>(selTrans.get());
+    ASSERT_EQ(selectedModel,model2.get());
+}
+
 //{
 //   MultiModelManager man(nullptr);
 //   man.OnMouseLeftDClick(42, 23);
