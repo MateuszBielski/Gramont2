@@ -52,12 +52,7 @@ bool MultiModelManager::ConfigureTextureShader()
     const char * vertCode = textFileRead(d_textureVertexShaderPath);
     const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
     const char * fragCode = textFileRead(d_textureFragmentShaderPath);
-    bool ok = true;
-    ok &= (bool)vertCode;
-    ok &= (bool)fragIlumCode;
-    ok &= (bool)fragCode;
-    if(!ok)return false;
-
+    
     ptr_TextureShader->AddCode(vertCode,GL_VERTEX_SHADER);
     ptr_TextureShader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
     ptr_TextureShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
@@ -70,6 +65,12 @@ bool MultiModelManager::ConfigureTextureShader()
     ptr_TextureShader->AddUnif("lightProps");
     ptr_TextureShader->AddUnif("lightColour");
     ptr_TextureShader->AddUnif("stringTexture");
+    
+    bool ok = true;
+    ok &= (bool)vertCode;
+    ok &= (bool)fragIlumCode;
+    ok &= (bool)fragCode;
+    if(!ok)return false;
 
     string nameOfFunction = "MultiModelManager::ConfigureTextureShader";
     ptr_TextureShader->Init(nameOfFunction);

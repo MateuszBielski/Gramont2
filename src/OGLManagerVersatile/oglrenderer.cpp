@@ -50,7 +50,7 @@ OglRendererProgress OglRenderer::DrawTextureForSingleModelEntry(TextureForModel&
     //without two following models are black rendered
     glActiveTexture(GL_TEXTURE0 + tex.textureUnit);
     glBindTexture(GL_TEXTURE_2D, tex.textureId);
-    
+
     glUniform1i(m_loc.stringTexture, tex.textureUnit);
 
     glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);
@@ -79,11 +79,9 @@ void OglRenderer::setLightMatrices(myLight* light)
 }
 void OglRenderer::setLocationsFrom(spMyOGLShaders shader)
 {
-        m_loc.mMVP = shader->GetUnifLoc("mMVP");
-        m_loc.mToViewSpace = shader->GetUnifLoc("mToViewSpace");
-        m_loc.lightProps = shader->GetUnifLoc("lightProps");
-        m_loc.lightColour = shader->GetUnifLoc("lightColour");
-        m_loc.stringTexture = shader->GetUnifLoc("stringTexture");
-//    setLocations<OglRenderer>(m_TexRenderer,tnames,*ptr_TextureShader,&myOGLShaders::GetUnifLoc);
-//    m_loc.mMVP = shader->GetUnifLoc("mMVP");
+    m_loc.mMVP = shader->GetUnifLoc("mMVP");
+    m_loc.mToViewSpace = shader->GetUnifLoc("mToViewSpace");
+    m_loc.lightProps = shader->GetUnifLoc("lightProps");
+    m_loc.lightColour = shader->GetUnifLoc("lightColour");
+    m_loc.stringTexture = shader->GetUnifLoc("stringTexture");
 }
