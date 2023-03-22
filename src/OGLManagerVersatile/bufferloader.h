@@ -33,6 +33,7 @@ public:
     BufferLoaderProgress CreateBuffersForSingleModelEntry(ModelData& d);
     
     virtual void LoadBuffers(spOneModel model){};
+    virtual void setLocationsFrom(spMyOGLShaders);
     void LoadBuffersForSingleModelEntry(ModelData& d);
     void ClearBuffersForSingleModelEntry(ModelData& d);
     bool LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d);

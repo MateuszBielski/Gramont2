@@ -235,3 +235,9 @@ unsigned int BufferLoader::CreateBuffersCheckedCount()
 {
     return createBuffersCheckedCount;
 }
+void BufferLoader::setLocationsFrom(spMyOGLShaders shader)
+{
+    m_loc.position_tex = shader->GetAttribLoc("in_sPosition");
+    m_loc.normal_tex = shader->GetAttribLoc("in_sNormal");
+    m_loc.textureCoord = shader->GetAttribLoc("in_TextPos");
+}

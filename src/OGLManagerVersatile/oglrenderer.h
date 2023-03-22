@@ -41,7 +41,7 @@ public:
     unsigned int StartCallCount(){return startCallCount;}
     virtual void setViewMatrices(spMatrixStack );
     virtual void setLightMatrices(myLight * );
-    virtual void setLocationsFrom(spMyOGLShaders){};
+    virtual void setLocationsFrom(spMyOGLShaders);
 protected:
     unsigned int startCallCount = 0;
 };

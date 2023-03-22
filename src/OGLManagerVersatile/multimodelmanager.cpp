@@ -47,20 +47,21 @@ void MultiModelManager::MakeAndSetCustomModels()
     m_selecting->RegisterSelectable( {model_1,model_2});
 #endif
 }
-
-void MultiModelManager::SetShadersAndGeometry()
+bool MultiModelManager::ConfigureTextureShader()
 {
+    const char * vertCode = textFileRead(d_textureVertexShaderPath);
+    const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
+    const char * fragCode = textFileRead(d_textureFragmentShaderPath);
+    bool ok = true;
+    ok &= (bool)vertCode;
+    ok &= (bool)fragIlumCode;
+    ok &= (bool)fragCode;
+    if(!ok)return false;
 
-#ifdef TESTOWANIE_F
-#define TEXTURE_IMAGE "nieistniejacyPlik.jpg"
-//real path is timeconsume in tests
-#endif
+    ptr_TextureShader->AddCode(vertCode,GL_VERTEX_SHADER);
+    ptr_TextureShader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
+    ptr_TextureShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
 
-    char t[] = "shader code";
-    textureShaderCode = t;
-    ptr_TextureShader->AddCode(textFileRead(d_textureVertexShaderPath),GL_VERTEX_SHADER);
-    ptr_TextureShader->AddCode(textFileRead(d_illuminationShaderPath),GL_FRAGMENT_SHADER);
-    ptr_TextureShader->AddCode(textFileRead(d_textureFragmentShaderPath),GL_FRAGMENT_SHADER);
     ptr_TextureShader->AddAttrib("in_sPosition");
     ptr_TextureShader->AddAttrib("in_sNormal");
     ptr_TextureShader->AddAttrib("in_TextPos");
@@ -70,19 +71,26 @@ void MultiModelManager::SetShadersAndGeometry()
     ptr_TextureShader->AddUnif("lightColour");
     ptr_TextureShader->AddUnif("stringTexture");
 
-    string nameOfFunction = "MultiModelManager::SetShadersAndGeometry";
+    string nameOfFunction = "MultiModelManager::ConfigureTextureShader";
     ptr_TextureShader->Init(nameOfFunction);
+    return true;
+}
+
+void MultiModelManager::SetShadersAndGeometry()
+{
+
+#ifdef TESTOWANIE_F
+#define TEXTURE_IMAGE "nieistniejacyPlik.jpg"
+//real path is timeconsume in tests
+#endif
+    if(!ConfigureTextureShader());
+    //return
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
-    vector<t_BLoc_str> locNamsTexBuff {
-        {&BLoc::position_tex,"in_sPosition"},
-        {&BLoc::normal_tex,"in_sNormal"},
-        {&BLoc::textureCoord,"in_TextPos"},
-    };
+    
 
     m_selecting->Init();
     m_selecting->getRenderer()->setViewMatrices(m_ptrMatrixStack);
-    setLocations<BufferLoader>(m_BufferLoader,locNamsTexBuff,*ptr_TextureShader,&myOGLShaders::GetAttribLoc);
-    int a = models.size();
+    m_BufferLoader->setLocationsFrom(ptr_TextureShader);
 
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
@@ -96,15 +104,8 @@ void MultiModelManager::SetShadersAndGeometry()
     }
 
     auto auccessBufferLoadedCount = m_BufferLoader->LoadTextureSuccessCount();
-    vector<t_OLoc_str> tnames {
-        {&OLoc::mMVP,"mMVP"},
-        {&OLoc::mToViewSpace,"mToViewSpace"},
-        {&OLoc::lightProps,"lightProps"},
-        {&OLoc::lightColour,"lightColour"},
-        {&OLoc::stringTexture,"stringTexture"}
-    };
-    setLocations<OglRenderer>(m_TexRenderer,tnames,*ptr_TextureShader,&myOGLShaders::GetUnifLoc);
 
+    m_TexRenderer->setLocationsFrom(ptr_TextureShader);
     m_TexRenderer->setViewMatrices(m_ptrMatrixStack);
     m_TexRenderer->setLightMatrices(&m_Light);
 
@@ -188,8 +189,7 @@ void MultiModelManager::setSelectingResult(SelectingResult&& res)
 }
 void MultiModelManager::SwitchViewControl()
 {
-	if(!selectedTransformable) 
-    {
+    if(!selectedTransformable) {
         doesCameraViewControl = true;
         return;
     }

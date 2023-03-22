@@ -18,6 +18,7 @@ private:
     spSelecting m_selecting;
     spTransformable selectedTransformable;
     void MakeAndSetCustomModels();
+    bool ConfigureTextureShader();
 public:
     MultiModelManager(myOGLErrHandler* extErrHnd);
     ~MultiModelManager();

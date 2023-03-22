@@ -77,3 +77,13 @@ void OglRenderer::setLightMatrices(myLight* light)
     m_matrices.light_position = light->GetFLightPos();
     m_matrices.light_colour = light->GetFLightColour();
 }
+void OglRenderer::setLocationsFrom(spMyOGLShaders shader)
+{
+        m_loc.mMVP = shader->GetUnifLoc("mMVP");
+        m_loc.mToViewSpace = shader->GetUnifLoc("mToViewSpace");
+        m_loc.lightProps = shader->GetUnifLoc("lightProps");
+        m_loc.lightColour = shader->GetUnifLoc("lightColour");
+        m_loc.stringTexture = shader->GetUnifLoc("stringTexture");
+//    setLocations<OglRenderer>(m_TexRenderer,tnames,*ptr_TextureShader,&myOGLShaders::GetUnifLoc);
+//    m_loc.mMVP = shader->GetUnifLoc("mMVP");
+}
