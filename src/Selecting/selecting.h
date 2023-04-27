@@ -7,6 +7,7 @@
 #include "pickingrenderer.h"
 #include "pickingbuffloader.h"
 #include "selectable.h"
+#include "rendersystem.h"
 
 using std::string, std::vector;
 
@@ -21,7 +22,7 @@ public:
     spSelectable getSelected();
 };
 
-class Selecting
+class Selecting : public RenderSystem
 {
 #ifdef TESTOWANIE_F
     friend class SelectingTestAccess;
@@ -49,7 +50,6 @@ private:
     bool inited = false;
     vector<spSelectable> registeredForSelection;
 
-    void LoadShaders();
     void CreateAndLoadFrameBuffer();
     void UpdateFrameBuffer();
     bool ConfigurePickingShader();
@@ -78,8 +78,6 @@ public:
     void ReadInClickedPosition();
     SelectingResult getResult();
     
-    spOglRenderer getRenderer();
-    spMyOGLShaders getShader();
     spBufferLoader getBufferLoader();
     void SetVertexShaderPath(string);
     void SetFragmentShaderPath(string);

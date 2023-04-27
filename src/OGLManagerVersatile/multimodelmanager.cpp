@@ -85,13 +85,19 @@ void MultiModelManager::SetShadersAndGeometry()
 //real path is timeconsume in tests
 #endif
     if(!ConfigureTextureShader());
+    m_TexRenderer->setLocationsFrom(ptr_TextureShader);
+    m_BufferLoader->setLocationsFrom(ptr_TextureShader);
+    /****zamiast trzech powyższych mogłoby być ****/
+    //m_drawingSystem->Init();, które mogłoby nazywać się ConfigureShadersAndLocations
+    /*******/
     //return
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
     
 
-    m_selecting->Init();
+    m_selecting->Init();//czyta, kompiluje i linkuje shadery, ustawia lokacje
     m_selecting->getRenderer()->setViewMatrices(m_ptrMatrixStack);
-    m_BufferLoader->setLocationsFrom(ptr_TextureShader);
+    
+    
 
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
@@ -100,13 +106,19 @@ void MultiModelManager::SetShadersAndGeometry()
         tex.LoadImageFile(TEXTURE_IMAGE);
 #endif
         m_BufferLoader->CreateBuffersForSingleModelEntry(d);
+        m_BufferLoader->CreateBufferForTextureCoord(tex);
         m_BufferLoader->LoadTextureBuffersForSingleModelEntry(tex, d);
         m_selecting->getBufferLoader()->LoadBuffers(model);
     }
+    /**zamiast powyższej pętli***/
+//    m_drawingSystem->CreateGraphicBuffers(models);
+//    m_drawingSystem->LoadGraphicBuffers(models);
+//    m_selecting->LoadGraphicBuffers(models);
+    /*****/
 
     auto auccessBufferLoadedCount = m_BufferLoader->LoadTextureSuccessCount();
 
-    m_TexRenderer->setLocationsFrom(ptr_TextureShader);
+    
     m_TexRenderer->setViewMatrices(m_ptrMatrixStack);
     m_TexRenderer->setLightMatrices(&m_Light);
 

@@ -85,6 +85,10 @@
       <File Name="src/Transform/transformable.cpp"/>
       <File Name="src/Transform/transformable.h"/>
     </VirtualDirectory>
+    <VirtualDirectory Name="Rendering">
+      <File Name="src/Rendering/rendersystem.h"/>
+      <File Name="src/Rendering/rendersystem.cpp"/>
+    </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
     <File Name="src/myglcanvas.h"/>

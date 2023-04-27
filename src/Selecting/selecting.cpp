@@ -8,8 +8,11 @@ using namespace std;
 Selecting::Selecting()
 {
     m_pickingRenderer = make_shared<PickingRenderer>();
-    m_pickingShader = make_shared<myOGLShaders>();
+    
     m_pickingBuffLoader = make_shared<PickingBuffLoader>();
+    
+    m_renderer = m_pickingRenderer;
+    m_pickingShader = m_shader;
 }
 
 Selecting::~Selecting()
@@ -48,14 +51,7 @@ spBufferLoader Selecting::getBufferLoader()
 {
     return m_pickingBuffLoader;
 }
-spOglRenderer Selecting::getRenderer()
-{
-    return m_pickingRenderer;
-}
-spMyOGLShaders Selecting::getShader()
-{
-    return m_pickingShader;
-}
+
 void Selecting::setWindowSize(unsigned int w, unsigned int h)
 {
     if(WindowWidth == w

@@ -34,11 +34,12 @@ void BufferLoader::ClearBuffersForSingleModelEntry(ModelData& d)
 BufferLoaderProgress BufferLoader::CreateBuffersForSingleModelEntry(ModelData& d)
 {
     bool ok = true;
-    ok &= (bool)d.bufColNorId;
-    ok &= (bool)d.bufIndexId;
-    ok &= (bool)d.bufVertId;
+    ok &= (bool)d.nuNormals;
+    ok &= (bool)d.nuColours;
+    ok &= (bool)d.nuIndices;
+    ok &= (bool)d.nuPoints;
     ++createBuffersCheckedCount;
-    if(ok) return BufferLoaderProgress::Checked;
+    if(!ok) return BufferLoaderProgress::Checked;
 
     MyOnGLError(myoglERR_CLEAR);
     GLsizeiptr nBytes;
@@ -156,14 +157,14 @@ bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, M
 //    ok &= (bool)m_loc.normal_tex;
     if(!ok)return false;
 
-    GLsizeiptr nBytes = 2 * tex.nuTexCoord * sizeof(GLfloat);
-
-    glGenBuffers(1, &tex.bufTexCoordId);
-    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
-    // Populate the buffer with the array "vert"
-    glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
-
-    MyOnGLError(myoglERR_CLEAR); //clear error stack
+//    GLsizeiptr nBytes = 2 * tex.nuTexCoord * sizeof(GLfloat);
+//
+//    glGenBuffers(1, &tex.bufTexCoordId);
+//    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
+//    // Populate the buffer with the array "vert"
+//    glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
+//
+//    MyOnGLError(myoglERR_CLEAR); //clear error stack
 
 //    auto& d = model->GetModelData();
     glGenVertexArrays(1, &tex.textureVAO);
@@ -182,6 +183,11 @@ bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, M
     glEnableVertexAttribArray(m_loc.normal_tex);
     GLsizeiptr bufoffset = d.nuColours * 4 *sizeof(GLfloat);
     glVertexAttribPointer(m_loc.normal_tex, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)bufoffset);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(tex.textureVAO);
+
     glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
 //    loc = m_TextureShader.GetAttribLoc("in_TextPos");
     glEnableVertexAttribArray(m_loc.textureCoord);
@@ -240,4 +246,22 @@ void BufferLoader::setLocationsFrom(spMyOGLShaders shader)
     m_loc.position_tex = shader->GetAttribLoc("in_sPosition");
     m_loc.normal_tex = shader->GetAttribLoc("in_sNormal");
     m_loc.textureCoord = shader->GetAttribLoc("in_TextPos");
+}
+BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& tex)
+{
+    bool ok = true;
+    ok &= (bool)tex.nuTexCoord;
+    ++createBuffersCheckedCount;
+    if(!ok) return BufferLoaderProgress::Checked;
+    
+    GLsizeiptr nBytes = 2 * tex.nuTexCoord * sizeof(GLfloat);
+
+    glGenBuffers(1, &tex.bufTexCoordId);
+    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
+    // Populate the buffer with the array "vert"
+    glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
+
+    MyOnGLError(myoglERR_CLEAR);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    return BufferLoaderProgress::Completed;
 }

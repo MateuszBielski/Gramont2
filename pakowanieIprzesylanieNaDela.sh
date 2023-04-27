@@ -4,7 +4,7 @@ projSpakowany=${projNazwa}.tar.gz
 projCalaSciezka=${sciezkaKompWpracy}${projNazwa}
 folderExclude=${projNazwa}/Debug
 
-zdalnyHost=mateusz@10.36.2.157
+zdalnyHost=mateusz@10.36.2.156
 zdalnyFolder=/Vista/programowanie/gtkWorkspace
 
 #today=`date +%Y-%m-%d`

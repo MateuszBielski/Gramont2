@@ -31,6 +31,7 @@ public:
     };
     Locations m_loc;
     BufferLoaderProgress CreateBuffersForSingleModelEntry(ModelData& d);
+    BufferLoaderProgress CreateBufferForTextureCoord(TextureForModel& tex);
     
     virtual void LoadBuffers(spOneModel model){};
     virtual void setLocationsFrom(spMyOGLShaders);

@@ -39,6 +39,7 @@ set(includes
     src/ViewControl
     src/Surface
     src/Selecting
+    src/Rendering
 )
 
 set ( CXX_SRCS
@@ -61,6 +62,7 @@ set ( CXX_SRCS
     src/Selecting/pickingrenderer.cpp
     src/Selecting/pickingbuffloader.cpp
     src/Selecting/selectable.cpp
+    src/Rendering/rendersystem.cpp
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS})
