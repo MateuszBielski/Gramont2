@@ -105,9 +105,13 @@ void MultiModelManager::SetShadersAndGeometry()
 #ifdef TESTOWANIE_F
         tex.LoadImageFile(TEXTURE_IMAGE);
 #endif
-        m_BufferLoader->CreateBuffersForSingleModelEntry(d);
+        m_BufferLoader->CreateBuffersForModelGeometry(d);
         m_BufferLoader->CreateBufferForTextureCoord(tex);
-        m_BufferLoader->LoadTextureBuffersForSingleModelEntry(tex, d);
+        unsigned int& vao = tex.textureVAO;
+        m_BufferLoader->CreateVao(vao);
+        //dla renderera potrzbna będzie możliwość wybrania dla którego vao renderuje
+        m_BufferLoader->LoadBuffersForModelGeometry(d,vao);
+        m_BufferLoader->LoadBufferForTexture(tex,vao);
         m_selecting->getBufferLoader()->LoadBuffers(model);
     }
     /**zamiast powyższej pętli***/

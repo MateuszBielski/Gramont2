@@ -11,9 +11,11 @@ enum class BufferLoaderProgress
 {
     Completed,
     Checked,
+    VaoNotInited,
     VertexError,
     ColorNormalsError,
     IndexError,
+    TextureError,
 };
 
 class BufferLoader
@@ -30,17 +32,20 @@ public:
         int textureCoord;
     };
     Locations m_loc;
-    BufferLoaderProgress CreateBuffersForSingleModelEntry(ModelData& d);
+    BufferLoaderProgress CreateBuffersForModelGeometry(ModelData& d);
     BufferLoaderProgress CreateBufferForTextureCoord(TextureForModel& tex);
+    bool CreateVao(unsigned int& vao);
+    BufferLoaderProgress LoadBuffersForModelGeometry(ModelData& d,const int vao);
+    BufferLoaderProgress LoadBufferForTexture(TextureForModel& tex,const int vao);
     
     virtual void LoadBuffers(spOneModel model){};
     virtual void setLocationsFrom(spMyOGLShaders);
-    void LoadBuffersForSingleModelEntry(ModelData& d);
     void ClearBuffersForSingleModelEntry(ModelData& d);
-    bool LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d);
     unsigned int CreateBuffersCheckedCount();
     unsigned int LoadTextureSuccessCount();
     unsigned int LoadTextureFailsCount();
+    
+    bool LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d);
 protected:
     unsigned loadTextureSuccessCount = 0, loadTextureFailsCount = 0, createBuffersCheckedCount = 0;
 };

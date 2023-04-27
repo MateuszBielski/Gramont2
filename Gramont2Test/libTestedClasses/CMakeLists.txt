@@ -33,6 +33,7 @@ set(Includes
     ../../src/Selecting
     ../../src/ViewControl
     ../../src/Transform
+    ../../src/Rendering
     ../../lib/funcs
 )
             

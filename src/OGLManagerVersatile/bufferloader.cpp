@@ -31,7 +31,7 @@ void BufferLoader::ClearBuffersForSingleModelEntry(ModelData& d)
 //    m_triangShaders = NULL;
     d.modelVAO = d.bufIndexId = d.bufColNorId = d.bufVertId = 0;
 }
-BufferLoaderProgress BufferLoader::CreateBuffersForSingleModelEntry(ModelData& d)
+BufferLoaderProgress BufferLoader::CreateBuffersForModelGeometry(ModelData& d)
 {
     bool ok = true;
     ok &= (bool)d.nuNormals;
@@ -101,43 +101,116 @@ BufferLoaderProgress BufferLoader::CreateBuffersForSingleModelEntry(ModelData& d
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     return BufferLoaderProgress::Completed;
 }
-
-void BufferLoader::LoadBuffersForSingleModelEntry(ModelData& d)
+BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& tex)
 {
-    MyOnGLError(myoglERR_CLEAR); //clear error stack
+    bool ok = true;
+    ok &= (bool)tex.nuTexCoord;
+    ++createBuffersCheckedCount;
+    if(!ok) return BufferLoaderProgress::Checked;
 
-    // Part 2: VAO - - - - - - - - - - - - - - - - - - -
+    GLsizeiptr nBytes = 2 * tex.nuTexCoord * sizeof(GLfloat);
 
-    // Vertex Array Object (VAO) that stores the relationship between the
-    // buffers and the shader input attributes
-    glGenVertexArrays(1, &d.modelVAO);
-    glBindVertexArray(d.modelVAO);
-    // Set the way of reading (blocks of n floats each) from the current bound
-    // buffer and passing data to the shader (through the index of an attribute).
-    // Vertices positions
+    glGenBuffers(1, &tex.bufTexCoordId);
+    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
+    // Populate the buffer with the array "vert"
+    glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
+    
+    tex.textureUnit = 1;
+    glActiveTexture(GL_TEXTURE0 + tex.textureUnit);
+    glGenTextures(1, &tex.textureId);
+    glBindTexture(GL_TEXTURE_2D, tex.textureId);
+    // Avoid some artifacts
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    // Do this before glTexImage2D because we only have 1 level, no mipmap
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
+
+    MyOnGLError(myoglERR_CLEAR);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    return BufferLoaderProgress::Completed;
+}
+bool BufferLoader::CreateVao(unsigned int& vao)
+{
+	if(vao) return false;
+    glGenVertexArrays(1, &vao);
+    return true;
+}
+
+BufferLoaderProgress BufferLoader::LoadBuffersForModelGeometry(ModelData& d,const int vao)
+{
+    bool ok = true;
+
+    if(!vao)return BufferLoaderProgress::VaoNotInited;
+    glBindVertexArray(vao);
+
     glBindBuffer(GL_ARRAY_BUFFER, d.bufVertId);
-//    GLuint loc = m_ModelShader.GetAttribLoc("in_Position");
-    glEnableVertexAttribArray(m_loc.position);
-    glVertexAttribPointer(m_loc.position, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
-    // Colours
-    glBindBuffer(GL_ARRAY_BUFFER, d.bufColNorId);
-//    loc = m_ModelShader.GetAttribLoc("in_Colour");
-    glEnableVertexAttribArray(m_loc.colour);
-    glVertexAttribPointer(m_loc.colour, 4, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
-    // Normals. Their position in buffer starts at d.offsetForNormalSubBuf
-//    loc = m_ModelShader.GetAttribLoc("in_Normal");
-    glEnableVertexAttribArray(m_loc.normal);
-    glVertexAttribPointer(m_loc.normal, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)d.offsetForNormalSubBuf);
-    // Indices
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d.bufIndexId);
+    glEnableVertexAttribArray(m_loc.position_tex);
+    glVertexAttribPointer(m_loc.position_tex, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
 
-    // Unbind
+    glBindBuffer(GL_ARRAY_BUFFER, d.bufColNorId);
+    glEnableVertexAttribArray(m_loc.normal_tex);
+    GLsizeiptr bufoffset = d.nuColours * 4 *sizeof(GLfloat);
+    glVertexAttribPointer(m_loc.normal_tex, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)bufoffset);
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d.bufIndexId);
+    
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    // Some log
-    MyOnGLError(myoglERR_JUSTLOG, "Triangles data loaded into GPU.");
+
+    return BufferLoaderProgress::Completed;
 }
+BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, const int vao)
+{
+    bool ok = true;
+
+    if(!vao)return BufferLoaderProgress::VaoNotInited;
+    
+    glBindVertexArray(vao);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
+    glEnableVertexAttribArray(m_loc.textureCoord);
+    glVertexAttribPointer(m_loc.textureCoord, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
+
+    glBindTexture(GL_TEXTURE_2D, tex.textureId);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,(GLsizei)tex.width, (GLsizei)tex.height, 0,GL_RGB, GL_UNSIGNED_BYTE, tex.TextureData());
+    
+    if ( ! MyOnGLError(myoglERR_TEXTIMAGE) ) {
+        // Likely the GPU got out of memory
+//            ClearTexture();
+        return BufferLoaderProgress::TextureError;
+    }
+    
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    return BufferLoaderProgress::Completed;
+}
+unsigned int BufferLoader::LoadTextureSuccessCount()
+{
+    return loadTextureSuccessCount;
+}
+unsigned int BufferLoader::LoadTextureFailsCount()
+{
+    return loadTextureFailsCount;
+}
+unsigned int BufferLoader::CreateBuffersCheckedCount()
+{
+    return createBuffersCheckedCount;
+}
+void BufferLoader::setLocationsFrom(spMyOGLShaders shader)
+{
+    m_loc.position_tex = shader->GetAttribLoc("in_sPosition");
+    m_loc.normal_tex = shader->GetAttribLoc("in_sNormal");
+    m_loc.textureCoord = shader->GetAttribLoc("in_TextPos");
+}
+
+
 bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d)
 {
     ++loadTextureFailsCount;
@@ -228,40 +301,4 @@ bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, M
     MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
     ++loadTextureSuccessCount;
     return true;
-}
-unsigned int BufferLoader::LoadTextureSuccessCount()
-{
-    return loadTextureSuccessCount;
-}
-unsigned int BufferLoader::LoadTextureFailsCount()
-{
-    return loadTextureFailsCount;
-}
-unsigned int BufferLoader::CreateBuffersCheckedCount()
-{
-    return createBuffersCheckedCount;
-}
-void BufferLoader::setLocationsFrom(spMyOGLShaders shader)
-{
-    m_loc.position_tex = shader->GetAttribLoc("in_sPosition");
-    m_loc.normal_tex = shader->GetAttribLoc("in_sNormal");
-    m_loc.textureCoord = shader->GetAttribLoc("in_TextPos");
-}
-BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& tex)
-{
-    bool ok = true;
-    ok &= (bool)tex.nuTexCoord;
-    ++createBuffersCheckedCount;
-    if(!ok) return BufferLoaderProgress::Checked;
-    
-    GLsizeiptr nBytes = 2 * tex.nuTexCoord * sizeof(GLfloat);
-
-    glGenBuffers(1, &tex.bufTexCoordId);
-    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
-    // Populate the buffer with the array "vert"
-    glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
-
-    MyOnGLError(myoglERR_CLEAR);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    return BufferLoaderProgress::Completed;
 }

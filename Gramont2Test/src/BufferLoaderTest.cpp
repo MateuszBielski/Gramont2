@@ -41,7 +41,7 @@ TEST_F(BufferLoader_Te,CompleteCreateBuffers_ifModelBuffersZero)
     d.bufColNorId = 0;
     d.bufIndexId = 0;
     d.bufVertId = 0;
-    ASSERT_EQ(BufferLoaderProgress::Completed,buf.CreateBuffersForSingleModelEntry(d));
+    ASSERT_EQ(BufferLoaderProgress::Completed,buf.CreateBuffersForModelGeometry(d));
 }
 TEST_F(BufferLoader_Te,StartedCreateBuffers_ifModelBuffersSetted)
 {
@@ -50,14 +50,14 @@ TEST_F(BufferLoader_Te,StartedCreateBuffers_ifModelBuffersSetted)
     d.bufColNorId = 1;
     d.bufIndexId = 5;
     d.bufVertId = 4;
-    ASSERT_EQ(BufferLoaderProgress::Checked,buf.CreateBuffersForSingleModelEntry(d));
+    ASSERT_EQ(BufferLoaderProgress::Checked,buf.CreateBuffersForModelGeometry(d));
 }
 TEST_F(BufferLoader_Te,CreateBuffersCheckedCount)
 {
     BufferLoader buf;
     ModelData d;
-    buf.CreateBuffersForSingleModelEntry(d);
-    buf.CreateBuffersForSingleModelEntry(d);
+    buf.CreateBuffersForModelGeometry(d);
+    buf.CreateBuffersForModelGeometry(d);
     ASSERT_EQ(2,buf.CreateBuffersCheckedCount());
 }
 
