@@ -68,7 +68,7 @@ public:
         }
     };
     
-    bool Init();
+    virtual bool ConfigureShadersAndLocations() override;
     void RegisterSelectable(vector<spSelectable>&& );
     void setWindowSize(unsigned int, unsigned int);
     void setReadPosition(int posX, int posY);
@@ -78,7 +78,7 @@ public:
     void ReadInClickedPosition();
     SelectingResult getResult();
     
-    spBufferLoader getBufferLoader();
+    
     void SetVertexShaderPath(string);
     void SetFragmentShaderPath(string);
 protected:

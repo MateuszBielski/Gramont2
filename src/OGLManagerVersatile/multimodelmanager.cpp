@@ -1,6 +1,4 @@
 #include "multimodelmanager.h"
-#include "shadersPath.h"
-#include "textfile.h"
 #include "convexsurface.h"
 
 using namespace std;
@@ -9,12 +7,15 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
 {
     if(extErrHnd)
         setErrHandler(extErrHnd);
-    ptr_TextureShader = make_shared<myOGLShaders>();
+//    ptr_TextureShader = make_shared<myOGLShaders>();
+    ptr_TextureShader = m_renderSystem->getShader();
     int i = 7;
     cameraTrial = make_shared<CameraTrial>();
     m_Camera = cameraTrial;
     m_ptrMatrixStack = make_shared<MatrixStack>();
     m_selecting = make_shared<Selecting>();
+    
+    
     MakeAndSetCustomModels();
     activeShader = ptr_TextureShader;
     activeRenderer = m_TexRenderer;
@@ -47,34 +48,10 @@ void MultiModelManager::MakeAndSetCustomModels()
     m_selecting->RegisterSelectable( {model_1,model_2});
 #endif
 }
-bool MultiModelManager::ConfigureTextureShader()
+void MultiModelManager::RenderSystemSetIfWant()
 {
-    const char * vertCode = textFileRead(d_textureVertexShaderPath);
-    const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
-    const char * fragCode = textFileRead(d_textureFragmentShaderPath);
-    
-    ptr_TextureShader->AddCode(vertCode,GL_VERTEX_SHADER);
-    ptr_TextureShader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
-    ptr_TextureShader->AddCode(fragCode,GL_FRAGMENT_SHADER);
-
-    ptr_TextureShader->AddAttrib("in_sPosition");
-    ptr_TextureShader->AddAttrib("in_sNormal");
-    ptr_TextureShader->AddAttrib("in_TextPos");
-    ptr_TextureShader->AddUnif("mMVP");
-    ptr_TextureShader->AddUnif("mToViewSpace");
-    ptr_TextureShader->AddUnif("lightProps");
-    ptr_TextureShader->AddUnif("lightColour");
-    ptr_TextureShader->AddUnif("stringTexture");
-    
-    bool ok = true;
-    ok &= (bool)vertCode;
-    ok &= (bool)fragIlumCode;
-    ok &= (bool)fragCode;
-    if(!ok)return false;
-
-    string nameOfFunction = "MultiModelManager::ConfigureTextureShader";
-    ptr_TextureShader->Init(nameOfFunction);
-    return true;
+    setRenderSystem(make_unique<TextureDisplaceInVertShadRenderSystem>());//move to configuration module (when it will be made)
+    setAndConfigureRenderSystem(make_unique<TextureDisplaceInVertShadRenderSystem>());//move to configuration module (when it will be made)
 }
 
 void MultiModelManager::SetShadersAndGeometry()
@@ -84,20 +61,13 @@ void MultiModelManager::SetShadersAndGeometry()
 #define TEXTURE_IMAGE "nieistniejacyPlik.jpg"
 //real path is timeconsume in tests
 #endif
-    if(!ConfigureTextureShader());
-    m_TexRenderer->setLocationsFrom(ptr_TextureShader);
-    m_BufferLoader->setLocationsFrom(ptr_TextureShader);
-    /****zamiast trzech powyższych mogłoby być ****/
-    //m_drawingSystem->Init();, które mogłoby nazywać się ConfigureShadersAndLocations
-    /*******/
-    //return
+   
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
-    
 
-    m_selecting->Init();//czyta, kompiluje i linkuje shadery, ustawia lokacje
+    m_renderSystem->ConfigureShadersAndLocations();
+    m_selecting->ConfigureShadersAndLocations();
+    
     m_selecting->getRenderer()->setViewMatrices(m_ptrMatrixStack);
-    
-    
 
     for(auto& model : models) {
         auto& tex = *model->MyTexture();

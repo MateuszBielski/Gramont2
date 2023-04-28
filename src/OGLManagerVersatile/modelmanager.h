@@ -3,6 +3,7 @@
 #include "myoglmanager.h"
 #include "bufferloader.h"
 #include "oglrenderer.h"
+#include "onetexturerendersystem.h"
 
 #include <iostream>
 #include <memory>
@@ -23,7 +24,6 @@ class ModelManager : public myOGLManager
 private:
 
 public:
-//    ModelManager(myOGLErrHandler* extErrHnd);
     ModelManager();
 //    ~ModelManager();
 #ifdef TESTOWANIE_F
@@ -39,13 +39,17 @@ public:
 #endif
 
 protected:
-    spBufferLoader m_BufferLoader;//should be settable
+
+    spRenderSystem m_renderSystem;
+    
+    spBufferLoader m_BufferLoader;
     spOglRenderer m_TexRenderer;//j/w
     spOglRenderer m_OglRenderer;
+    
     spOglRenderer activeRenderer;
     spMyOGLShaders activeShader;
 
-    
+
     template<typename T>
     void setLocations(std::shared_ptr<T>,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );
 

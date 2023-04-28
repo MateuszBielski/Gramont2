@@ -8,17 +8,18 @@ using namespace std;
 Selecting::Selecting()
 {
     m_pickingRenderer = make_shared<PickingRenderer>();
-    
+
     m_pickingBuffLoader = make_shared<PickingBuffLoader>();
-    
+
     m_renderer = m_pickingRenderer;
+    m_BufferLoader = m_pickingBuffLoader;
     m_pickingShader = m_shader;
 }
 
 Selecting::~Selecting()
 {
 }
-bool Selecting::Init()
+bool Selecting::ConfigureShadersAndLocations()
 {
     vertCode = textFileRead(d_vertexPickingShaderPath);
     fragCode = textFileRead(d_fragmentPickingShaderPath);
@@ -46,10 +47,6 @@ bool Selecting::ConfigurePickingShader()
     m_pickingShader->AddUnif("mMVP");
     m_pickingShader->AddUnif("modelUniqueId");
     return true;
-}
-spBufferLoader Selecting::getBufferLoader()
-{
-    return m_pickingBuffLoader;
 }
 
 void Selecting::setWindowSize(unsigned int w, unsigned int h)
@@ -208,7 +205,7 @@ void Selecting::UpdateSelectedModelId(PixelInfo& pxi)
 }
 void Selecting::ReadInClickedPosition()
 {
-	PixelInfo Pixel = ReadPixel(clickedPosX,clickedPosY);
+    PixelInfo Pixel = ReadPixel(clickedPosX,clickedPosY);
     UpdateSelectedModelId(Pixel);
     string str_log = to_string(Pixel.ObjectID) + " " +
                      to_string(Pixel.notUsed_1) + " " +

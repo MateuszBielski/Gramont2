@@ -88,6 +88,8 @@
     <VirtualDirectory Name="Rendering">
       <File Name="src/Rendering/rendersystem.h"/>
       <File Name="src/Rendering/rendersystem.cpp"/>
+      <File Name="src/Rendering/onetexturerendersystem.h"/>
+      <File Name="src/Rendering/onetexturerendersystem.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="include">

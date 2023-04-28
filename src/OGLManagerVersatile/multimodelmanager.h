@@ -18,7 +18,7 @@ private:
     spSelecting m_selecting;
     spTransformable selectedTransformable;
     void MakeAndSetCustomModels();
-    bool ConfigureTextureShader();
+    void RenderSystemSetIfWant();
 public:
     MultiModelManager(myOGLErrHandler* extErrHnd);
     ~MultiModelManager();
@@ -39,6 +39,7 @@ protected:
     vector<spOneModel> models;
     spMyOGLShaders ptr_TextureShader;
     char * textureShaderCode = nullptr;
+    
 };
 
 

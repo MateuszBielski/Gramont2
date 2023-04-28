@@ -11,15 +11,12 @@ ModelManager::ModelManager():myOGLManager()
     GlFunctionsMock functionsMock;
     functionsMock.Define();
 #endif
-    
-    m_BufferLoader = make_unique<BufferLoader>();
-    m_TexRenderer = make_unique<OglRenderer>();
-    m_OglRenderer = make_unique<OglRenderer>();
+    m_renderSystem = make_shared<OneTextureRenderSystem>(); //default
+    m_BufferLoader = m_renderSystem->getBufferLoader();
+    m_TexRenderer = m_renderSystem->getRenderer();
+
     m_Camera = make_unique<myOGLCamera>();
 }
-//ModelManager::~ModelManager()
-//{
-//}
 
 template<typename T>
 void ModelManager::setLocations(shared_ptr<T> rend, vec_locations_T<T> vec, myOGLShaders& shader,  sha_FunGetStr FunGetByString)

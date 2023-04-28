@@ -11,10 +11,13 @@ private:
 
 public:
 RenderSystem();
+    virtual bool ConfigureShadersAndLocations() = 0;
     spOglRenderer getRenderer();
     spMyOGLShaders getShader();
+    spBufferLoader getBufferLoader();
 protected:
     spOglRenderer m_renderer;
+    spBufferLoader m_BufferLoader;
     spMyOGLShaders m_shader;
 
 };
