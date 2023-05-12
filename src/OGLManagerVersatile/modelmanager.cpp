@@ -25,7 +25,21 @@ void ModelManager::setLocations(shared_ptr<T> rend, vec_locations_T<T> vec, myOG
         rend->m_loc.*(get<0>(name)) = (shader.*FunGetByString)(get<1>(name));//ok
     }
 }
-
+bool ModelManager::setAndConfigureRenderSystem(spRenderSystem rs)
+{
+	m_renderSystem = rs;
+    activeShader = rs->getShader();
+    activeRenderer = rs->getRenderer();
+    return true;
+}
+spMyOGLShaders ModelManager::getActiveShader()
+{
+    return activeShader;
+}
+spOglRenderer ModelManager::getActiveRenderer()
+{
+	return activeRenderer;
+}
 
 
 //for linker

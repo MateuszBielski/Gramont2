@@ -26,6 +26,7 @@ private:
 public:
     ModelManager();
 //    ~ModelManager();
+    bool setAndConfigureRenderSystem(spRenderSystem);
 #ifdef TESTOWANIE_F
     spBufferLoader getBufferLoaderForTest() {
         return m_BufferLoader;
@@ -37,15 +38,16 @@ public:
         return *m_Camera;
     }
 #endif
-
+    spMyOGLShaders getActiveShader();
+    spOglRenderer getActiveRenderer();
 protected:
 
     spRenderSystem m_renderSystem;
-    
+
     spBufferLoader m_BufferLoader;
     spOglRenderer m_TexRenderer;//j/w
     spOglRenderer m_OglRenderer;
-    
+
     spOglRenderer activeRenderer;
     spMyOGLShaders activeShader;
 

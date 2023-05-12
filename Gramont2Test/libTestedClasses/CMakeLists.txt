@@ -21,6 +21,9 @@ set ( CXX_SRCS
     ../../src/ViewControl/cameratrial.cpp
     ../../src/ViewControl/matrixstack.cpp
     ../../src/Transform/transformable.cpp
+    ../../src/Rendering/rendersystem.cpp
+    ../../src/Rendering/paralaxoclusionmaprendersystem.cpp
+    ../../src/Rendering/onetexturerendersystem.cpp
     ../../lib/funcs/textfile.cpp
     ../../lib/funcs/funkcje.cpp
     )

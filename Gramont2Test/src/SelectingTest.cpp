@@ -17,7 +17,7 @@ TEST(Selecting,initializeShaderOnInit)
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
-    select.Init();
+    select.ConfigureShadersAndLocations();
     ASSERT_TRUE(shad_mock->InitUsed());
 }
 TEST(Selecting,addUniformsForShaderOnInit)
@@ -27,7 +27,7 @@ TEST(Selecting,addUniformsForShaderOnInit)
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
-    select.Init();
+    select.ConfigureShadersAndLocations();
     ASSERT_TRUE(shad_mock->hasUnif("modelUniqueId"));
     ASSERT_TRUE(shad_mock->hasUnif("mMVP"));
 }
@@ -38,7 +38,7 @@ TEST(Selecting,addAttribForShaderOnInit)
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
-    select.Init();
+    select.ConfigureShadersAndLocations();
     ASSERT_TRUE(shad_mock->hasAttrib("position"));
 }
 TEST(Selecting,addCodeForShaderOnInit)
@@ -48,7 +48,7 @@ TEST(Selecting,addCodeForShaderOnInit)
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
-    select.Init();
+    select.ConfigureShadersAndLocations();
     ASSERT_TRUE(shad_mock->hasCodeOfType(GL_VERTEX_SHADER));
     ASSERT_TRUE(shad_mock->hasCodeOfType(GL_FRAGMENT_SHADER));
 }
@@ -65,7 +65,7 @@ TEST(Selecting,NoInitializeShaderIfShaderFilesNotExist)
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
-    select.Init();
+    select.ConfigureShadersAndLocations();
 
     rename(newPathVertexFile.c_str(),pathVertexFile.c_str());
     rename(newPathFragmentFile.c_str(),pathFragmentFile.c_str());
@@ -80,7 +80,7 @@ TEST(Selecting,LoadingShaders_incorrectPath)
     Selecting select;
     select.SetVertexShaderPath("vs");
     select.SetFragmentShaderPath("fs");
-    select.Init();
+    select.ConfigureShadersAndLocations();
     SelectingTestAccess access(select);
     ASSERT_FALSE(access.ShadersLoaded());
 }
@@ -91,7 +91,7 @@ TEST(Selecting,noCompilingShaders_ifNoShadersCode)
     SelectingTestAccess access(select);
     spShadersMock shad_mock = make_shared<glShadersMock>();
     access.setShader(shad_mock);
-    select.Init();
+    select.ConfigureShadersAndLocations();
     ASSERT_FALSE(shad_mock->UsingCompile());
 }
 
@@ -117,7 +117,7 @@ TEST(Selecting,PickingBuffLoaderKnowsShaderLocationAfterInit)
     shader->setAttribLoc("position",12);
     access.setShader(shader);
 
-    select.Init();
+    select.ConfigureShadersAndLocations();
 
     ASSERT_EQ(12,select.getBufferLoader()->m_loc.position);
 }

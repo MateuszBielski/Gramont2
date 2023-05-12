@@ -106,7 +106,7 @@ void OneModelManager::InitTextureShader()
 
 void OneModelManager::SetShadersAndGeometry()
 {
-     vector<t_OLoc_str> tnames {
+    vector<t_OLoc_str> tnames {
         {&OLoc::mMVP,"mMVP"},
         {&OLoc::mToViewSpace,"mToViewSpace"},
         {&OLoc::lightProps,"lightProps"},
@@ -129,19 +129,22 @@ void OneModelManager::SetShadersAndGeometry()
         {&BLoc::normal_tex,"in_sNormal"},
         {&BLoc::textureCoord,"in_TextPos"},
     };
-    
+
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
     OdczytajShaderyZplikow();
     InitModelShader();
 
     setLocations<BufferLoader>(m_BufferLoader,bnames,m_ModelShader,&myOGLShaders::GetAttribLoc);
-    m_BufferLoader->CreateBuffersForSingleModelEntry(model->GetModelData());
-    m_BufferLoader->LoadBuffersForSingleModelEntry(model->GetModelData());
+    m_BufferLoader->CreateBuffersForModelGeometry(model->GetModelData());
+    auto ptrTex = model->MyTexture();
+    unsigned int& vao = ptrTex->textureVAO;
+    m_BufferLoader->CreateVao(vao);
+    m_BufferLoader->LoadBuffersForModelGeometry(model->GetModelData(),vao);
 
     setLocations<OglRenderer>(m_OglRenderer, names, m_ModelShader,&myOGLShaders::GetUnifLoc);
     setMatricesForRender(m_OglRenderer);
 
-    auto ptrTex = model->MyTexture();
+    
     if(!ptrTex) return;
 
     InitTextureShader();
@@ -151,7 +154,7 @@ void OneModelManager::SetShadersAndGeometry()
 
     setLocations<BufferLoader>(m_BufferLoader,btnames,m_TextureShader,&myOGLShaders::GetAttribLoc);
     m_BufferLoader->LoadTextureBuffersForSingleModelEntry(tex,model->GetModelData());
-   
+
     setLocations<OglRenderer>(m_TexRenderer,tnames,m_TextureShader,&myOGLShaders::GetUnifLoc);
     setMatricesForRender(m_TexRenderer);
 }

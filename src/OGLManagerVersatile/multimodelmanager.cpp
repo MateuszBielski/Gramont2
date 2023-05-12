@@ -1,5 +1,6 @@
 #include "multimodelmanager.h"
 #include "convexsurface.h"
+#include "paralaxoclusionmaprendersystem.h"
 
 using namespace std;
 
@@ -50,8 +51,9 @@ void MultiModelManager::MakeAndSetCustomModels()
 }
 void MultiModelManager::RenderSystemSetIfWant()
 {
-    setRenderSystem(make_unique<TextureDisplaceInVertShadRenderSystem>());//move to configuration module (when it will be made)
-    setAndConfigureRenderSystem(make_unique<TextureDisplaceInVertShadRenderSystem>());//move to configuration module (when it will be made)
+//    setRenderSystem(make_unique<TextureDisplaceInVertShadRenderSystem>());
+//    setAndConfigureRenderSystem(make_unique<TextureDisplaceInVertShadRenderSystem>());
+    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());//move to configuration module (when it will be made)
 }
 
 void MultiModelManager::SetShadersAndGeometry()
@@ -150,13 +152,15 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 {
     m_selecting->setReadPosition(posX,posY);
     m_selecting->EnableWritingToFrameBuffer();
+    auto previousActiveShader = activeShader;
     activeRenderer = m_selecting->getRenderer();
     activeShader = m_selecting->getShader();
     Draw3d();
     m_selecting->DisableWritingToFrameBuffer();
     m_selecting->ReadInClickedPosition();
     activeRenderer = m_TexRenderer;
-    activeShader = ptr_TextureShader;
+//    activeShader = ptr_TextureShader;
+    activeShader = previousActiveShader;
     setSelectingResult(m_selecting->getResult());
 }
 void MultiModelManager::SetViewport(int x, int y, int width, int height)

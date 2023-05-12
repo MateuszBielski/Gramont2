@@ -512,9 +512,48 @@ TEST(MultiModelManager,setSelectingResult_SelectedModelViewControl)
     OneModel * selectedModel = static_cast<OneModel *>(selTrans.get());
     ASSERT_EQ(selectedModel,model2.get());
 }
+TEST(MultiModelManager,setAndConfigureRenderSystem_activeShader)
+{
+    MultiModelManager man(nullptr);
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    man.setAndConfigureRenderSystem(rs);
+    auto adr1 = rs->getShader().get();
+    auto adr2 = man.getActiveShader().get();
+    ASSERT_EQ(adr1,adr2);
+}
+TEST(MultiModelManager,OnMouseLeftDClick_restoreAsActiveShaderFromSettedSystem)
+{
+    MultiModelManager man(nullptr);
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    man.setAndConfigureRenderSystem(rs);
+    auto adr1 = rs->getShader().get();
+    man.OnMouseLeftDClick(3,4);
+    auto adr2 = man.getActiveShader().get();
+    ASSERT_EQ(adr1,adr2);
+}
+
+TEST(MultiModelManager,setAndConfigureRenderSystem_activeRenderer)
+{
+    MultiModelManager man(nullptr);
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    man.setAndConfigureRenderSystem(rs);
+    auto adr1 = rs->getRenderer().get();
+    auto adr2 = man.getActiveRenderer().get();
+    ASSERT_EQ(adr1,adr2);
+}
+//TEST(MultiModelManager,OnMouseLeftDClick_restoreAsActiveRendererFromSettedSystem)
+//{
+//    MultiModelManager man(nullptr);
+//    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+//    man.setAndConfigureRenderSystem(rs);
+//    auto adr1 = rs->getShader().get();
+//    man.OnMouseLeftDClick(3,4);
+//    auto adr2 = man.getActiveShader().get();
+//    ASSERT_EQ(adr1,adr2);
+//}
 
 //{
-//   MultiModelManager man(nullptr);
+//MultiModelManager man(nullptr);
 //   man.OnMouseLeftDClick(42, 23);
 //
 //}
