@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 #include "bufferloader.h"
+#include "bufferloadermock.h"
 //#include "textureformodel.h"
 //#include "modeldata.h"
 //#include "glshadersmock.h"
@@ -238,4 +239,38 @@ TEST_F(BufferLoader_Te,LoadTextureSuccessCounting)
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
     ASSERT_EQ(3,buf.LoadTextureSuccessCount());
+}
+TEST_F(BufferLoader_Te,BufferForModelDataNotLoaded)
+{
+    BufferLoaderMock blm;
+    ModelData d1;
+    ASSERT_FALSE(blm.LoadedBufferForModelGeometry(d1));
+}
+TEST_F(BufferLoader_Te,BufferForModelDataLoaded)
+{
+    BufferLoaderMock blm;
+    ModelData d1;
+    blm.LoadBuffersForModelGeometry(d1,3);
+    ASSERT_TRUE(blm.LoadedBufferForModelGeometry(d1));
+}
+TEST_F(BufferLoader_Te,BufferForModelDataLoaded_andNotLoaded)
+{
+    BufferLoaderMock blm;
+    ModelData d1, d2;
+    blm.LoadBuffersForModelGeometry(d1,3);
+    ASSERT_TRUE(blm.LoadedBufferForModelGeometry(d1));
+    ASSERT_FALSE(blm.LoadedBufferForModelGeometry(d2));
+}
+TEST_F(BufferLoader_Te,BufferForTextureNotLoaded)
+{
+    BufferLoaderMock blm;
+    TextureForModel t;
+    ASSERT_FALSE(blm.LoadedBufferForTexture(t));
+}
+TEST_F(BufferLoader_Te,BufferForTextureLoaded)
+{
+    BufferLoaderMock blm;
+    TextureForModel t;
+    blm.LoadBufferForTexture(t,4);
+    ASSERT_TRUE(blm.LoadedBufferForTexture(t));
 }

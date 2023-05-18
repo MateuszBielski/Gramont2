@@ -11,7 +11,9 @@
 #include "OglRendererMock.h"
 #include "matrixstackmock.h"
 #include "selectingtestaccess.h"
+#include "bufferloadermock.h"
 #include "textfile.h" //AccessFileForTest
+#include "rendersystemmock.h"
 
 TEST(GlFunctionsMock,StaticDefine_SuccesOnFirstDefine)
 {
@@ -457,9 +459,9 @@ TEST(MultiModelManager,setSelectingResult_Background_consecutively)
     SelectingResult resultEmpty1;
     SelectingResult resultEmpty2;
     SelectingResult resultNotEmpty(model1);
-    
+
     MultiModelManager man(nullptr);
-    man.setModels({model1});
+    man.setModels( {model1});
     man.setSelectingResult(move(resultEmpty1));
     man.setSelectingResult(move(resultNotEmpty));
     man.setSelectingResult(move(resultEmpty2));
@@ -470,9 +472,9 @@ TEST(MultiModelManager,setSelectingResult_NoCameraViewControl)
 {
     spOneModel model1 = make_shared<OneModel>();
     SelectingResult result(model1);
-    
+
     MultiModelManager man(nullptr);
-    man.setModels({model1});
+    man.setModels( {model1});
     man.setSelectingResult(move(result));
     MultiModelManagerAccess manAcc(man);
     ASSERT_FALSE(manAcc.CameraDoesViewControl());
@@ -484,9 +486,9 @@ TEST(MultiModelManager,setSelectingResult_NoCameraViewControl_consecutively)
     SelectingResult resultM1(model1);
     SelectingResult resultEmpty;
     SelectingResult resultM2(model2);
-    
+
     MultiModelManager man(nullptr);
-    man.setModels({model1,model2});
+    man.setModels( {model1,model2});
     man.setSelectingResult(move(resultM1));
     man.setSelectingResult(move(resultEmpty));
     man.setSelectingResult(move(resultM2));
@@ -500,13 +502,13 @@ TEST(MultiModelManager,setSelectingResult_SelectedModelViewControl)
     SelectingResult resultM1(model1);
     SelectingResult resultEmpty;
     SelectingResult resultM2(model2);
-    
+
     MultiModelManager man(nullptr);
-    man.setModels({model1,model2});
+    man.setModels( {model1,model2});
     man.setSelectingResult(move(resultM1));
     man.setSelectingResult(move(resultEmpty));
     man.setSelectingResult(move(resultM2));
-    
+
     MultiModelManagerAccess manAcc(man);
     spTransformable selTrans= manAcc.getSelectedTransformable();
     OneModel * selectedModel = static_cast<OneModel *>(selTrans.get());
@@ -541,27 +543,53 @@ TEST(MultiModelManager,setAndConfigureRenderSystem_activeRenderer)
     auto adr2 = man.getActiveRenderer().get();
     ASSERT_EQ(adr1,adr2);
 }
-//TEST(MultiModelManager,OnMouseLeftDClick_restoreAsActiveRendererFromSettedSystem)
-//{
-//    MultiModelManager man(nullptr);
-//    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
-//    man.setAndConfigureRenderSystem(rs);
-//    auto adr1 = rs->getShader().get();
-//    man.OnMouseLeftDClick(3,4);
-//    auto adr2 = man.getActiveShader().get();
-//    ASSERT_EQ(adr1,adr2);
-//}
+TEST(MultiModelManager,OnMouseLeftDClick_restoreAsActiveRendererFromSettedSystem)
+{
+    MultiModelManager man(nullptr);
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    man.setAndConfigureRenderSystem(rs);
+    auto adr1 = rs->getRenderer().get();
+    man.OnMouseLeftDClick(3,4);
+    auto adr2 = man.getActiveRenderer().get();
+    ASSERT_EQ(adr1,adr2);
+}
+TEST(MultiModelManager,BuffersLoadedForEachModel_Geometry)
+{
+    MultiModelManager man(nullptr);
+    spOneModel model1 = make_shared<Triangle>();
+    spOneModel model2 = make_shared<Triangle>();
+    man.setModels( {model1,model2});
+    
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    spBufferLoaderMock bl = make_shared<BufferLoaderMock>();
+    rs->setBufferLoader(bl);
+    
+    man.setAndConfigureRenderSystem(rs);
+    
+    ASSERT_TRUE(bl->LoadedBufferForModelGeometry(model1->GetModelData()));
+    ASSERT_TRUE(bl->LoadedBufferForModelGeometry(model2->GetModelData()));
+    
+//    LoadBuffersForModelGeometry(d,vao);
+//    m_BufferLoader->LoadBufferForTexture(tex,vao);
+}
 
-//{
-//MultiModelManager man(nullptr);
-//   man.OnMouseLeftDClick(42, 23);
-//
-//}
+TEST(MultiModelManager,ReloadedVaoForEach_ModelDataAndTextures)
+{
+    MultiModelManager man(nullptr);
+    spOneModel model1 = make_shared<Triangle>();
+    spOneModel model2 = make_shared<Triangle>();
+    man.setModels( {model1,model2});
+    
+    spRenderSystemMock rsm = make_shared<RenderSystemMock>();
+    
+    man.setAndConfigureRenderSystem(rsm);
 
-//class functorGlUniformMatrix4fv
-//    {
-//
-//    };
+    ASSERT_TRUE(rsm->ReloadedVAOforModelData(model1->GetModelData()));
+    ASSERT_TRUE(rsm->ReloadedVAOforTexture(*model1->MyTexture()));
+    ASSERT_TRUE(rsm->ReloadedVAOforModelData(model2->GetModelData()));
+    ASSERT_TRUE(rsm->ReloadedVAOforTexture(*model2->MyTexture()));
+}
+
 stack<const float *> matricesFv_stack;
 void glUniformMatrix4fv_ForTest(GLint location, GLsizei count, GLboolean transpose, const GLfloat *value)
 {

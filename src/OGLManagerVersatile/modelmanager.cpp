@@ -27,9 +27,19 @@ void ModelManager::setLocations(shared_ptr<T> rend, vec_locations_T<T> vec, myOG
 }
 bool ModelManager::setAndConfigureRenderSystem(spRenderSystem rs)
 {
-	m_renderSystem = rs;
+	/***pomysł*****/
+//    rs->setRenderingResources(m_renderSystem->getRidOfRenderingResources());//(getRidOf - pozbądź się) jakie to mogą być zasoby?:
+    //lokacje, wskaźniki do Light i matrixStack, 
+    //dlaczego tworzyć kolejną klasę RenderingResources?
+    /**/
+    m_renderSystem = rs;
+//    rs->ConfigureShadersAndLocations();
+//skopiować i wyzerować od dotychczas aktywnego renderera: matrixStack, Light
+
+    CallForMyRenderable(&RenderSystem::ReloadVAO,rs);
     activeShader = rs->getShader();
     activeRenderer = rs->getRenderer();
+    
     return true;
 }
 spMyOGLShaders ModelManager::getActiveShader()

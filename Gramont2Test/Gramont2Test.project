@@ -59,6 +59,10 @@
     <File Name="libHelperClasses/OglRendererMock.cpp"/>
     <File Name="libHelperClasses/matrixstackmock.h"/>
     <File Name="libHelperClasses/matrixstackmock.cpp"/>
+    <File Name="libHelperClasses/bufferloadermock.h"/>
+    <File Name="libHelperClasses/bufferloadermock.cpp"/>
+    <File Name="libHelperClasses/rendersystemmock.h"/>
+    <File Name="libHelperClasses/rendersystemmock.cpp"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>

@@ -132,6 +132,10 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     return BufferLoaderProgress::Completed;
+    //czy modele potrzebują na nowo mieć tworzone bufory na karcie graficznej, jesli tak to czy poprzednie kasować czy przechowywać.
+    //https://gamedev.stackexchange.com/questions/75989/what-is-the-correct-way-to-reset-and-load-new-data-into-gl-array-buffer
+    //glBufferData() overwrites the previous data, and is generally what you should use to load new data into a GL buffer. Conceptually it is similar to overwriting data in an array.
+    //glDeleteBuffers() and glGenBuffers() destroy and recreate a buffer. Conceptually they are similar to free() and malloc()
 }
 bool BufferLoader::CreateVao(unsigned int& vao)
 {

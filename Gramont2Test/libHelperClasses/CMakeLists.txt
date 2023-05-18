@@ -9,6 +9,8 @@ set ( CXX_SRCS
     MultiModelManagerAccess.cpp
     OglRendererMock.cpp
     matrixstackmock.cpp
+    bufferloadermock.cpp
+    rendersystemmock.cpp
     )
 set(Includes 
     ${CMAKE_CURRENT_SOURCE_DIR}

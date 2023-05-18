@@ -67,6 +67,7 @@ set ( CXX_SRCS
     src/BufferLoaderTest.cpp
     src/ViewControlTest.cpp
     src/ViewControlNeedFixTest.cpp
+    src/RenderSystemTest.cpp
 )
 if(UNIX)
 #add_compile_options(-H)

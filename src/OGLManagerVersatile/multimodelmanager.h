@@ -35,6 +35,8 @@ public:
     void setModels(vector<spOneModel>&& );
     void setSelectingResult(SelectingResult&& );
 protected:
+    virtual void CallForMyRenderable(FunReSys ,spRenderSystem) override;
+    
     spMatrixStack m_ptrMatrixStack;
     vector<spOneModel> models;
     spMyOGLShaders ptr_TextureShader;

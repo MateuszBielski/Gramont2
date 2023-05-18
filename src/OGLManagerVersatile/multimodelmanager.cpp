@@ -15,11 +15,12 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     m_Camera = cameraTrial;
     m_ptrMatrixStack = make_shared<MatrixStack>();
     m_selecting = make_shared<Selecting>();
-    
-    
+
+
     MakeAndSetCustomModels();
     activeShader = ptr_TextureShader;
     activeRenderer = m_TexRenderer;
+//    RenderSystemSetIfWant();
 //    activeRenderer = m_selecting->getRenderer();
 //    activeShader = m_selecting->getShader();
 }
@@ -51,11 +52,19 @@ void MultiModelManager::MakeAndSetCustomModels()
 }
 void MultiModelManager::RenderSystemSetIfWant()
 {
-//    setRenderSystem(make_unique<TextureDisplaceInVertShadRenderSystem>());
-//    setAndConfigureRenderSystem(make_unique<TextureDisplaceInVertShadRenderSystem>());
-    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());//move to configuration module (when it will be made)
+//    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());//move to configuration module (when it will be made)
+    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
 }
-
+void MultiModelManager::CallForMyRenderable(FunReSys FunToCall, spRenderSystem rs)
+{
+    for(auto& model : models) {
+        auto& tex = *model->MyTexture();
+        auto& d = model->GetModelData();
+//        RenderSystem * prs;
+//        (prs->*FunToCall)(d,tex);
+        ((*rs).*FunToCall)(d,tex);
+    }
+}
 void MultiModelManager::SetShadersAndGeometry()
 {
 
@@ -63,12 +72,12 @@ void MultiModelManager::SetShadersAndGeometry()
 #define TEXTURE_IMAGE "nieistniejacyPlik.jpg"
 //real path is timeconsume in tests
 #endif
-   
+
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
 
     m_renderSystem->ConfigureShadersAndLocations();
     m_selecting->ConfigureShadersAndLocations();
-    
+
     m_selecting->getRenderer()->setViewMatrices(m_ptrMatrixStack);
 
     for(auto& model : models) {
@@ -87,6 +96,11 @@ void MultiModelManager::SetShadersAndGeometry()
         m_selecting->getBufferLoader()->LoadBuffers(model);
     }
     /**zamiast powyższej pętli***/
+//    CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,m_renderSystem);// funkcja CallForMyRenderable już działa
+//    CallForMyRenderable(&RenderSystem::LoadVAO,m_renderSystem);
+//    CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
+
+//    starsza wersja:
 //    m_drawingSystem->CreateGraphicBuffers(models);
 //    m_drawingSystem->LoadGraphicBuffers(models);
 //    m_selecting->LoadGraphicBuffers(models);
@@ -94,7 +108,7 @@ void MultiModelManager::SetShadersAndGeometry()
 
     auto auccessBufferLoadedCount = m_BufferLoader->LoadTextureSuccessCount();
 
-    
+
     m_TexRenderer->setViewMatrices(m_ptrMatrixStack);
     m_TexRenderer->setLightMatrices(&m_Light);
 
@@ -153,13 +167,15 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
     m_selecting->setReadPosition(posX,posY);
     m_selecting->EnableWritingToFrameBuffer();
     auto previousActiveShader = activeShader;
+    auto previousActiveRenderer = activeRenderer;
     activeRenderer = m_selecting->getRenderer();
     activeShader = m_selecting->getShader();
     Draw3d();
     m_selecting->DisableWritingToFrameBuffer();
     m_selecting->ReadInClickedPosition();
-    activeRenderer = m_TexRenderer;
+//    activeRenderer = m_TexRenderer;
 //    activeShader = ptr_TextureShader;
+    activeRenderer = previousActiveRenderer;
     activeShader = previousActiveShader;
     setSelectingResult(m_selecting->getResult());
 }

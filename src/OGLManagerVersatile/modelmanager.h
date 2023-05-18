@@ -50,7 +50,8 @@ protected:
 
     spOglRenderer activeRenderer;
     spMyOGLShaders activeShader;
-
+    
+    virtual void CallForMyRenderable(FunReSys ,spRenderSystem){};
 
     template<typename T>
     void setLocations(std::shared_ptr<T>,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );

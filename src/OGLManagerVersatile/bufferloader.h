@@ -35,8 +35,8 @@ public:
     BufferLoaderProgress CreateBuffersForModelGeometry(ModelData& d);
     BufferLoaderProgress CreateBufferForTextureCoord(TextureForModel& tex);
     bool CreateVao(unsigned int& vao);
-    BufferLoaderProgress LoadBuffersForModelGeometry(ModelData& d,const int vao);
-    BufferLoaderProgress LoadBufferForTexture(TextureForModel& tex,const int vao);
+    virtual BufferLoaderProgress LoadBuffersForModelGeometry(ModelData& d,const int vao);
+    virtual BufferLoaderProgress LoadBufferForTexture(TextureForModel& tex,const int vao);
     
     virtual void LoadBuffers(spOneModel model){};
     virtual void setLocationsFrom(spMyOGLShaders);
