@@ -16,6 +16,9 @@ struct ModelData
     GLuint bufVertId = 0;
     GLuint bufColNorId = 0;
     GLuint bufIndexId = 0;
+//    GLuint bufVertId = (GLuint)-1;
+//    GLuint bufColNorId = (GLuint)-1;
+//    GLuint bufIndexId = (GLuint)-1;
     GLsizeiptr offsetForNormalSubBuf;
     
     GLuint modelVAO = 0;

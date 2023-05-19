@@ -33,13 +33,16 @@ bool ModelManager::setAndConfigureRenderSystem(spRenderSystem rs)
     //dlaczego tworzyć kolejną klasę RenderingResources?
     /**/
     m_renderSystem = rs;
-//    rs->ConfigureShadersAndLocations();
-//skopiować i wyzerować od dotychczas aktywnego renderera: matrixStack, Light
-
+    rs->ConfigureShadersAndLocations();
+    
+    //tu musi być sprawdzenie, czy modele miały już wywołaną funkcję tworzenia buforów
+    CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,rs);
     CallForMyRenderable(&RenderSystem::ReloadVAO,rs);
+    ConfigureWithMyViewControl(rs);
+    
+    ConfigureWithMyLightSystem(rs);
     activeShader = rs->getShader();
     activeRenderer = rs->getRenderer();
-    
     return true;
 }
 spMyOGLShaders ModelManager::getActiveShader()
@@ -50,6 +53,15 @@ spOglRenderer ModelManager::getActiveRenderer()
 {
 	return activeRenderer;
 }
+myLight* ModelManager::getLightPtr()
+{
+	return &m_Light;
+}
+void ModelManager::ConfigureWithMyLightSystem(spRenderSystem rs)
+{
+	rs->getRenderer()->setLightMatrices(&m_Light);
+}
+
 
 
 //for linker

@@ -33,9 +33,12 @@ spBufferLoader RenderSystem::getBufferLoader()
 void RenderSystem::ReloadVAO(ModelData& d, TextureForModel& tex)
 {
     unsigned int& vao = tex.textureVAO;
-    //TO DO:
-    //check vao
-    //remove old Vao, and create new
+    m_BufferLoader->RecreateVao(vao);
     m_BufferLoader->LoadBuffersForModelGeometry(d,vao);
-//    m_BufferLoader->LoadBufferForTexture(tex,vao);
+    m_BufferLoader->LoadBufferForTexture(tex,vao);
+}
+void RenderSystem::CreateGraphicBuffers(ModelData& d, TextureForModel& tex)
+{
+    m_BufferLoader->CreateBuffersForModelGeometry(d);
+    m_BufferLoader->CreateBufferForTextureCoord(tex);
 }

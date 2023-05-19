@@ -36,6 +36,8 @@ public:
     void setSelectingResult(SelectingResult&& );
 protected:
     virtual void CallForMyRenderable(FunReSys ,spRenderSystem) override;
+    virtual void ConfigureWithMyViewControl(spRenderSystem) override;
+    
     
     spMatrixStack m_ptrMatrixStack;
     vector<spOneModel> models;

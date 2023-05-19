@@ -9,6 +9,7 @@ public:
     virtual ~MultiModelManagerAccess();
     char * getTextureShaderCode(){return manager.textureShaderCode;}
     spCameraTrial getPtrCameraForTest(){return manager.cameraTrial;}
+    spMatrixStack getMatrixStack(){return manager.m_ptrMatrixStack;}
     void setTextureShaderForTest(spMyOGLShaders sh){manager.ptr_TextureShader = sh;}
     void setMatrixStack(spMatrixStack ms){manager.m_ptrMatrixStack = ms;}
     void setTexRenderer(spOglRenderer );

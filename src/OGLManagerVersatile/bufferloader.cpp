@@ -110,11 +110,13 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& 
 
     GLsizeiptr nBytes = 2 * tex.nuTexCoord * sizeof(GLfloat);
 
-    glGenBuffers(1, &tex.bufTexCoordId);
-    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
-    // Populate the buffer with the array "vert"
-    glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
-    
+    if(!tex.bufTexCoordId) {
+
+        glGenBuffers(1, &tex.bufTexCoordId);
+        glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
+        // Populate the buffer with the array "vert"
+        glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
+    }
     tex.textureUnit = 1;
     glActiveTexture(GL_TEXTURE0 + tex.textureUnit);
     glGenTextures(1, &tex.textureId);
@@ -139,11 +141,20 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& 
 }
 bool BufferLoader::CreateVao(unsigned int& vao)
 {
-	if(vao) return false;
+    if(vao) return false;
     glGenVertexArrays(1, &vao);
     return true;
 }
 
+void BufferLoader::RecreateVao(unsigned int& vao)
+{
+    //    sprawdzić rzeczywiste działanie: czy glDeleteVertexArray() zeruje przekazaną nazwę, i glGenVertexArrays() daje ten sam numer, czy następny wolny
+    //ewentualnie zmodyfikować działanie funkcji glDeleteVertexArrays_Mock
+    if(vao)
+        glDeleteVertexArrays(1,&vao);
+
+    glGenVertexArrays(1, &vao);
+}
 BufferLoaderProgress BufferLoader::LoadBuffersForModelGeometry(ModelData& d,const int vao)
 {
     bool ok = true;
@@ -161,7 +172,7 @@ BufferLoaderProgress BufferLoader::LoadBuffersForModelGeometry(ModelData& d,cons
     glVertexAttribPointer(m_loc.normal_tex, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)bufoffset);
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d.bufIndexId);
-    
+
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -173,22 +184,22 @@ BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, co
     bool ok = true;
 
     if(!vao)return BufferLoaderProgress::VaoNotInited;
-    
+
     glBindVertexArray(vao);
-    
+
     glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
     glEnableVertexAttribArray(m_loc.textureCoord);
     glVertexAttribPointer(m_loc.textureCoord, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
 
     glBindTexture(GL_TEXTURE_2D, tex.textureId);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,(GLsizei)tex.width, (GLsizei)tex.height, 0,GL_RGB, GL_UNSIGNED_BYTE, tex.TextureData());
-    
+
     if ( ! MyOnGLError(myoglERR_TEXTIMAGE) ) {
         // Likely the GPU got out of memory
 //            ClearTexture();
         return BufferLoaderProgress::TextureError;
     }
-    
+
     glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);

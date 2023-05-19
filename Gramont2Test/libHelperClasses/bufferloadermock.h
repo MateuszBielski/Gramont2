@@ -17,6 +17,8 @@ public:
     
     bool LoadedBufferForModelGeometry(ModelData& d);
     bool LoadedBufferForTexture(TextureForModel& tex);
+    virtual void RecreateVao(unsigned int& vao) override;
+    unsigned short recreateVaoUsed = 0;
 protected:
 
 };

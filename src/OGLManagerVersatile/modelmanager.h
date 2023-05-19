@@ -40,6 +40,7 @@ public:
 #endif
     spMyOGLShaders getActiveShader();
     spOglRenderer getActiveRenderer();
+    myLight * getLightPtr();
 protected:
 
     spRenderSystem m_renderSystem;
@@ -52,6 +53,8 @@ protected:
     spMyOGLShaders activeShader;
     
     virtual void CallForMyRenderable(FunReSys ,spRenderSystem){};
+    virtual void ConfigureWithMyViewControl(spRenderSystem){};
+    virtual void ConfigureWithMyLightSystem(spRenderSystem);
 
     template<typename T>
     void setLocations(std::shared_ptr<T>,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );

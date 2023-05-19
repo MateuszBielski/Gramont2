@@ -12,9 +12,14 @@ GLint glGetUniformLocation_Mock(GLuint program, const GLchar *name){return 1;} /
 void glCompileShader_Mock(GLuint shader){}
 void glLinkProgram_Mock(GLuint program){}
 void glDeleteProgram_Mock(GLuint program){}
+GLuint lastGeneratedBufferNumber = 0;
 void glGenBuffers_Mock(GLsizei n, GLuint *buffers)
 {
-    *buffers = rand() % 10;
+//    GLuint l = rand() % 10;
+//    if(l == 0)l++;
+//    *buffers = rand() % 10;
+    *buffers = ++lastGeneratedBufferNumber;
+    
 }
 void glBindAttribLocation_Mock(GLuint program, GLuint index, const GLchar *name){}
 void glShaderSource_Mock(GLuint shader, GLsizei count, const GLchar *const*string, const GLint *length){}
@@ -40,7 +45,7 @@ void glBindVertexArray_Mock(GLuint array){}
 void glDeleteVertexArrays_Mock(GLsizei n, const GLuint *arrays){}
 void glBufferData_Mock(GLenum target, GLsizeiptr size, const void *data, GLenum usage){}
 void glBufferSubData_Mock(GLenum target, GLintptr offset, GLsizeiptr size, const void *data){}
-void glGenVertexArrays_Mock(GLsizei n, GLuint *arrays){}
+void glGenVertexArrays_Mock(GLsizei n, GLuint *arrays){ *arrays = 7;}
 void glEnableVertexAttribArray_Mock(GLuint index){}
 void glVertexAttribPointer_Mock(GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const void *pointer){}
 void glActiveTexture_Mock(GLenum texture){}

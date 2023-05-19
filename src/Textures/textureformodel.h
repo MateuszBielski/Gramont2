@@ -19,6 +19,7 @@ public:
     const GLfloat * texCoord = nullptr;
     GLuint nuTexCoord = 0;
     GLuint bufTexCoordId = 0;
+//    GLuint bufTexCoordId = (GLuint)-1;
     GLuint textureUnit = 1;
     GLuint textureId = 0;
     GLuint textureVAO = 0;

@@ -21,7 +21,7 @@ enum class BufferLoaderProgress
 class BufferLoader
 {
 private:
-    
+
 public:
     struct Locations {
         int position;
@@ -35,16 +35,20 @@ public:
     BufferLoaderProgress CreateBuffersForModelGeometry(ModelData& d);
     BufferLoaderProgress CreateBufferForTextureCoord(TextureForModel& tex);
     bool CreateVao(unsigned int& vao);
+#ifdef TESTOWANIE_F
+    virtual
+#endif
+    void RecreateVao(unsigned int& vao);
     virtual BufferLoaderProgress LoadBuffersForModelGeometry(ModelData& d,const int vao);
     virtual BufferLoaderProgress LoadBufferForTexture(TextureForModel& tex,const int vao);
-    
-    virtual void LoadBuffers(spOneModel model){};
+
+    virtual void LoadBuffers(spOneModel model) {};
     virtual void setLocationsFrom(spMyOGLShaders);
     void ClearBuffersForSingleModelEntry(ModelData& d);
     unsigned int CreateBuffersCheckedCount();
     unsigned int LoadTextureSuccessCount();
     unsigned int LoadTextureFailsCount();
-    
+
     bool LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d);
 protected:
     unsigned loadTextureSuccessCount = 0, loadTextureFailsCount = 0, createBuffersCheckedCount = 0;

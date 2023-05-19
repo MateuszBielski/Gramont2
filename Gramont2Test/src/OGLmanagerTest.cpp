@@ -137,7 +137,7 @@ TEST(MultiModelManager,SetShadersAndGeometry_LightSettedAndBindToRenderMatrix)
         ASSERT_FLOAT_EQ(0.0f, l.GetFLightPos()[i]);
     MultiModelManager man(nullptr);
     man.SetShadersAndGeometry();
-    auto renderer = man.getTexRendererForTest();
+    auto renderer = man.getActiveRenderer();
     auto position = renderer->m_matrices.light_position;
     ASSERT_NE(nullptr,position);
     auto colour = renderer->m_matrices.light_colour;
@@ -242,7 +242,7 @@ TEST(MultiModelManager,RendererKnowsMatricesFromMatrixStack)
     MultiModelManagerAccess acc(man);
     acc.setMatrixStack(ms);
     man.SetShadersAndGeometry();
-    auto renderer = man.getTexRendererForTest();
+    auto renderer = man.getActiveRenderer();
     ASSERT_EQ(ms->getModelViewProjectionMatrixfv(),renderer->m_matrices.matMVP);
     ASSERT_EQ(ms->getViewMatrixfv(),renderer->m_matrices.matToVw);
 }
@@ -588,6 +588,59 @@ TEST(MultiModelManager,ReloadedVaoForEach_ModelDataAndTextures)
     ASSERT_TRUE(rsm->ReloadedVAOforTexture(*model1->MyTexture()));
     ASSERT_TRUE(rsm->ReloadedVAOforModelData(model2->GetModelData()));
     ASSERT_TRUE(rsm->ReloadedVAOforTexture(*model2->MyTexture()));
+}
+TEST(MultiModelManager,setAndConfigureRenderSystem_knownMatrixStack)
+{
+    MultiModelManager man(nullptr);
+    MultiModelManagerAccess manAcc(man);
+    
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    
+    man.setAndConfigureRenderSystem(rs);
+    
+    auto rs_matMVP = rs->getRenderer()->m_matrices.matMVP;
+    auto ms_matMVP = manAcc.getMatrixStack()->getModelViewProjectionMatrixfv();
+    auto rs_matToVw = rs->getRenderer()->m_matrices.matToVw;
+    auto ms_matToVw = manAcc.getMatrixStack()->getViewMatrixfv();
+    
+    ASSERT_EQ(rs_matMVP, ms_matMVP);
+    ASSERT_EQ(rs_matToVw, ms_matToVw);
+}
+TEST(MultiModelManager,setAndConfigureRenderSystem_knownLightSystem)
+{
+    MultiModelManager man(nullptr);
+//    MultiModelManagerAccess manAcc(man);
+    
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    
+    man.setAndConfigureRenderSystem(rs);
+    
+    auto rs_matlightPositon = rs->getRenderer()->m_matrices.light_position;
+    auto ms_matlightPositon = man.getLightPtr()->GetFLightPos();
+    auto rs_matlight_colour = rs->getRenderer()->m_matrices.light_colour;
+    auto ms_matlight_colour = man.getLightPtr()->GetFLightColour();
+//    m_matrices.light_position = light->GetFLightPos();
+//    m_matrices.light_colour = light->GetFLightColour();
+    
+    ASSERT_EQ(rs_matlightPositon, ms_matlightPositon);
+    ASSERT_EQ(rs_matlight_colour, ms_matlight_colour);
+}
+TEST(MultiModelManager,setAndConfigureRenderSystem_BuffersCreatedForModels)
+{
+    MultiModelManager man(nullptr);
+    spOneModel model1 = make_shared<Triangle>();
+    spOneModel model2 = make_shared<Triangle>();
+    man.setModels( {model1,model2});
+    
+    spRenderSystemMock rsm = make_shared<RenderSystemMock>();
+    
+    man.setAndConfigureRenderSystem(rsm);
+    ASSERT_GT(model1->GetModelData().bufVertId,0);
+    ASSERT_GT(model2->GetModelData().bufVertId,0);
+//    GLuint bufVertId = 0;
+//    GLuint bufColNorId = 0;
+//    GLuint bufIndexId = 0;
+//tex.bufTexCoordId
 }
 
 stack<const float *> matricesFv_stack;

@@ -35,23 +35,85 @@ protected:
 };
 TextureForModel BufferLoader_Te::textureWithData;
 bool BufferLoader_Te::textureLoaded= false;
-TEST_F(BufferLoader_Te,CompleteCreateBuffers_ifModelBuffersZero)
+TEST_F(BufferLoader_Te,CompleteCreateBuffers_ifNumbersNotZero)
 {
     BufferLoader buf;
     ModelData d;
-    d.bufColNorId = 0;
-    d.bufIndexId = 0;
-    d.bufVertId = 0;
+    d.nuColours = 4;
+    d.nuIndices = 6;
+    d.nuNormals = 8;
+    d.nuPoints = 10;
     ASSERT_EQ(BufferLoaderProgress::Completed,buf.CreateBuffersForModelGeometry(d));
 }
-TEST_F(BufferLoader_Te,StartedCreateBuffers_ifModelBuffersSetted)
+TEST_F(BufferLoader_Te,StartedCreateBuffers_ifNumbersZero)
 {
     BufferLoader buf;
     ModelData d;
-    d.bufColNorId = 1;
-    d.bufIndexId = 5;
-    d.bufVertId = 4;
+    d.nuColours = 0;
+    d.nuIndices = 0;
+    d.nuNormals = 0;
+    d.nuPoints = 0;
     ASSERT_EQ(BufferLoaderProgress::Checked,buf.CreateBuffersForModelGeometry(d));
+}
+TEST_F(BufferLoader_Te,NotCreateGeometryBuffersIfCreated)
+{
+    BufferLoader buf;
+    ModelData d;
+    d.nuColours = 4;
+    d.nuIndices = 6;
+    d.nuNormals = 8;
+    d.nuPoints = 10;
+    d.bufColNorId = 2;
+    d.bufIndexId = 5;
+    d.bufVertId = 3;
+    
+    ASSERT_EQ(BufferLoaderProgress::Completed,buf.CreateBuffersForModelGeometry(d));
+    ASSERT_EQ(d.bufColNorId,2);
+    ASSERT_EQ(d.bufIndexId,5);
+    ASSERT_EQ(d.bufVertId,3);
+}
+TEST_F(BufferLoader_Te,CreateGeometryBuffersIf_InitialValue_NotCreated)
+{
+    BufferLoader buf;
+    ModelData d;
+    d.nuColours = 4;
+    d.nuIndices = 6;
+    d.nuNormals = 8;
+    d.nuPoints = 10;
+
+    unsigned int colNor = d.bufColNorId, index = d.bufIndexId, vert = d.bufVertId;
+    
+    ASSERT_EQ(BufferLoaderProgress::Completed,buf.CreateBuffersForModelGeometry(d));
+    ASSERT_GT(d.bufColNorId,0);
+    ASSERT_NE(d.bufColNorId,colNor);
+    
+    ASSERT_GT(d.bufIndexId,0);
+    ASSERT_NE(d.bufIndexId,index);
+    
+    ASSERT_GT(d.bufVertId,0);
+    ASSERT_NE(d.bufVertId,vert);
+}
+TEST_F(BufferLoader_Te,NotCreateTextureBuffersIfCreated)
+{
+    BufferLoader buf;
+    TextureForModel t;
+    t.nuTexCoord = 2;
+    t.bufTexCoordId = 3;
+    
+    ASSERT_EQ(BufferLoaderProgress::Completed,buf.CreateBufferForTextureCoord(t));
+    ASSERT_EQ(t.bufTexCoordId,3);
+}
+TEST_F(BufferLoader_Te,CreateTextureBuffersIf_InitialValue_NotCreated)
+{
+    BufferLoader buf;
+    TextureForModel t;
+    t.nuTexCoord = 2;
+    
+    unsigned int texCoord = t.bufTexCoordId;
+    
+    ASSERT_EQ(BufferLoaderProgress::Completed,buf.CreateBufferForTextureCoord(t));
+    ASSERT_GT(t.bufTexCoordId,0);
+    ASSERT_NE(t.bufTexCoordId,texCoord);
 }
 TEST_F(BufferLoader_Te,CreateBuffersCheckedCount)
 {
@@ -273,4 +335,27 @@ TEST_F(BufferLoader_Te,BufferForTextureLoaded)
     TextureForModel t;
     blm.LoadBufferForTexture(t,4);
     ASSERT_TRUE(blm.LoadedBufferForTexture(t));
+}
+TEST_F(BufferLoader_Te,NotCreateVao_IfExist)
+{
+    BufferLoader bl;
+    unsigned int vao = 343;
+    bl.CreateVao(vao);
+    ASSERT_EQ(343,vao);
+}
+TEST_F(BufferLoader_Te,CreateVao)
+{
+    BufferLoader bl;
+    unsigned int vao = 0;
+    bl.CreateVao(vao);
+    ASSERT_NE(0,vao);
+}
+TEST_F(BufferLoader_Te,RecreateVao)
+{
+    BufferLoader bl;
+    unsigned int vao = 33558;
+    bl.RecreateVao(vao);
+
+    ASSERT_NE(0,vao);
+    ASSERT_NE(33558,vao);
 }

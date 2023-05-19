@@ -20,7 +20,7 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     MakeAndSetCustomModels();
     activeShader = ptr_TextureShader;
     activeRenderer = m_TexRenderer;
-//    RenderSystemSetIfWant();
+    RenderSystemSetIfWant();
 //    activeRenderer = m_selecting->getRenderer();
 //    activeShader = m_selecting->getShader();
 }
@@ -60,10 +60,12 @@ void MultiModelManager::CallForMyRenderable(FunReSys FunToCall, spRenderSystem r
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto& d = model->GetModelData();
-//        RenderSystem * prs;
-//        (prs->*FunToCall)(d,tex);
         ((*rs).*FunToCall)(d,tex);
     }
+}
+void MultiModelManager::ConfigureWithMyViewControl(spRenderSystem rs)
+{
+    rs->getRenderer()->setViewMatrices(m_ptrMatrixStack);
 }
 void MultiModelManager::SetShadersAndGeometry()
 {
@@ -78,7 +80,7 @@ void MultiModelManager::SetShadersAndGeometry()
     m_renderSystem->ConfigureShadersAndLocations();
     m_selecting->ConfigureShadersAndLocations();
 
-    m_selecting->getRenderer()->setViewMatrices(m_ptrMatrixStack);
+    ConfigureWithMyViewControl(m_selecting);
 
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
@@ -100,7 +102,7 @@ void MultiModelManager::SetShadersAndGeometry()
 //    CallForMyRenderable(&RenderSystem::LoadVAO,m_renderSystem);
 //    CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
 
-//    starsza wersja:
+//    starsza wersja pomysłu:
 //    m_drawingSystem->CreateGraphicBuffers(models);
 //    m_drawingSystem->LoadGraphicBuffers(models);
 //    m_selecting->LoadGraphicBuffers(models);
@@ -108,9 +110,8 @@ void MultiModelManager::SetShadersAndGeometry()
 
     auto auccessBufferLoadedCount = m_BufferLoader->LoadTextureSuccessCount();
 
-
-    m_TexRenderer->setViewMatrices(m_ptrMatrixStack);
-    m_TexRenderer->setLightMatrices(&m_Light);
+    ConfigureWithMyViewControl(m_renderSystem);
+    ConfigureWithMyLightSystem(m_renderSystem);
 
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());

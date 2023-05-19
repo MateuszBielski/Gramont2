@@ -1,5 +1,7 @@
 #include <gtest/gtest.h>
 #include "rendersystemmock.h"
+#include "bufferloadermock.h"
+#include "onetexturerendersystem.h"
 
 using namespace std;
 
@@ -31,4 +33,27 @@ TEST(RenderSystem,ReloadedVAOforTexture)
     rsm.ReloadVAO(d,t);
     ASSERT_TRUE(rsm.ReloadedVAOforTexture(t));
 }
+TEST(RenderSystem,ReloadVAO_RecreateVao)
+{
+    OneTextureRenderSystem rs;
+    spBufferLoaderMock blm = make_shared<BufferLoaderMock>();
+    rs.setBufferLoader(blm);
+    
+    ModelData d;
+    TextureForModel t;
+    rs.ReloadVAO(d,t);
+    ASSERT_EQ(1,blm->recreateVaoUsed);
+}
 
+TEST(RenderSystem,ReloadVAO_LoadedBufferForTexture)
+{
+    OneTextureRenderSystem rs;
+    spBufferLoaderMock blm = make_shared<BufferLoaderMock>();
+    rs.setBufferLoader(blm);
+    
+    ModelData d;
+    TextureForModel t1, t2;
+    rs.ReloadVAO(d,t1);
+    ASSERT_FALSE(blm->LoadedBufferForTexture(t2));
+    ASSERT_TRUE(blm->LoadedBufferForTexture(t1));
+}

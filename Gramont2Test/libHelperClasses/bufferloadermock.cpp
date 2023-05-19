@@ -31,3 +31,7 @@ bool BufferLoaderMock::LoadedBufferForTexture(TextureForModel& tex)
     }
     return false;
 }
+void BufferLoaderMock::RecreateVao(unsigned int& vao)
+{
+	recreateVaoUsed++;
+}
