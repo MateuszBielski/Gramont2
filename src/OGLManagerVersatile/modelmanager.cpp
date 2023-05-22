@@ -27,15 +27,9 @@ void ModelManager::setLocations(shared_ptr<T> rend, vec_locations_T<T> vec, myOG
 }
 bool ModelManager::setAndConfigureRenderSystem(spRenderSystem rs)
 {
-	/***pomysł*****/
-//    rs->setRenderingResources(m_renderSystem->getRidOfRenderingResources());//(getRidOf - pozbądź się) jakie to mogą być zasoby?:
-    //lokacje, wskaźniki do Light i matrixStack, 
-    //dlaczego tworzyć kolejną klasę RenderingResources?
-    /**/
     m_renderSystem = rs;
     rs->ConfigureShadersAndLocations();
     
-    //tu musi być sprawdzenie, czy modele miały już wywołaną funkcję tworzenia buforów
     CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,rs);
     CallForMyRenderable(&RenderSystem::ReloadVAO,rs);
     ConfigureWithMyViewControl(rs);

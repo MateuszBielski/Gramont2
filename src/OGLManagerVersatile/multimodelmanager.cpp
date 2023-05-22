@@ -20,7 +20,7 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     MakeAndSetCustomModels();
     activeShader = ptr_TextureShader;
     activeRenderer = m_TexRenderer;
-    RenderSystemSetIfWant();
+
 //    activeRenderer = m_selecting->getRenderer();
 //    activeShader = m_selecting->getShader();
 }
@@ -67,6 +67,7 @@ void MultiModelManager::ConfigureWithMyViewControl(spRenderSystem rs)
 {
     rs->getRenderer()->setViewMatrices(m_ptrMatrixStack);
 }
+
 void MultiModelManager::SetShadersAndGeometry()
 {
 
@@ -81,42 +82,39 @@ void MultiModelManager::SetShadersAndGeometry()
     m_selecting->ConfigureShadersAndLocations();
 
     ConfigureWithMyViewControl(m_selecting);
-
+    
+    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
+    
     for(auto& model : models) {
-        auto& tex = *model->MyTexture();
-        auto& d = model->GetModelData();
+//        auto& tex = *model->MyTexture();
+//        auto& d = model->GetModelData();
 #ifdef TESTOWANIE_F
-        tex.LoadImageFile(TEXTURE_IMAGE);
+//        tex.LoadImageFile(TEXTURE_IMAGE);
 #endif
-        m_BufferLoader->CreateBuffersForModelGeometry(d);
-        m_BufferLoader->CreateBufferForTextureCoord(tex);
-        unsigned int& vao = tex.textureVAO;
-        m_BufferLoader->CreateVao(vao);
-        //dla renderera potrzbna będzie możliwość wybrania dla którego vao renderuje
-        m_BufferLoader->LoadBuffersForModelGeometry(d,vao);
-        m_BufferLoader->LoadBufferForTexture(tex,vao);
+//        m_BufferLoader->CreateBuffersForModelGeometry(d);
+//        m_BufferLoader->CreateBufferForTextureCoord(tex);
+//        unsigned int& vao = tex.textureVAO;
+//        m_BufferLoader->CreateVao(vao);
+//        //dla renderera potrzbna będzie możliwość wybrania dla którego vao renderuje
+//        m_BufferLoader->LoadBuffersForModelGeometry(d,vao);
+//        m_BufferLoader->LoadBufferForTexture(tex,vao);
         m_selecting->getBufferLoader()->LoadBuffers(model);
     }
+
     /**zamiast powyższej pętli***/
 //    CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,m_renderSystem);// funkcja CallForMyRenderable już działa
-//    CallForMyRenderable(&RenderSystem::LoadVAO,m_renderSystem);
-//    CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
-
-//    starsza wersja pomysłu:
-//    m_drawingSystem->CreateGraphicBuffers(models);
-//    m_drawingSystem->LoadGraphicBuffers(models);
-//    m_selecting->LoadGraphicBuffers(models);
+//    CallForMyRenderable(&RenderSystem::ReloadVAO,m_renderSystem);
+//    CallForMyRenderable(&RenderSystem::ReloadVAO,m_selecting); // to nie będzie działać bo reload powinno tworzyć vao dotyczące selectu a nie tekstury
     /*****/
-
     auto auccessBufferLoadedCount = m_BufferLoader->LoadTextureSuccessCount();
 
     ConfigureWithMyViewControl(m_renderSystem);
     ConfigureWithMyLightSystem(m_renderSystem);
+    
 
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
 }
-
 void MultiModelManager::Draw3d()
 {
 
