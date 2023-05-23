@@ -32,7 +32,9 @@ spBufferLoader RenderSystem::getBufferLoader()
 }
 void RenderSystem::ReloadVAO(ModelData& d, TextureForModel& tex)
 {
-    unsigned int& vao = tex.textureVAO;
+//    unsigned int& vao = tex.textureVAO;
+    if(!activeVaoPtr)return;
+    unsigned int& vao = *activeVaoPtr;
     m_BufferLoader->RecreateVao(vao);
     m_BufferLoader->LoadBuffersForModelGeometry(d,vao);
     m_BufferLoader->LoadBufferForTexture(tex,vao);
@@ -41,4 +43,8 @@ void RenderSystem::CreateGraphicBuffers(ModelData& d, TextureForModel& tex)
 {
     m_BufferLoader->CreateBuffersForModelGeometry(d);
     m_BufferLoader->CreateBufferForTextureCoord(tex);
+}
+void RenderSystem::setActiveVaoPtr(unsigned int * vao)
+{
+	activeVaoPtr = vao;
 }

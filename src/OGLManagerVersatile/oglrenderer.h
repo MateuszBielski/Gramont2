@@ -36,7 +36,7 @@ public:
     Matrices m_matrices;
     Locations m_loc;
     OglRendererProgress DrawSingleModelEntry(ModelData& d, unsigned int gl_ProgramId);
-    virtual OglRendererProgress DrawTextureForSingleModelEntry(TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId);
+    virtual OglRendererProgress DrawTextureForSingleModelEntry(const unsigned int vao, TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId);
     virtual OglRendererProgress DrawModel(spOneModel, unsigned int  );
     unsigned int StartCallCount(){return startCallCount;}
     virtual void setViewMatrices(spMatrixStack );

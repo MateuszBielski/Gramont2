@@ -191,6 +191,9 @@ BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, co
     glEnableVertexAttribArray(m_loc.textureCoord);
     glVertexAttribPointer(m_loc.textureCoord, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
 
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    
     glBindTexture(GL_TEXTURE_2D, tex.textureId);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,(GLsizei)tex.width, (GLsizei)tex.height, 0,GL_RGB, GL_UNSIGNED_BYTE, tex.TextureData());
 
@@ -200,12 +203,37 @@ BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, co
         return BufferLoaderProgress::TextureError;
     }
 
-    glBindVertexArray(0);
     glBindTexture(GL_TEXTURE_2D, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     return BufferLoaderProgress::Completed;
 }
+//BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, const int vao)
+//{
+//    bool ok = true;
+//
+//    if(!vao)return BufferLoaderProgress::VaoNotInited;
+//
+//    glBindVertexArray(vao);
+//
+//    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
+//    glEnableVertexAttribArray(m_loc.textureCoord);
+//    glVertexAttribPointer(m_loc.textureCoord, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
+//
+//    glBindTexture(GL_TEXTURE_2D, tex.textureId);
+//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,(GLsizei)tex.width, (GLsizei)tex.height, 0,GL_RGB, GL_UNSIGNED_BYTE, tex.TextureData());
+//
+//    if ( ! MyOnGLError(myoglERR_TEXTIMAGE) ) {
+//        // Likely the GPU got out of memory
+////            ClearTexture();
+//        return BufferLoaderProgress::TextureError;
+//    }
+//
+//    glBindVertexArray(0);
+//    glBindTexture(GL_TEXTURE_2D, 0);
+//    glBindBuffer(GL_ARRAY_BUFFER, 0);
+//
+//    return BufferLoaderProgress::Completed;
+//}
 unsigned int BufferLoader::LoadTextureSuccessCount()
 {
     return loadTextureSuccessCount;

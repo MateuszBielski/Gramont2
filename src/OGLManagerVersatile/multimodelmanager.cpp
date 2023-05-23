@@ -52,7 +52,7 @@ void MultiModelManager::MakeAndSetCustomModels()
 }
 void MultiModelManager::RenderSystemSetIfWant()
 {
-//    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());//move to configuration module (when it will be made)
+//    setAndConfigureRenderSystem(make_unique<c>());//move to configuration module (when it will be made)
     setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
 }
 void MultiModelManager::CallForMyRenderable(FunReSys FunToCall, spRenderSystem rs)
@@ -60,6 +60,7 @@ void MultiModelManager::CallForMyRenderable(FunReSys FunToCall, spRenderSystem r
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto& d = model->GetModelData();
+        rs->setActiveVaoPtr(model->getVaoPtr());
         ((*rs).*FunToCall)(d,tex);
     }
 }
@@ -78,12 +79,12 @@ void MultiModelManager::SetShadersAndGeometry()
 
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
 
-    m_renderSystem->ConfigureShadersAndLocations();
+//    m_renderSystem->ConfigureShadersAndLocations();
     m_selecting->ConfigureShadersAndLocations();
 
     ConfigureWithMyViewControl(m_selecting);
     
-    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
+    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
     
     for(auto& model : models) {
 //        auto& tex = *model->MyTexture();

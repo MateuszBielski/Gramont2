@@ -24,7 +24,7 @@ OglRendererProgress OglRenderer::DrawSingleModelEntry(ModelData& d, unsigned int
     glUseProgram(0);
     return OglRendererProgress::Completed;
 }
-OglRendererProgress OglRenderer::DrawTextureForSingleModelEntry(TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId)
+OglRendererProgress OglRenderer::DrawTextureForSingleModelEntry(const unsigned int vao, TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId)
 {
     ++startCallCount;
     bool ok = true;
@@ -41,13 +41,15 @@ OglRendererProgress OglRenderer::DrawTextureForSingleModelEntry(TextureForModel&
         return OglRendererProgress::BeforeOgl;
 
     glUseProgram(gl_ProgramId);
-    glBindVertexArray(tex.textureVAO);
+//    glBindVertexArray(tex.textureVAO);
+    glBindVertexArray(vao);
 
     glUniformMatrix4fv(m_loc.mMVP, 1, GL_FALSE, m_matrices.matMVP);
     glUniformMatrix4fv(m_loc.mToViewSpace, 1, GL_FALSE, m_matrices.matToVw);
     glUniform4fv(m_loc.lightProps, 1, m_matrices.light_position);
     glUniform3fv(m_loc.lightColour, 1, m_matrices.light_colour);
     //without two following models are black rendered
+    //order is important
     glActiveTexture(GL_TEXTURE0 + tex.textureUnit);
     glBindTexture(GL_TEXTURE_2D, tex.textureId);
 
@@ -65,7 +67,8 @@ OglRendererProgress OglRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
 {
     auto& tex = *model->MyTexture();
     auto d = model->GetModelData();
-    return DrawTextureForSingleModelEntry(tex, d,gl_ProgramId);
+    auto vao = model->getVao();
+    return DrawTextureForSingleModelEntry(vao,tex, d,gl_ProgramId);
 }
 void OglRenderer::setViewMatrices(spMatrixStack ms)
 {
