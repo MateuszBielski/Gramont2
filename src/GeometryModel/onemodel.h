@@ -4,12 +4,16 @@
 #include "textureformodel.h"
 #include "transformable.h"
 #include "selectable.h"
+#include <vector>
 
+using std::vector;
 
 class OneModel : public Transformable, public Selectable
 {
 private:
 public:
+    OneModel();
+    ~OneModel();
     virtual ModelData& GetModelData();
     spTextureForModel MyTexture();
     unsigned int VAO = 0;
@@ -18,9 +22,11 @@ public:
 //    void setWhichVao(param);
     unsigned int& getVao();
     unsigned int * getVaoPtr();
+    bool AddTexture(spTextureForModel ,GLuint nuTexCoord, GLfloat * texCoord ,TextureForModel::TextureType type);
 protected:
     ModelData data;
     spTextureForModel m_texture = nullptr;
+    vector<spTextureForModel> addedTextures;
 
 };
 

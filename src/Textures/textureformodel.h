@@ -26,15 +26,21 @@ public:
 
 using spTextureInMemory = std::shared_ptr<TextureInMemory>;
 
+
+
 class TextureForModel
 {
 public:
     TextureForModel() {};
     ~TextureForModel() {};
+    enum TextureType
+    {
+       Image,Height,TextureTypesSize
+    };
     void setTextureInMemory(spTextureInMemory);
     const GLint getTextureUnit();
     const GLuint getTextureId();
-    bool CreateAndSetTextureInMemoryWithLoadedImageFile(std::string imageFile);
+//    bool CreateAndSetTextureInMemoryWithLoadedImageFile(std::string imageFile);
 
     const GLfloat * texCoord = nullptr;
     GLuint nuTexCoord = 0;
