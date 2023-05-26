@@ -7,7 +7,11 @@
 
 using namespace std;
 
-void TextureForModel::LoadImageFile(string imageFile)
+TextureInMemory::TextureInMemory(std::string imageFile)
+{
+	LoadImageFile(imageFile);
+}
+void TextureInMemory::LoadImageFile(string imageFile)
 {
 //    int x,y,n;
     stbi_set_flip_vertically_on_load(true);
@@ -22,16 +26,37 @@ void TextureForModel::LoadImageFile(string imageFile)
 //    }
 }
 
-unsigned char* TextureForModel::TextureData()
+unsigned char* TextureInMemory::TextureData()
 {
 //    unsigned char * data = new unsigned char [100];
     return textureData;
 }
-TextureForModel::~TextureForModel()
+TextureInMemory::~TextureInMemory()
 {
     stbi_image_free(textureData);
 }
-bool TextureForModel::hasImagePath()
+bool TextureInMemory::hasImagePath()
 {
     return (bool)imagePath.size();
+}
+GLint& TextureInMemory::getTextureUnit()
+{
+    return textureUnit;
+}
+GLuint& TextureInMemory::getTextureId()
+{	
+	return textureId;
+}
+
+void TextureForModel::setTextureInMemory(spTextureInMemory texm)
+{
+	m_texm_ptr = texm;
+}
+const GLuint TextureForModel::getTextureId()
+{
+    return m_texm_ptr->getTextureId();
+}
+const GLint TextureForModel::getTextureUnit()
+{
+	return m_texm_ptr->getTextureUnit();
 }

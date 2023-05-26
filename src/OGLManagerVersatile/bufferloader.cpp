@@ -6,9 +6,6 @@ using namespace std;
 
 void BufferLoader::ClearBuffersForSingleModelEntry(ModelData& d)
 {
-    //    if ( m_triangShaders )
-//    m_ModelShader.DisableGenericVAA();
-
     // Clear graphics card memory
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
@@ -28,7 +25,6 @@ void BufferLoader::ClearBuffersForSingleModelEntry(ModelData& d)
 
     glFlush(); //Tell GL to execute those commands now, but we don't wait for them
 
-//    m_triangShaders = NULL;
     d.modelVAO = d.bufIndexId = d.bufColNorId = d.bufVertId = 0;
 }
 BufferLoaderProgress BufferLoader::CreateBuffersForModelGeometry(ModelData& d)
@@ -117,10 +113,21 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& 
         // Populate the buffer with the array "vert"
         glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
     }
-    tex.textureUnit = 1;
-    glActiveTexture(GL_TEXTURE0 + tex.textureUnit);
-    glGenTextures(1, &tex.textureId);
-    glBindTexture(GL_TEXTURE_2D, tex.textureId);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    return BufferLoaderProgress::Completed;
+    //czy modele potrzebują na nowo mieć tworzone bufory na karcie graficznej, jesli tak to czy poprzednie kasować czy przechowywać.
+    //https://gamedev.stackexchange.com/questions/75989/what-is-the-correct-way-to-reset-and-load-new-data-into-gl-array-buffer
+    //glBufferData() overwrites the previous data, and is generally what you should use to load new data into a GL buffer. Conceptually it is similar to overwriting data in an array.
+    //glDeleteBuffers() and glGenBuffers() destroy and recreate a buffer. Conceptually they are similar to free() and malloc()
+}
+BufferLoaderProgress BufferLoader::CreateBufferForTextureInMemory(TextureInMemory& texm)
+{
+    texm.getTextureUnit() = 1;
+    glActiveTexture(GL_TEXTURE0 + texm.getTextureUnit());
+    glGenTextures(1, &texm.getTextureId());
+    glBindTexture(GL_TEXTURE_2D, texm.getTextureId());
     // Avoid some artifacts
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
@@ -131,13 +138,16 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& 
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
 
     MyOnGLError(myoglERR_CLEAR);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,(GLsizei)texm.width, (GLsizei)texm.height, 0,GL_RGB, GL_UNSIGNED_BYTE, texm.TextureData());
+
+    if ( ! MyOnGLError(myoglERR_TEXTIMAGE) ) {
+        // Likely the GPU got out of memory
+//            ClearTexture();
+        return BufferLoaderProgress::TextureError;
+    }
+
     glBindTexture(GL_TEXTURE_2D, 0);
     return BufferLoaderProgress::Completed;
-    //czy modele potrzebują na nowo mieć tworzone bufory na karcie graficznej, jesli tak to czy poprzednie kasować czy przechowywać.
-    //https://gamedev.stackexchange.com/questions/75989/what-is-the-correct-way-to-reset-and-load-new-data-into-gl-array-buffer
-    //glBufferData() overwrites the previous data, and is generally what you should use to load new data into a GL buffer. Conceptually it is similar to overwriting data in an array.
-    //glDeleteBuffers() and glGenBuffers() destroy and recreate a buffer. Conceptually they are similar to free() and malloc()
 }
 bool BufferLoader::CreateVao(unsigned int& vao)
 {
@@ -193,47 +203,9 @@ BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, co
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    
-    glBindTexture(GL_TEXTURE_2D, tex.textureId);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,(GLsizei)tex.width, (GLsizei)tex.height, 0,GL_RGB, GL_UNSIGNED_BYTE, tex.TextureData());
-
-    if ( ! MyOnGLError(myoglERR_TEXTIMAGE) ) {
-        // Likely the GPU got out of memory
-//            ClearTexture();
-        return BufferLoaderProgress::TextureError;
-    }
-
-    glBindTexture(GL_TEXTURE_2D, 0);
 
     return BufferLoaderProgress::Completed;
 }
-//BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, const int vao)
-//{
-//    bool ok = true;
-//
-//    if(!vao)return BufferLoaderProgress::VaoNotInited;
-//
-//    glBindVertexArray(vao);
-//
-//    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
-//    glEnableVertexAttribArray(m_loc.textureCoord);
-//    glVertexAttribPointer(m_loc.textureCoord, 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
-//
-//    glBindTexture(GL_TEXTURE_2D, tex.textureId);
-//    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,(GLsizei)tex.width, (GLsizei)tex.height, 0,GL_RGB, GL_UNSIGNED_BYTE, tex.TextureData());
-//
-//    if ( ! MyOnGLError(myoglERR_TEXTIMAGE) ) {
-//        // Likely the GPU got out of memory
-////            ClearTexture();
-//        return BufferLoaderProgress::TextureError;
-//    }
-//
-//    glBindVertexArray(0);
-//    glBindTexture(GL_TEXTURE_2D, 0);
-//    glBindBuffer(GL_ARRAY_BUFFER, 0);
-//
-//    return BufferLoaderProgress::Completed;
-//}
 unsigned int BufferLoader::LoadTextureSuccessCount()
 {
     return loadTextureSuccessCount;
@@ -253,15 +225,11 @@ void BufferLoader::setLocationsFrom(spMyOGLShaders shader)
     m_loc.textureCoord = shader->GetAttribLoc("in_TextPos");
 }
 
-
 bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d)
 {
     ++loadTextureFailsCount;
     bool ok = true;
 
-    ok &= (bool)tex.width;
-    ok &= (bool)tex.height;
-    ok &= (bool)tex.TextureData();
     ok &= (bool)tex.texCoord;
     ok &= (bool)tex.nuTexCoord;
     ok &= (bool)d.bufIndexId;
@@ -273,16 +241,6 @@ bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, M
 //    ok &= (bool)m_loc.normal_tex;
     if(!ok)return false;
 
-//    GLsizeiptr nBytes = 2 * tex.nuTexCoord * sizeof(GLfloat);
-//
-//    glGenBuffers(1, &tex.bufTexCoordId);
-//    glBindBuffer(GL_ARRAY_BUFFER, tex.bufTexCoordId);
-//    // Populate the buffer with the array "vert"
-//    glBufferData(GL_ARRAY_BUFFER, nBytes, tex.texCoord, GL_STATIC_DRAW);
-//
-//    MyOnGLError(myoglERR_CLEAR); //clear error stack
-
-//    auto& d = model->GetModelData();
     glGenVertexArrays(1, &tex.textureVAO);
     glBindVertexArray(tex.textureVAO);
 
@@ -311,6 +269,7 @@ bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, M
 
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d.bufIndexId);
 
+    /*poniższe nie działa po rozdzieleniu obiektu textury na TextureForModel i TextureInMemory
     tex.textureUnit = 1;
     glActiveTexture(GL_TEXTURE0 + tex.textureUnit);
     glGenTextures(1, &tex.textureId);
@@ -329,15 +288,16 @@ bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, M
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,(GLsizei)tex.width, (GLsizei)tex.height, 0,GL_RGB, GL_UNSIGNED_BYTE, tex.TextureData());
     if ( ! MyOnGLError(myoglERR_TEXTIMAGE) ) {
         // Likely the GPU got out of memory
-//            ClearTexture();
+    //            ClearTexture();
         return false;
     }
 
     // Unbind
-    glBindVertexArray(0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindTexture(GL_TEXTURE_2D, 0);
     glActiveTexture(GL_TEXTURE0);
+     */
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     // Some log
     std::string str_log = "Texture buffers loaded into GPU for model Id = ";

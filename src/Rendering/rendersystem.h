@@ -23,6 +23,7 @@ public:
 #endif
     void ReloadVAO(ModelData& d, TextureForModel& tex);
     void CreateGraphicBuffers(ModelData& d, TextureForModel& tex);
+    void CreateGraphicBuffers(TextureInMemory& texm);
 protected:
     spOglRenderer m_renderer;
     spBufferLoader m_BufferLoader;
@@ -31,7 +32,8 @@ protected:
 
 };
 
-using FunReSys = void (RenderSystem::*)(ModelData& d,TextureForModel& tex);
+using FunReSys_MdTfm = void (RenderSystem::*)(ModelData& d,TextureForModel& tex);
+using FunReSys_Tim = void (RenderSystem::*)(TextureInMemory& tex);
 using spRenderSystem = std::shared_ptr<RenderSystem>;
 using upRenderSystem = std::unique_ptr<RenderSystem>;
 #endif // RenderSystem_H

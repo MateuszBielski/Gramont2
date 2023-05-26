@@ -44,6 +44,10 @@ void RenderSystem::CreateGraphicBuffers(ModelData& d, TextureForModel& tex)
     m_BufferLoader->CreateBuffersForModelGeometry(d);
     m_BufferLoader->CreateBufferForTextureCoord(tex);
 }
+void RenderSystem::CreateGraphicBuffers(TextureInMemory& texm)
+{
+	m_BufferLoader->CreateBufferForTextureInMemory(texm);
+}
 void RenderSystem::setActiveVaoPtr(unsigned int * vao)
 {
 	activeVaoPtr = vao;

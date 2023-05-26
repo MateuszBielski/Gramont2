@@ -34,6 +34,7 @@ public:
     Locations m_loc;
     BufferLoaderProgress CreateBuffersForModelGeometry(ModelData& d);
     BufferLoaderProgress CreateBufferForTextureCoord(TextureForModel& tex);
+    BufferLoaderProgress CreateBufferForTextureInMemory(TextureInMemory& tex);
     bool CreateVao(unsigned int& vao);
 #ifdef TESTOWANIE_F
     virtual

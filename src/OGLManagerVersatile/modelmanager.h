@@ -52,7 +52,8 @@ protected:
     spOglRenderer activeRenderer;
     spMyOGLShaders activeShader;
     
-    virtual void CallForMyRenderable(FunReSys ,spRenderSystem){};
+    virtual void CallForMyRenderable(FunReSys_MdTfm ,spRenderSystem){};
+    virtual void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs){};
     virtual void ConfigureWithMyViewControl(spRenderSystem){};
     virtual void ConfigureWithMyLightSystem(spRenderSystem);
 

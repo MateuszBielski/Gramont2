@@ -40,13 +40,20 @@ void MultiModelManager::MakeAndSetCustomModels()
 #define TEXTURE_IMAGE2 "../ResourcesGramont2/ksiezyc.jpg"
     auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
     auto model_2 = make_shared<ConvexSurface>(80,80,100,100,30);
-//    setModels(vector<spOneModel> {model_1,model_2});
     setModels( {model_1,model_2});
+    
     model_1->Translate( {60.0f,0.0f,0.0f});
     model_2->Rotate(60.0f, {0.0f,0.3f,0.8f});
     model_2->Translate( {-60.0f,0.0f,0.0f});
-    model_1->MyTexture()->LoadImageFile(TEXTURE_IMAGE2);
-    model_2->MyTexture()->LoadImageFile(TEXTURE_IMAGE);
+    
+    spTextureInMemory texm_1, texm_2;
+    texm_1 = make_shared<TextureInMemory>(TEXTURE_IMAGE2);
+    texm_2 = make_shared<TextureInMemory>(TEXTURE_IMAGE);
+    texms.push_back(texm_1);
+    texms.push_back(texm_2);
+    model_1->MyTexture()->setTextureInMemory(texm_1);
+    model_2->MyTexture()->setTextureInMemory(texm_2);
+
     m_selecting->RegisterSelectable( {model_1,model_2});
 #endif
 }
@@ -55,13 +62,20 @@ void MultiModelManager::RenderSystemSetIfWant()
 //    setAndConfigureRenderSystem(make_unique<c>());//move to configuration module (when it will be made)
     setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
 }
-void MultiModelManager::CallForMyRenderable(FunReSys FunToCall, spRenderSystem rs)
+void MultiModelManager::CallForMyRenderable(FunReSys_MdTfm FunToCall, spRenderSystem rs)
 {
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto& d = model->GetModelData();
         rs->setActiveVaoPtr(model->getVaoPtr());
         ((*rs).*FunToCall)(d,tex);
+    }
+}
+void MultiModelManager::CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs)
+{
+    for(auto& textureInMemory : texms)
+    {
+        ((*rs).*FunToCall)(*textureInMemory);
     }
 }
 void MultiModelManager::ConfigureWithMyViewControl(spRenderSystem rs)
@@ -79,46 +93,20 @@ void MultiModelManager::SetShadersAndGeometry()
 
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
 
-//    m_renderSystem->ConfigureShadersAndLocations();
     m_selecting->ConfigureShadersAndLocations();
-
     ConfigureWithMyViewControl(m_selecting);
     
     setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
     
     for(auto& model : models) {
-//        auto& tex = *model->MyTexture();
-//        auto& d = model->GetModelData();
-#ifdef TESTOWANIE_F
-//        tex.LoadImageFile(TEXTURE_IMAGE);
-#endif
-//        m_BufferLoader->CreateBuffersForModelGeometry(d);
-//        m_BufferLoader->CreateBufferForTextureCoord(tex);
-//        unsigned int& vao = tex.textureVAO;
-//        m_BufferLoader->CreateVao(vao);
-//        //dla renderera potrzbna będzie możliwość wybrania dla którego vao renderuje
-//        m_BufferLoader->LoadBuffersForModelGeometry(d,vao);
-//        m_BufferLoader->LoadBufferForTexture(tex,vao);
         m_selecting->getBufferLoader()->LoadBuffers(model);
     }
-
-    /**zamiast powyższej pętli***/
-//    CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,m_renderSystem);// funkcja CallForMyRenderable już działa
-//    CallForMyRenderable(&RenderSystem::ReloadVAO,m_renderSystem);
-//    CallForMyRenderable(&RenderSystem::ReloadVAO,m_selecting); // to nie będzie działać bo reload powinno tworzyć vao dotyczące selectu a nie tekstury
-    /*****/
-    auto auccessBufferLoadedCount = m_BufferLoader->LoadTextureSuccessCount();
-
-    ConfigureWithMyViewControl(m_renderSystem);
-    ConfigureWithMyLightSystem(m_renderSystem);
-    
 
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
 }
 void MultiModelManager::Draw3d()
 {
-
     for(auto& model : models) {
         auto& tex = *model->MyTexture();
         auto d = model->GetModelData();

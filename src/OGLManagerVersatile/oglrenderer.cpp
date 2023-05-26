@@ -50,10 +50,10 @@ OglRendererProgress OglRenderer::DrawTextureForSingleModelEntry(const unsigned i
     glUniform3fv(m_loc.lightColour, 1, m_matrices.light_colour);
     //without two following models are black rendered
     //order is important
-    glActiveTexture(GL_TEXTURE0 + tex.textureUnit);
-    glBindTexture(GL_TEXTURE_2D, tex.textureId);
+    glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
+    glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
 
-    glUniform1i(m_loc.stringTexture, tex.textureUnit);
+    glUniform1i(m_loc.stringTexture, tex.getTextureUnit());
 
     glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);
     // Unbind

@@ -35,12 +35,14 @@ public:
     void setModels(vector<spOneModel>&& );
     void setSelectingResult(SelectingResult&& );
 protected:
-    virtual void CallForMyRenderable(FunReSys ,spRenderSystem) override;
+    virtual void CallForMyRenderable(FunReSys_MdTfm ,spRenderSystem) override;
+    virtual void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs) override;
     virtual void ConfigureWithMyViewControl(spRenderSystem) override;
     
     
     spMatrixStack m_ptrMatrixStack;
     vector<spOneModel> models;
+    vector<spTextureInMemory> texms;
     spMyOGLShaders ptr_TextureShader;
     char * textureShaderCode = nullptr;
     

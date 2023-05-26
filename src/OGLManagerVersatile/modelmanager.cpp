@@ -32,6 +32,7 @@ bool ModelManager::setAndConfigureRenderSystem(spRenderSystem rs)
     
     CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,rs);
     CallForMyRenderable(&RenderSystem::ReloadVAO,rs);
+    CallForMyTextures(&RenderSystem::CreateGraphicBuffers,rs);
     ConfigureWithMyViewControl(rs);
     
     ConfigureWithMyLightSystem(rs);
