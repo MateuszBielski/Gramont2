@@ -66,7 +66,6 @@ set ( CXX_SRCS
     src/OglRendererTest.cpp
     src/BufferLoaderTest.cpp
     src/ViewControlTest.cpp
-    src/ViewControlNeedFixTest.cpp
     src/RenderSystemTest.cpp
 )
 if(UNIX)

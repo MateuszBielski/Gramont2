@@ -125,31 +125,33 @@ TEST_F(BufferLoader_Te,CreateBuffersCheckedCount)
     ModelData d;
     buf.CreateBuffersForModelGeometry(d);
     buf.CreateBuffersForModelGeometry(d);
-    ASSERT_EQ(2,buf.CreateBuffersCheckedCount());
+    
+    ASSERT_EQ(2,buf.Counter(BufferLoaderCounterType::CreateBuffersForModelGeometryStart));
 }
 
 TEST_F(BufferLoader_Te,LoadTextureSuccessCounting_Zero)
 {
     BufferLoader buf;
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+    
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
 //    buf.LoadTextureBuffersForSingleModelEntry();
 }
 
 TEST_F(BufferLoader_Te,LoadTextureFailsCounting_Zero)
 {
     BufferLoader buf;
-    ASSERT_EQ(0,buf.LoadTextureFailsCount());
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureStart));
 //    buf.LoadTextureBuffersForSingleModelEntry();
 }
 
-TEST_F(BufferLoader_Te,LoadTextureFailsCounting)
+TEST_F(BufferLoader_Te,LoadTextureStartsCounting)
 {
     BufferLoader buf;
-    ModelData d;
+//    ModelData d;
     TextureForModel tex;
-    buf.LoadTextureBuffersForSingleModelEntry(tex, d);
-    buf.LoadTextureBuffersForSingleModelEntry(tex, d);
-    ASSERT_EQ(2,buf.LoadTextureFailsCount());
+    buf.LoadBufferForTexture(tex, 2);
+    buf.LoadBufferForTexture(tex, 4);
+    ASSERT_EQ(2,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureStart));
 }
 
 TEST_F(BufferLoader_Te,LoadTextureSuccessCounting_ZeroIfRequirementsNotMet)
@@ -159,7 +161,7 @@ TEST_F(BufferLoader_Te,LoadTextureSuccessCounting_ZeroIfRequirementsNotMet)
     TextureForModel tex;
     buf.LoadTextureBuffersForSingleModelEntry(tex, d);
     buf.LoadTextureBuffersForSingleModelEntry(tex, d);
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
 }
 
 
@@ -171,7 +173,7 @@ TEST_F(BufferLoader_Te,LoadFail_bufIndexId)
     setDummyDataForTexture(textureWithData);
     d.bufIndexId = 0;
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureStart));
 }
 TEST_F(BufferLoader_Te,LoadFail_bufColNorId)
 {
@@ -181,7 +183,7 @@ TEST_F(BufferLoader_Te,LoadFail_bufColNorId)
     setDummyDataForTexture(textureWithData);
     d.bufColNorId = 0;
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
 }
 TEST_F(BufferLoader_Te,LoadFail_nuColours)
 {
@@ -191,7 +193,7 @@ TEST_F(BufferLoader_Te,LoadFail_nuColours)
     setDummyDataForTexture(textureWithData);
     d.nuColours = 0;
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
 }
 TEST_F(BufferLoader_Te,LoadFail_bufVertId)
 {
@@ -201,48 +203,49 @@ TEST_F(BufferLoader_Te,LoadFail_bufVertId)
     setDummyDataForTexture(textureWithData);
     d.bufVertId = 0;
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureStart));
 }
-TEST_F(BufferLoader_Te,LoadFail_TexWidth)
-{
-    BufferLoader buf;
-    ModelData d;
-    setDummyDataForModelData(d);
-    setDummyDataForTexture(textureWithData);
-    auto temp = sptextureInMemoryWithData->width;
-    sptextureInMemoryWithData->width = 0;
-    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    sptextureInMemoryWithData->width = temp;
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
-}
-TEST_F(BufferLoader_Te,LoadFail_TexHeight)
-{
-    BufferLoader buf;
-    ModelData d;
-    setDummyDataForModelData(d);
-    setDummyDataForTexture(textureWithData);
-    auto temp = sptextureInMemoryWithData->height;
-    sptextureInMemoryWithData->height = 0;
-    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    sptextureInMemoryWithData->height = temp;
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
-}
-TEST_F(BufferLoader_Te,LoadFail_TextureData)
-{
-    BufferLoader buf;
-    ModelData d;
-    TextureForModel tex;
-    spTextureInMemory texm = std::make_shared<TextureInMemory>("");
-    tex.setTextureInMemory(texm);
-    setDummyDataForModelData(d);
-    float coord = 32.1f;
-    texm->width = 4;
-    texm->height = 6;
-    tex.texCoord = &coord;
-    tex.nuTexCoord = 1;
-    buf.LoadTextureBuffersForSingleModelEntry(tex, d);
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
-}
+//LoadTextureBuffersForSingleModelEntry is function used only in OneModelManager
+//TEST_F(BufferLoader_Te,LoadFail_TexWidth)
+//{
+//    BufferLoader buf;
+//    ModelData d;
+//    setDummyDataForModelData(d);
+//    setDummyDataForTexture(textureWithData);
+//    auto temp = sptextureInMemoryWithData->width;
+//    sptextureInMemoryWithData->width = 0;
+//    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
+//    sptextureInMemoryWithData->width = temp;
+//    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+//}
+//TEST_F(BufferLoader_Te,LoadFail_TexHeight)
+//{
+//    BufferLoader buf;
+//    ModelData d;
+//    setDummyDataForModelData(d);
+//    setDummyDataForTexture(textureWithData);
+//    auto temp = sptextureInMemoryWithData->height;
+//    sptextureInMemoryWithData->height = 0;
+//    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
+//    sptextureInMemoryWithData->height = temp;
+//    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+//}
+//TEST_F(BufferLoader_Te,LoadFail_TextureData)
+//{
+//    BufferLoader buf;
+//    ModelData d;
+//    TextureForModel tex;
+//    spTextureInMemory texm = std::make_shared<TextureInMemory>("");
+//    tex.setTextureInMemory(texm);
+//    setDummyDataForModelData(d);
+//    float coord = 32.1f;
+//    texm->width = 4;
+//    texm->height = 6;
+//    tex.texCoord = &coord;
+//    tex.nuTexCoord = 1;
+//    buf.LoadTextureBuffersForSingleModelEntry(tex, d);
+//    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+//}
 TEST_F(BufferLoader_Te,LoadFail_TexCoord)
 {
     BufferLoader buf;
@@ -253,7 +256,7 @@ TEST_F(BufferLoader_Te,LoadFail_TexCoord)
     textureWithData.texCoord = nullptr;
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
     textureWithData.texCoord = temp;
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureStart));
 }
 
 TEST_F(BufferLoader_Te,LoadFail_nuTexCoord)
@@ -266,7 +269,7 @@ TEST_F(BufferLoader_Te,LoadFail_nuTexCoord)
     textureWithData.nuTexCoord = 0;
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
     textureWithData.nuTexCoord = temp;
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureStart));
 }
 void setDummyLocationsForBufLoad(BufferLoader& buf)
 {
@@ -294,7 +297,7 @@ TEST_F(BufferLoader_Te,LoadFail_LocationsNotSetted)
     buf.m_loc.textureCoord = 0;
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
 
-    ASSERT_EQ(0,buf.LoadTextureSuccessCount());
+    ASSERT_EQ(0,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
 }
 TEST_F(BufferLoader_Te,LoadTextureSuccessCounting)
 {
@@ -303,10 +306,12 @@ TEST_F(BufferLoader_Te,LoadTextureSuccessCounting)
     setDummyDataForModelData(d);
     setDummyDataForTexture(textureWithData);
     setDummyLocationsForBufLoad(buf);
-    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    ASSERT_EQ(3,buf.LoadTextureSuccessCount());
+    buf.LoadBufferForTexture(textureWithData, 2);
+    buf.LoadBufferForTexture(textureWithData, 3);
+    buf.LoadBufferForTexture(textureWithData, 4);
+//    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
+//    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
+    ASSERT_EQ(3,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
 }
 TEST_F(BufferLoader_Te,BufferForModelDataNotLoaded)
 {

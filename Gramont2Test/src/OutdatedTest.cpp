@@ -251,4 +251,48 @@ TEST(MatrixStackTestNeedFix,ChangeProjection_Updates_MVP)
     }
     ASSERT_FALSE(notEqual);
 }
+TEST(GlFunctionsMock,StaticDefine_SuccesOnFirstDefine)
+{
+    GlFunctionsMock funMock;
+    ASSERT_TRUE(funMock.Define());//test failed if static OneModelManager is used;
+}
+//outdated logic of shader_mock loading 
+TEST(MultiModelManager,SetShadersAndGeometry_LocationsForBufferLoaderSetted)
+{
+    auto model_1 = make_shared<OneModelMock>();
+    spShadersMock shader = make_shared<glShadersMock>();
+    shader->setAttribLoc("in_sPosition",49);
+    shader->setAttribLoc("in_sNormal",53);
+    shader->setAttribLoc("in_TextPos",12);
+    MultiModelManager man(nullptr);
+    MultiModelManagerAccess acc(man);
+    acc.setTextureShaderForTest(shader);
+    man.SetShadersAndGeometry();
 
+    auto bufloader =  man.getBufferLoaderForTest();
+    ASSERT_EQ(49,bufloader->m_loc.position_tex);
+    ASSERT_EQ(53,bufloader->m_loc.normal_tex);
+    ASSERT_EQ(12,bufloader->m_loc.textureCoord);
+}
+TEST(MultiModelManager,SetShadersAndGeometry_LocationsForRendererSetted)
+{
+    auto model_1 = make_shared<OneModelMock>();
+    spShadersMock shader = make_shared<glShadersMock>();
+    shader->setUnifLoc("mMVP",49);
+    shader->setUnifLoc("mToViewSpace",53);
+    shader->setUnifLoc("lightProps",12);
+    shader->setUnifLoc("lightColour",17);
+    shader->setUnifLoc("stringTexture",19);
+    MultiModelManager man(nullptr);
+    MultiModelManagerAccess acc(man);
+    acc.setTextureShaderForTest(shader);
+    man.SetShadersAndGeometry();
+
+    auto renderer =  man.getTexRendererForTest();
+    ASSERT_EQ(49,renderer->m_loc.mMVP);
+    ASSERT_EQ(53,renderer->m_loc.mToViewSpace);
+    ASSERT_EQ(12,renderer->m_loc.lightProps);
+    ASSERT_EQ(17,renderer->m_loc.lightColour);
+    ASSERT_EQ(19,renderer->m_loc.stringTexture);
+
+}

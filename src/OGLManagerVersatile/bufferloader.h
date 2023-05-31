@@ -17,12 +17,24 @@ enum class BufferLoaderProgress
     IndexError,
     TextureError,
 };
+enum class BufferLoaderCounterType
+{
+    CreateBuffersForModelGeometryStart,
+    CreateBufferForTextureCoordStart,
+    CreateBufferForTextureInMemoryStart,
+    LoadBufferForTextureStart,
+    CreateBuffersForModelGeometryCompleted,
+    CreateBufferForTextureCoordCompleted,
+    CreateBufferForTextureInMemoryCompleted,
+    LoadBufferForTextureCompleted,
+    BufferLoaderCounterTypeSize
+};
 
 class BufferLoader
 {
-private:
+    private:
 
-public:
+    public:
     struct Locations {
         int position;
         int position_tex;
@@ -31,6 +43,7 @@ public:
         int colour;
         int textureCoord;
     };
+    BufferLoader();
     Locations m_loc;
     BufferLoaderProgress CreateBuffersForModelGeometry(ModelData& d);
     BufferLoaderProgress CreateBufferForTextureCoord(TextureForModel& tex);
@@ -46,13 +59,15 @@ public:
     virtual void LoadBuffers(spOneModel model) {};
     virtual void setLocationsFrom(spMyOGLShaders);
     void ClearBuffersForSingleModelEntry(ModelData& d);
-    unsigned int CreateBuffersCheckedCount();
-    unsigned int LoadTextureSuccessCount();
-    unsigned int LoadTextureFailsCount();
+//    unsigned int CreateBuffersCheckedCount();
+//    unsigned int LoadTextureSuccessCount();
+//    unsigned int LoadTextureFailsCount();
+    const unsigned Counter(BufferLoaderCounterType couterType);
 
     bool LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d);
 protected:
-    unsigned loadTextureSuccessCount = 0, loadTextureFailsCount = 0, createBuffersCheckedCount = 0;
+//unsigned loadTextureSuccessCount = 0, loadTextureFailsCount = 0, createBuffersCheckedCount = 0;
+    vector<unsigned> counter;
 };
 
 using spBufferLoader = std::shared_ptr<BufferLoader>;

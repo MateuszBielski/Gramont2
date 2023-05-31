@@ -4,6 +4,10 @@
 
 using namespace std;
 
+BufferLoader::BufferLoader():counter((size_t)BufferLoaderCounterType::BufferLoaderCounterTypeSize,0)
+{
+//(unsigned)
+}
 void BufferLoader::ClearBuffersForSingleModelEntry(ModelData& d)
 {
     // Clear graphics card memory
@@ -34,7 +38,7 @@ BufferLoaderProgress BufferLoader::CreateBuffersForModelGeometry(ModelData& d)
     ok &= (bool)d.nuColours;
     ok &= (bool)d.nuIndices;
     ok &= (bool)d.nuPoints;
-    ++createBuffersCheckedCount;
+    ++counter[(size_t)BufferLoaderCounterType::CreateBuffersForModelGeometryStart];
     if(!ok) return BufferLoaderProgress::Checked;
 
     MyOnGLError(myoglERR_CLEAR);
@@ -101,7 +105,8 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& 
 {
     bool ok = true;
     ok &= (bool)tex.nuTexCoord;
-    ++createBuffersCheckedCount;
+//    ++createBuffersCheckedCount;
+    
     if(!ok) return BufferLoaderProgress::Checked;
 
     GLsizeiptr nBytes = 2 * tex.nuTexCoord * sizeof(GLfloat);
@@ -192,7 +197,7 @@ BufferLoaderProgress BufferLoader::LoadBuffersForModelGeometry(ModelData& d,cons
 BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, const int vao)
 {
     bool ok = true;
-
+    ++counter[(size_t)BufferLoaderCounterType::LoadBufferForTextureStart];
     if(!vao)return BufferLoaderProgress::VaoNotInited;
 
     glBindVertexArray(vao);
@@ -203,20 +208,25 @@ BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, co
 
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-
+    
+    ++counter[(size_t)BufferLoaderCounterType::LoadBufferForTextureCompleted];
     return BufferLoaderProgress::Completed;
 }
-unsigned int BufferLoader::LoadTextureSuccessCount()
+//unsigned int BufferLoader::LoadTextureSuccessCount()
+//{
+//    return loadTextureSuccessCount;
+//}
+//unsigned int BufferLoader::LoadTextureFailsCount()
+//{
+//    return loadTextureFailsCount;
+//}
+//unsigned int BufferLoader::CreateBuffersCheckedCount()
+//{
+//    return createBuffersCheckedCount;
+//}
+const unsigned BufferLoader::Counter(BufferLoaderCounterType couterType)
 {
-    return loadTextureSuccessCount;
-}
-unsigned int BufferLoader::LoadTextureFailsCount()
-{
-    return loadTextureFailsCount;
-}
-unsigned int BufferLoader::CreateBuffersCheckedCount()
-{
-    return createBuffersCheckedCount;
+	return counter[(size_t)couterType];
 }
 void BufferLoader::setLocationsFrom(spMyOGLShaders shader)
 {
@@ -224,10 +234,11 @@ void BufferLoader::setLocationsFrom(spMyOGLShaders shader)
     m_loc.normal_tex = shader->GetAttribLoc("in_sNormal");
     m_loc.textureCoord = shader->GetAttribLoc("in_TextPos");
 }
-
+//function used only in OneModelManager
 bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d)
 {
-    ++loadTextureFailsCount;
+    
+//    ++loadTextureFailsCount;
     bool ok = true;
 
     ok &= (bool)tex.texCoord;
@@ -302,6 +313,7 @@ bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, M
     // Some log
     std::string str_log = "Texture buffers loaded into GPU for model Id = ";
     MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
-    ++loadTextureSuccessCount;
+//    ++loadTextureSuccessCount;
     return true;
 }
+

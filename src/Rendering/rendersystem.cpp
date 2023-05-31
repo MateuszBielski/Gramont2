@@ -18,6 +18,10 @@ void RenderSystem::setBufferLoader(spBufferLoader bl)
 {
     m_BufferLoader = bl;
 }
+void RenderSystem::setShader(spMyOGLShaders sha)
+{
+	m_shader = sha;
+}
 spOglRenderer RenderSystem::getRenderer()
 {
     return m_renderer;
@@ -52,3 +56,4 @@ void RenderSystem::setActiveVaoPtr(unsigned int * vao)
 {
 	activeVaoPtr = vao;
 }
+

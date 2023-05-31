@@ -17,6 +17,7 @@ public:
     spMyOGLShaders getShader();
     spBufferLoader getBufferLoader();
     void setBufferLoader(spBufferLoader );
+    void setShader(spMyOGLShaders );
     void setActiveVaoPtr(unsigned int *);
 #ifdef TESTOWANIE_F
     virtual

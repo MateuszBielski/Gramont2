@@ -38,6 +38,8 @@ bool ModelManager::setAndConfigureRenderSystem(spRenderSystem rs)
     ConfigureWithMyLightSystem(rs);
     activeShader = rs->getShader();
     activeRenderer = rs->getRenderer();
+    m_BufferLoader = m_renderSystem->getBufferLoader();
+    m_TexRenderer = m_renderSystem->getRenderer();
     return true;
 }
 spMyOGLShaders ModelManager::getActiveShader()

@@ -19,7 +19,7 @@ void PickingBuffLoader::LoadBuffers(spOneModel model)
 {
     unsigned int& vaoSel = model->getVAOforSelect();
     
-    ++loadTextureFailsCount;
+//    ++loadTextureFailsCount;
     ModelData& d = model->GetModelData();
 
     glGenVertexArrays(1, &vaoSel);
@@ -36,5 +36,5 @@ void PickingBuffLoader::LoadBuffers(spOneModel model)
     
     std::string str_log = "Texture buffers loaded into GPU for model Id = "+to_string(model->getUniqueId()) + " in PickingBuffLoader::LoadBuffers";
     MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
-    ++loadTextureSuccessCount;
+//    ++loadTextureSuccessCount;
 }

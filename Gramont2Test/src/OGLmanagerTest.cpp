@@ -15,11 +15,7 @@
 #include "textfile.h" //AccessFileForTest
 #include "rendersystemmock.h"
 
-TEST(GlFunctionsMock,StaticDefine_SuccesOnFirstDefine)
-{
-    GlFunctionsMock funMock;
-    ASSERT_TRUE(funMock.Define());//test failed if static OneModelManager is used;
-}
+
 TEST(GlFunctionsMock,StaticDefine_FailureOnNextDefine)
 {
     GlFunctionsMock funMock;
@@ -73,45 +69,7 @@ TEST(MultiModelManager,SetShadersAndGeometry_HasModels)
     man.SetShadersAndGeometry();
     ASSERT_TRUE(model_1->GetModelDataUsed() && model_2->GetModelDataUsed());
 }
-TEST(MultiModelManager,SetShadersAndGeometry_LocationsForBufferLoaderSetted)
-{
-    auto model_1 = make_shared<OneModelMock>();
-    spShadersMock shader = make_shared<glShadersMock>();
-    shader->setAttribLoc("in_sPosition",49);
-    shader->setAttribLoc("in_sNormal",53);
-    shader->setAttribLoc("in_TextPos",12);
-    MultiModelManager man(nullptr);
-    MultiModelManagerAccess acc(man);
-    acc.setTextureShaderForTest(shader);
-    man.SetShadersAndGeometry();
 
-    auto bufloader =  man.getBufferLoaderForTest();
-    ASSERT_EQ(49,bufloader->m_loc.position_tex);
-    ASSERT_EQ(53,bufloader->m_loc.normal_tex);
-    ASSERT_EQ(12,bufloader->m_loc.textureCoord);
-}
-TEST(MultiModelManager,SetShadersAndGeometry_LocationsForRendererSetted)
-{
-    auto model_1 = make_shared<OneModelMock>();
-    spShadersMock shader = make_shared<glShadersMock>();
-    shader->setUnifLoc("mMVP",49);
-    shader->setUnifLoc("mToViewSpace",53);
-    shader->setUnifLoc("lightProps",12);
-    shader->setUnifLoc("lightColour",17);
-    shader->setUnifLoc("stringTexture",19);
-    MultiModelManager man(nullptr);
-    MultiModelManagerAccess acc(man);
-    acc.setTextureShaderForTest(shader);
-    man.SetShadersAndGeometry();
-
-    auto renderer =  man.getTexRendererForTest();
-    ASSERT_EQ(49,renderer->m_loc.mMVP);
-    ASSERT_EQ(53,renderer->m_loc.mToViewSpace);
-    ASSERT_EQ(12,renderer->m_loc.lightProps);
-    ASSERT_EQ(17,renderer->m_loc.lightColour);
-    ASSERT_EQ(19,renderer->m_loc.stringTexture);
-
-}
 TEST(MultiModelManager,SetShadersAndGeometry_LightSettedAndBindToRenderMatrix)
 {
     myLight l;
@@ -129,15 +87,15 @@ TEST(MultiModelManager,SetShadersAndGeometry_LightSettedAndBindToRenderMatrix)
 }
 TEST(MultiModelManager,TextureAddShadersCode)
 {
+
     AccessFileForTest enableAcc;
     MultiModelManager man(nullptr);
     spShadersMock shader = make_shared<glShadersMock>();
-    MultiModelManagerAccess acc(man);
-    acc.setTextureShaderForTest(shader);
-    ASSERT_EQ(nullptr,acc.getTextureShaderCode());
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    rs->setShader(shader);
     ASSERT_EQ(0,shader->getShaCode().size());
-    man.SetShadersAndGeometry();
-//    ASSERT_NE(nullptr,acc.getTextureShaderCode());
+    man.setAndConfigureRenderSystem(rs);
+
     ASSERT_TRUE(shader->hasCodeOfType(GL_VERTEX_SHADER));
     ASSERT_TRUE(shader->hasCodeOfType(GL_FRAGMENT_SHADER));
 }
@@ -145,10 +103,11 @@ TEST(MultiModelManager,TextureShadersAddUnif)
 {
     MultiModelManager man(nullptr);
     spShadersMock shader = make_shared<glShadersMock>();
-    MultiModelManagerAccess acc(man);
-    acc.setTextureShaderForTest(shader);
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    rs->setShader(shader);
     ASSERT_EQ(0,shader->getShaUnif().size());
-    man.SetShadersAndGeometry();
+    man.setAndConfigureRenderSystem(rs);
+
     ASSERT_NE(0,shader->getShaUnif().size());
     ASSERT_NE(0,shader->hasUnif("mMVP"));
     ASSERT_NE(0,shader->hasUnif("mToViewSpace"));
@@ -160,10 +119,11 @@ TEST(MultiModelManager,TextureShadersAddAttrib)
 {
     MultiModelManager man(nullptr);
     spShadersMock shader = make_shared<glShadersMock>();
-    MultiModelManagerAccess acc(man);
-    acc.setTextureShaderForTest(shader);
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    rs->setShader(shader);
     ASSERT_EQ(0,shader->getShaAttrib().size());
-    man.SetShadersAndGeometry();
+    man.setAndConfigureRenderSystem(rs);
+
     ASSERT_NE(0,shader->getShaAttrib().size());
     ASSERT_NE(0,shader->hasAttrib("in_sPosition"));
     ASSERT_NE(0,shader->hasAttrib("in_sNormal"));
@@ -172,11 +132,12 @@ TEST(MultiModelManager,TextureShadersAddAttrib)
 
 TEST(MultiModelManager,TextureShadersInit)
 {
+    AccessFileForTest enableAcc;
     MultiModelManager man(nullptr);
     spShadersMock shader = make_shared<glShadersMock>();
-    MultiModelManagerAccess acc(man);
-    acc.setTextureShaderForTest(shader);
-    man.SetShadersAndGeometry();
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    rs->setShader(shader);
+    man.setAndConfigureRenderSystem(rs);
     ASSERT_TRUE(shader->InitUsed());
 }
 TEST(MultiModelManager,CountLoadTextureBuffers)
@@ -185,9 +146,10 @@ TEST(MultiModelManager,CountLoadTextureBuffers)
     auto model_2 = make_shared<OneModelMock>();
     MultiModelManager man(nullptr);
     man.setModels(vector<spOneModel> {model_1,model_2});
-    man.SetShadersAndGeometry();
-    auto buffer = man.getBufferLoaderForTest();
-    ASSERT_EQ(2,buffer->LoadTextureFailsCount());
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    man.setAndConfigureRenderSystem(rs);
+    auto buffer = rs->getBufferLoader();
+    ASSERT_EQ(2,buffer->Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
     //ASSERT_EQ(2,buffer->LoadTextureSuccessCount());//how do this?
 }
 TEST(MultiModelManager,CountCreateBuffers)
@@ -198,7 +160,7 @@ TEST(MultiModelManager,CountCreateBuffers)
     man.setModels(vector<spOneModel> {model_1,model_2});
     man.SetShadersAndGeometry();
     auto buffer = man.getBufferLoaderForTest();
-    ASSERT_EQ(2,buffer->CreateBuffersCheckedCount());
+    ASSERT_EQ(2,buffer->Counter(BufferLoaderCounterType::CreateBuffersForModelGeometryStart));
 }
 TEST(MultiModelManager,DrawTexture_IfMatircesUpdates)
 {
@@ -542,16 +504,16 @@ TEST(MultiModelManager,BuffersLoadedForEachModel_Geometry)
     spOneModel model1 = make_shared<Triangle>();
     spOneModel model2 = make_shared<Triangle>();
     man.setModels( {model1,model2});
-    
+
     spRenderSystem rs = make_shared<OneTextureRenderSystem>();
     spBufferLoaderMock bl = make_shared<BufferLoaderMock>();
     rs->setBufferLoader(bl);
-    
+
     man.setAndConfigureRenderSystem(rs);
-    
+
     ASSERT_TRUE(bl->LoadedBufferForModelGeometry(model1->GetModelData()));
     ASSERT_TRUE(bl->LoadedBufferForModelGeometry(model2->GetModelData()));
-    
+
 //    LoadBuffersForModelGeometry(d,vao);
 //    m_BufferLoader->LoadBufferForTexture(tex,vao);
 }
@@ -562,9 +524,9 @@ TEST(MultiModelManager,ReloadedVaoForEach_ModelDataAndTextures)
     spOneModel model1 = make_shared<Triangle>();
     spOneModel model2 = make_shared<Triangle>();
     man.setModels( {model1,model2});
-    
+
     spRenderSystemMock rsm = make_shared<RenderSystemMock>();
-    
+
     man.setAndConfigureRenderSystem(rsm);
 
     ASSERT_TRUE(rsm->ReloadedVAOforModelData(model1->GetModelData()));
@@ -576,16 +538,16 @@ TEST(MultiModelManager,setAndConfigureRenderSystem_knownMatrixStack)
 {
     MultiModelManager man(nullptr);
     MultiModelManagerAccess manAcc(man);
-    
+
     spRenderSystem rs = make_shared<OneTextureRenderSystem>();
-    
+
     man.setAndConfigureRenderSystem(rs);
-    
+
     auto rs_matMVP = rs->getRenderer()->m_matrices.matMVP;
     auto ms_matMVP = manAcc.getMatrixStack()->getModelViewProjectionMatrixfv();
     auto rs_matToVw = rs->getRenderer()->m_matrices.matToVw;
     auto ms_matToVw = manAcc.getMatrixStack()->getViewMatrixfv();
-    
+
     ASSERT_EQ(rs_matMVP, ms_matMVP);
     ASSERT_EQ(rs_matToVw, ms_matToVw);
 }
@@ -593,18 +555,18 @@ TEST(MultiModelManager,setAndConfigureRenderSystem_knownLightSystem)
 {
     MultiModelManager man(nullptr);
 //    MultiModelManagerAccess manAcc(man);
-    
+
     spRenderSystem rs = make_shared<OneTextureRenderSystem>();
-    
+
     man.setAndConfigureRenderSystem(rs);
-    
+
     auto rs_matlightPositon = rs->getRenderer()->m_matrices.light_position;
     auto ms_matlightPositon = man.getLightPtr()->GetFLightPos();
     auto rs_matlight_colour = rs->getRenderer()->m_matrices.light_colour;
     auto ms_matlight_colour = man.getLightPtr()->GetFLightColour();
 //    m_matrices.light_position = light->GetFLightPos();
 //    m_matrices.light_colour = light->GetFLightColour();
-    
+
     ASSERT_EQ(rs_matlightPositon, ms_matlightPositon);
     ASSERT_EQ(rs_matlight_colour, ms_matlight_colour);
 }
@@ -614,9 +576,9 @@ TEST(MultiModelManager,setAndConfigureRenderSystem_BuffersCreatedForModels)
     spOneModel model1 = make_shared<Triangle>();
     spOneModel model2 = make_shared<Triangle>();
     man.setModels( {model1,model2});
-    
+
     spRenderSystemMock rsm = make_shared<RenderSystemMock>();
-    
+
     man.setAndConfigureRenderSystem(rsm);
     ASSERT_GT(model1->GetModelData().bufVertId,0);
     ASSERT_GT(model2->GetModelData().bufVertId,0);
