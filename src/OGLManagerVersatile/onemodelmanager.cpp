@@ -150,7 +150,7 @@ void OneModelManager::SetShadersAndGeometry()
     InitTextureShader();
 
     auto& tex = *ptrTex;
-    tex.LoadImageFile(TEXTURE_IMAGE);
+    tex.setTextureInMemory(make_shared<TextureInMemory>(TEXTURE_IMAGE));
 
     setLocations<BufferLoader>(m_BufferLoader,btnames,m_TextureShader,&myOGLShaders::GetAttribLoc);
     m_BufferLoader->LoadTextureBuffersForSingleModelEntry(tex,model->GetModelData());
@@ -161,12 +161,7 @@ void OneModelManager::SetShadersAndGeometry()
 
 void OneModelManager::DrawTexture()// to delete
 {
-    m_Camera->UpdateMatrices();
-
-    m_TexRenderer->DrawTextureForSingleModelEntry(
-        *(model->MyTexture()),
-        model->GetModelData(),
-        m_TextureShader.getProgramId());
+    
 }
 void OneModelManager::Draw3d()
 {
@@ -179,7 +174,7 @@ void OneModelManager::Draw3d()
 //        modelData,
 //        m_ModelShader.getProgramId());
 
-    m_TexRenderer->DrawTextureForSingleModelEntry(
+    m_TexRenderer->DrawTextureForSingleModelEntry(model->getVao(),
         *(model->MyTexture()),
         modelData,
         m_TextureShader.getProgramId());

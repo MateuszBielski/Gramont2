@@ -4,33 +4,29 @@
 //#include "../src/Surface/surface.h"
 TEST(Texture,ReturnNullForNotExistingFile)
 {
-    TextureForModel tex1;
-    tex1.LoadImageFile("NieIstniejacyPlik.jpg");
+    TextureInMemory tex1("NieIstniejacyPlik.jpg");
     ASSERT_EQ(nullptr,tex1.TextureData());
 }
 TEST(Texture,NotNullDataPointer)
 {
-    TextureForModel tex1;
-    tex1.LoadImageFile("Gramont2Test/Resources/10x10image.jpg");
+    TextureInMemory tex1("Gramont2Test/Resources/10x10image.jpg");
     ASSERT_NE(nullptr,tex1.TextureData());
 }
 TEST(Texture,ImageSize)
 {
-    TextureForModel tex1;
-    tex1.LoadImageFile("Gramont2Test/Resources/10x10image.jpg");
+    TextureInMemory tex1("Gramont2Test/Resources/10x10image.jpg");
     ASSERT_EQ(10,tex1.width);
     ASSERT_EQ(10,tex1.height);
     ASSERT_EQ(3,tex1.nuChannels);
 }
 TEST(Texture,NotKnowImagePath)
 {
-    TextureForModel tex;
+    TextureInMemory tex("");
     ASSERT_FALSE(tex.hasImagePath());
 }
 TEST(Texture,KnowImagePath)
 {
-    TextureForModel tex;
-    tex.LoadImageFile("NieIstniejacyPlik.jpg");
+    TextureInMemory tex("NieIstniejacyPlik.jpg");
     ASSERT_TRUE(tex.hasImagePath());
 }
 TEST(Triangle,nuTextureCoordinates)

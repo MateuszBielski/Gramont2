@@ -7,7 +7,7 @@ OglRendererMock::OglRendererMock()
 OglRendererMock::~OglRendererMock()
 {
 }
-OglRendererProgress OglRendererMock::DrawTextureForSingleModelEntry(TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId)
+OglRendererProgress OglRendererMock::DrawTextureForSingleModelEntry(const unsigned int vao, TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId)
 {
     float sum = 0;
     if(m_matrices.matMVP)

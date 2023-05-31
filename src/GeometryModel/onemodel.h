@@ -22,7 +22,8 @@ public:
 //    void setWhichVao(param);
     unsigned int& getVao();
     unsigned int * getVaoPtr();
-    bool AddTexture(spTextureForModel ,GLuint nuTexCoord, GLfloat * texCoord ,TextureForModel::TextureType type);
+    bool AddTexture(spTextureForModel ,TextureForModel::TextureType type);
+    spTextureForModel getTextureOfType(TextureForModel::TextureType);
 protected:
     ModelData data;
     spTextureForModel m_texture = nullptr;

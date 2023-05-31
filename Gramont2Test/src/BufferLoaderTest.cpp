@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 #include "bufferloader.h"
 #include "bufferloadermock.h"
+//#include <memory>
 //#include "textureformodel.h"
 //#include "modeldata.h"
 //#include "glshadersmock.h"
@@ -11,13 +12,15 @@ class BufferLoader_Te : public ::testing::Test
 
 protected:
     static TextureForModel textureWithData;
+    static spTextureInMemory sptextureInMemoryWithData;
     float textureCoord;
     static bool textureLoaded;
     void setDummyDataForTexture(TextureForModel& tex) {
 
         if(!textureLoaded) {
             textureCoord = 34.8f;
-            tex.LoadImageFile("Gramont2Test/Resources/10x10image.jpg");
+            sptextureInMemoryWithData = std::make_shared<TextureInMemory>("Gramont2Test/Resources/10x10image.jpg");
+            tex.setTextureInMemory(sptextureInMemoryWithData);
             tex.texCoord = &textureCoord;
             tex.nuTexCoord = 1;
             textureLoaded = true;
@@ -34,6 +37,7 @@ protected:
 
 };
 TextureForModel BufferLoader_Te::textureWithData;
+spTextureInMemory BufferLoader_Te::sptextureInMemoryWithData;
 bool BufferLoader_Te::textureLoaded= false;
 TEST_F(BufferLoader_Te,CompleteCreateBuffers_ifNumbersNotZero)
 {
@@ -205,10 +209,10 @@ TEST_F(BufferLoader_Te,LoadFail_TexWidth)
     ModelData d;
     setDummyDataForModelData(d);
     setDummyDataForTexture(textureWithData);
-    auto temp = textureWithData.width;
-    textureWithData.width = 0;
+    auto temp = sptextureInMemoryWithData->width;
+    sptextureInMemoryWithData->width = 0;
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    textureWithData.width = temp;
+    sptextureInMemoryWithData->width = temp;
     ASSERT_EQ(0,buf.LoadTextureSuccessCount());
 }
 TEST_F(BufferLoader_Te,LoadFail_TexHeight)
@@ -217,10 +221,10 @@ TEST_F(BufferLoader_Te,LoadFail_TexHeight)
     ModelData d;
     setDummyDataForModelData(d);
     setDummyDataForTexture(textureWithData);
-    auto temp = textureWithData.height;
-    textureWithData.height = 0;
+    auto temp = sptextureInMemoryWithData->height;
+    sptextureInMemoryWithData->height = 0;
     buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-    textureWithData.height = temp;
+    sptextureInMemoryWithData->height = temp;
     ASSERT_EQ(0,buf.LoadTextureSuccessCount());
 }
 TEST_F(BufferLoader_Te,LoadFail_TextureData)
@@ -228,10 +232,12 @@ TEST_F(BufferLoader_Te,LoadFail_TextureData)
     BufferLoader buf;
     ModelData d;
     TextureForModel tex;
+    spTextureInMemory texm = std::make_shared<TextureInMemory>("");
+    tex.setTextureInMemory(texm);
     setDummyDataForModelData(d);
     float coord = 32.1f;
-    tex.width = 4;
-    tex.height = 6;
+    texm->width = 4;
+    texm->height = 6;
     tex.texCoord = &coord;
     tex.nuTexCoord = 1;
     buf.LoadTextureBuffersForSingleModelEntry(tex, d);

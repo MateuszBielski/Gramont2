@@ -112,23 +112,6 @@ TEST(MultiModelManager,SetShadersAndGeometry_LocationsForRendererSetted)
     ASSERT_EQ(19,renderer->m_loc.stringTexture);
 
 }
-TEST(MultiModelManager,SetShadersAndGeometry_EachModelKnowsPathToTextureImage)
-{
-    auto model_1 = make_shared<OneModelMock>();
-    auto model_2 = make_shared<OneModelMock>();
-    MultiModelManager man(nullptr);
-    man.setModels(vector<spOneModel> {model_1,model_2});
-    man.SetShadersAndGeometry();
-    ASSERT_TRUE(model_1->MyTexture()->hasImagePath() && model_2->MyTexture()->hasImagePath());
-}
-TEST(MultiModelManager,EachModelDoesNotKnowPathToTextureImage_beforeSetShadersAndGeom)
-{
-    auto model_1 = make_shared<OneModelMock>();
-    auto model_2 = make_shared<OneModelMock>();
-    MultiModelManager man(nullptr);
-    man.setModels(vector<spOneModel> {model_1,model_2});
-    ASSERT_FALSE(model_1->MyTexture()->hasImagePath() && model_2->MyTexture()->hasImagePath());
-}
 TEST(MultiModelManager,SetShadersAndGeometry_LightSettedAndBindToRenderMatrix)
 {
     myLight l;

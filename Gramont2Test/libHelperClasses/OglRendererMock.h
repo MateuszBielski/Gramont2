@@ -10,8 +10,7 @@ class OglRendererMock : public OglRenderer
 public:
     OglRendererMock();
     virtual ~OglRendererMock();
-    virtual OglRendererProgress DrawTextureForSingleModelEntry(TextureForModel& tex, 
-    ModelData& d, unsigned int gl_ProgramId) override;
+    virtual OglRendererProgress DrawTextureForSingleModelEntry(const unsigned int vao, TextureForModel& tex, ModelData& d, unsigned int gl_ProgramId) override;
     stack<float>& getSumsOfmatMVP();
 private:
     stack<float> sumsOfmatMVP;

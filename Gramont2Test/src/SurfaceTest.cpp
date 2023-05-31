@@ -286,3 +286,9 @@ TEST(Surface,nuTexCoord)
     Surface surf(7,3,100,100);
     ASSERT_EQ(surf.MyTexture()->nuTexCoord,32);
 }
+TEST(Surface,NoAddEmptyTexture)
+{
+    Surface surf(2,2,100,100);
+    surf.AddTexture(make_shared<TextureForModel>(),TextureForModel::TextureType::Height);
+    auto result = surf.getTextureOfType(TextureForModel::TextureType::Height);
+}

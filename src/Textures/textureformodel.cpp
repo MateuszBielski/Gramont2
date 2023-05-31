@@ -54,9 +54,11 @@ void TextureForModel::setTextureInMemory(spTextureInMemory texm)
 }
 const GLuint TextureForModel::getTextureId()
 {
+    if(!m_texm_ptr) return 0;
     return m_texm_ptr->getTextureId();
 }
 const GLint TextureForModel::getTextureUnit()
 {
-	return m_texm_ptr->getTextureUnit();
+	if(!m_texm_ptr) return 0;
+    return m_texm_ptr->getTextureUnit();
 }

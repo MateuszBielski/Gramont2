@@ -13,7 +13,7 @@ TEST(OglRenderer,ShaderNotInitialized)
     TextureForModel tex;
     ModelData d;
 
-    ASSERT_EQ(OglRendererProgress::BeforeOgl,renderer.DrawTextureForSingleModelEntry(tex,d,notInitializedShader));
+    ASSERT_EQ(OglRendererProgress::BeforeOgl,renderer.DrawTextureForSingleModelEntry(3,tex,d,notInitializedShader));
 
 }
 TEST(OglRenderer,MatricesNotInitialized_AtStartObject)
@@ -30,7 +30,7 @@ TEST(OglRenderer,DrawTexture_MaricesNotInitialized)
     int InitializedShader = 3; // >0
     TextureForModel tex;
     ModelData d;
-    ASSERT_EQ(OglRendererProgress::BeforeOgl,renderer.DrawTextureForSingleModelEntry(tex,d,InitializedShader));
+    ASSERT_EQ(OglRendererProgress::BeforeOgl,renderer.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader));
 }
 
 TEST(OglRenderer,DrawTexture_LocationsNotInitialized)
@@ -45,7 +45,7 @@ TEST(OglRenderer,DrawTexture_LocationsNotInitialized)
     renderer.m_matrices.light_position = &f;
     renderer.m_matrices.light_colour = &f;
 
-    ASSERT_EQ(OglRendererProgress::BeforeOgl,renderer.DrawTextureForSingleModelEntry(tex,d,InitializedShader));
+    ASSERT_EQ(OglRendererProgress::BeforeOgl,renderer.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader));
 }
 TEST(OglRenderer,DrawStartCount_0)
 {
@@ -58,8 +58,8 @@ TEST(OglRenderer,DrawStartCount)
     int InitializedShader = 3; // >0
     TextureForModel tex;
     ModelData d;
-    renderer.DrawTextureForSingleModelEntry(tex,d,InitializedShader);
-    renderer.DrawTextureForSingleModelEntry(tex,d,InitializedShader);
+    renderer.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader);
+    renderer.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader);
     ASSERT_EQ(2,renderer.StartCallCount());
 }
 TEST(OglRenderer,Mock_DrawTexture_pushesOnStack_sumOfmatMVP)
@@ -72,11 +72,11 @@ TEST(OglRenderer,Mock_DrawTexture_pushesOnStack_sumOfmatMVP)
     float matMVP_3[] = {6.7,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0};
     OglRendererMock rend;
     rend.m_matrices.matMVP = matMVP_1;
-    rend.DrawTextureForSingleModelEntry(tex,d,InitializedShader);
+    rend.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader);
     rend.m_matrices.matMVP = matMVP_2;
-    rend.DrawTextureForSingleModelEntry(tex,d,InitializedShader);
+    rend.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader);
     rend.m_matrices.matMVP = matMVP_3;
-    rend.DrawTextureForSingleModelEntry(tex,d,InitializedShader);
+    rend.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader);
     auto st = rend.getSumsOfmatMVP();
     ASSERT_EQ(3,st.size());
     ASSERT_FLOAT_EQ(7.7,st.top());
