@@ -18,12 +18,12 @@ public:
     spBufferLoader getBufferLoader();
     void setBufferLoader(spBufferLoader );
     void setShader(spMyOGLShaders );
-    void setActiveVaoPtr(unsigned int *);
 #ifdef TESTOWANIE_F
     virtual
 #endif
-    void ReloadVAO(ModelData& d, TextureForModel& tex);
+    void ReloadVAO(spOneModel );
     void CreateGraphicBuffers(ModelData& d, TextureForModel& tex);
+    void CreateGraphicBuffers(spOneModel );
     void CreateGraphicBuffers(TextureInMemory& texm);
 protected:
     spOglRenderer m_renderer;
@@ -35,6 +35,9 @@ protected:
 
 using FunReSys_MdTfm = void (RenderSystem::*)(ModelData& d,TextureForModel& tex);
 using FunReSys_Tim = void (RenderSystem::*)(TextureInMemory& tex);
+
+using FunReSys_spOm = void (RenderSystem::*)(spOneModel model);
+
 using spRenderSystem = std::shared_ptr<RenderSystem>;
 using upRenderSystem = std::unique_ptr<RenderSystem>;
 #endif // RenderSystem_H

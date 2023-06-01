@@ -14,7 +14,8 @@ private:
 
 public:
     bool ConfigureShadersAndLocations(){return true;};
-    virtual void ReloadVAO(ModelData& d, TextureForModel& tex) override;
+//    virtual void ReloadVAO(ModelData& d, TextureForModel& tex) override;
+    virtual void ReloadVAO(spOneModel ) override;
     bool ReloadedVAOforModelData(ModelData& d);
     bool ReloadedVAOforTexture(TextureForModel&);
 protected:

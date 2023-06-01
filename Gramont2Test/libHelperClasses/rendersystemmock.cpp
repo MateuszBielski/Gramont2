@@ -1,10 +1,12 @@
 #include "rendersystemmock.h"
 
 
-void RenderSystemMock::ReloadVAO(ModelData& d, TextureForModel& tex)
+void RenderSystemMock::ReloadVAO(spOneModel model)
 {
-	auto adrMd = &d;
-	auto adrTe = &tex;
+//    auto& d = model->GetModelData();
+//	auto& tex = *model->MyTexture();
+    auto adrMd = &model->GetModelData();
+	auto adrTe = model->MyTexture().get();
     adressesOfModelDataLoaded.push_back(adrMd);
     adressesOfTextureLoaded.push_back(adrTe);
 }

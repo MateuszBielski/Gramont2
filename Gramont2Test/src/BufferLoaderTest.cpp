@@ -309,8 +309,6 @@ TEST_F(BufferLoader_Te,LoadTextureSuccessCounting)
     buf.LoadBufferForTexture(textureWithData, 2);
     buf.LoadBufferForTexture(textureWithData, 3);
     buf.LoadBufferForTexture(textureWithData, 4);
-//    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
-//    buf.LoadTextureBuffersForSingleModelEntry(textureWithData, d);
     ASSERT_EQ(3,buf.Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
 }
 TEST_F(BufferLoader_Te,BufferForModelDataNotLoaded)

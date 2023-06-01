@@ -22,10 +22,9 @@ unsigned int& OneModel::getVao()
     return VAO;
 //    return m_texture->textureVAO;
 }
-unsigned int* OneModel::getVaoPtr()
+spTextureForModel OneModel::getTextureOfType(TextureForModel::TextureType typeTex)
 {
-    return &VAO;
-//    return &m_texture->textureVAO;
+	return addedTextures[(unsigned int)typeTex];
 }
 bool OneModel::AddTexture(spTextureForModel tex, TextureForModel::TextureType typeTex)
 {
@@ -33,7 +32,9 @@ bool OneModel::AddTexture(spTextureForModel tex, TextureForModel::TextureType ty
     addedTextures[(unsigned int)typeTex] = tex;
     return true;
 }
-spTextureForModel OneModel::getTextureOfType(TextureForModel::TextureType typeTex)
+bool OneModel::CopyFromMainTextureAs(TextureForModel::TextureType typeTex)
 {
-	return addedTextures[(unsigned int)typeTex];
+	
+    addedTextures[(unsigned int)typeTex] = std::make_unique<TextureForModel>(*m_texture);
+    return false;
 }

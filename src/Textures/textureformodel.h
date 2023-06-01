@@ -33,6 +33,7 @@ class TextureForModel
 public:
     TextureForModel() {};
     ~TextureForModel() {};
+    TextureForModel(TextureForModel& );
     enum TextureType
     {
        Image,Height,TextureTypesSize

@@ -62,13 +62,11 @@ void MultiModelManager::RenderSystemSetIfWant()
 //    setAndConfigureRenderSystem(make_unique<c>());//move to configuration module (when it will be made)
     setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
 }
-void MultiModelManager::CallForMyRenderable(FunReSys_MdTfm FunToCall, spRenderSystem rs)
+void MultiModelManager::CallForMyRenderable(FunReSys_spOm FunToCall, spRenderSystem rs)
 {
-    for(auto& model : models) {
-        auto& tex = *model->MyTexture();
-        auto& d = model->GetModelData();
-        rs->setActiveVaoPtr(model->getVaoPtr());
-        ((*rs).*FunToCall)(d,tex);
+    for(auto& model : models) 
+    {
+        ((*rs).*FunToCall)(model);
     }
 }
 void MultiModelManager::CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs)

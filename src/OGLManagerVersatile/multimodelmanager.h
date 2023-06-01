@@ -35,7 +35,7 @@ public:
     void setModels(vector<spOneModel>&& );
     void setSelectingResult(SelectingResult&& );
 protected:
-    virtual void CallForMyRenderable(FunReSys_MdTfm ,spRenderSystem) override;
+    virtual void CallForMyRenderable(FunReSys_spOm ,spRenderSystem) override;
     virtual void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs) override;
     virtual void ConfigureWithMyViewControl(spRenderSystem) override;
     
@@ -47,6 +47,5 @@ protected:
     char * textureShaderCode = nullptr;
     
 };
-
 
 #endif // MultiModelManager_H

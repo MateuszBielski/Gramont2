@@ -286,9 +286,58 @@ TEST(Surface,nuTexCoord)
     Surface surf(7,3,100,100);
     ASSERT_EQ(surf.MyTexture()->nuTexCoord,32);
 }
-TEST(Surface,NoAddEmptyTexture)
+TEST(Surface,NoAddTextureWithoutPtrToCoordinates)
 {
     Surface surf(2,2,100,100);
-    surf.AddTexture(make_shared<TextureForModel>(),TextureForModel::TextureType::Height);
-    auto result = surf.getTextureOfType(TextureForModel::TextureType::Height);
+    spTextureForModel tex = make_shared<TextureForModel>();
+    tex->texCoord = nullptr;
+    tex->nuTexCoord = 9;
+    surf.AddTexture(tex,TextureForModel::TextureType::Height);
+    ASSERT_EQ(nullptr,surf.getTextureOfType(TextureForModel::TextureType::Height));
 }
+TEST(Surface,NoAddTextureWithBadCoordNumber)
+{
+    Surface surf(2,2,100,100);
+    spTextureForModel tex = make_shared<TextureForModel>();
+    float coord[8];
+    tex->texCoord = coord;
+    tex->nuTexCoord = 8;
+    surf.AddTexture(tex,TextureForModel::TextureType::Height);
+    ASSERT_EQ(nullptr,surf.getTextureOfType(TextureForModel::TextureType::Height));
+}
+TEST(Surface,AddTexture)
+{
+    Surface surf(2,2,100,100);
+    spTextureForModel tex = make_shared<TextureForModel>();
+    float coord[9];
+    tex->texCoord = coord;
+    tex->nuTexCoord = 9;
+    surf.AddTexture(tex,TextureForModel::TextureType::Height);
+    ASSERT_EQ(tex,surf.getTextureOfType(TextureForModel::TextureType::Height));
+}
+TEST(Surface,CopyTextureFromMain_CorrectCoordNumbers)
+{
+    Surface surf(2,2,100,100);
+    ASSERT_EQ(nullptr,surf.getTextureOfType(TextureForModel::TextureType::Height));
+    surf.CopyFromMainTextureAs(TextureForModel::TextureType::Height);
+    auto res = surf.getTextureOfType(TextureForModel::TextureType::Height);
+    ASSERT_NE(nullptr,res);
+    ASSERT_EQ(9,res->nuTexCoord);
+}
+TEST(Surface,CopyTextureFromMain_AsSeparate)
+{
+    Surface surf(2,2,100,100);
+    surf.CopyFromMainTextureAs(TextureForModel::TextureType::Height);
+    auto copiedTex = surf.getTextureOfType(TextureForModel::TextureType::Height);
+    auto mainTex = surf.MyTexture();
+    ASSERT_NE(copiedTex,mainTex);
+}
+//TEST(Surface,CopyTextureFromMain_TheSameCoordBufferId)// jakie konsekwencje to spowoduje?
+//{
+//    Surface surf(2,2,100,100);
+//    ASSERT_EQ(nullptr,surf.getTextureOfType(TextureForModel::TextureType::Height));
+//    surf.CopyFromMainTextureAs(TextureForModel::TextureType::Height);
+//    auto res = surf.getTextureOfType(TextureForModel::TextureType::Height);
+//    ASSERT_NE(nullptr,res);
+//    ASSERT_EQ(9,res->nuTexCoord);
+//}

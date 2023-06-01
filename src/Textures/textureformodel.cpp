@@ -47,7 +47,12 @@ GLuint& TextureInMemory::getTextureId()
 {	
 	return textureId;
 }
-
+TextureForModel::TextureForModel(TextureForModel& rtex)
+{
+    //czy warto flagami zaznaczać, które jeszcze elementy mają być skopiowane?
+	texCoord = rtex.texCoord;
+    nuTexCoord = rtex.nuTexCoord;
+}
 void TextureForModel::setTextureInMemory(spTextureInMemory texm)
 {
 	m_texm_ptr = texm;
@@ -62,3 +67,4 @@ const GLint TextureForModel::getTextureUnit()
 	if(!m_texm_ptr) return 0;
     return m_texm_ptr->getTextureUnit();
 }
+

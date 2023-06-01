@@ -20,7 +20,7 @@ void RenderSystem::setBufferLoader(spBufferLoader bl)
 }
 void RenderSystem::setShader(spMyOGLShaders sha)
 {
-	m_shader = sha;
+    m_shader = sha;
 }
 spOglRenderer RenderSystem::getRenderer()
 {
@@ -34,26 +34,24 @@ spBufferLoader RenderSystem::getBufferLoader()
 {
     return m_BufferLoader;
 }
-void RenderSystem::ReloadVAO(ModelData& d, TextureForModel& tex)
+void RenderSystem::ReloadVAO(spOneModel model)
 {
-//    unsigned int& vao = tex.textureVAO;
-    if(!activeVaoPtr)return;
-    unsigned int& vao = *activeVaoPtr;
+    auto& vao = model->getVao();//czy druga wersja jest gdzieś używana?
+    auto& tex = *model->MyTexture();
+    auto& d = model->GetModelData();
     m_BufferLoader->RecreateVao(vao);
     m_BufferLoader->LoadBuffersForModelGeometry(d,vao);
     m_BufferLoader->LoadBufferForTexture(tex,vao);
 }
-void RenderSystem::CreateGraphicBuffers(ModelData& d, TextureForModel& tex)
+
+void RenderSystem::CreateGraphicBuffers(spOneModel model)
 {
+    auto& tex = *model->MyTexture();
+    auto& d = model->GetModelData();
     m_BufferLoader->CreateBuffersForModelGeometry(d);
     m_BufferLoader->CreateBufferForTextureCoord(tex);
 }
 void RenderSystem::CreateGraphicBuffers(TextureInMemory& texm)
 {
-	m_BufferLoader->CreateBufferForTextureInMemory(texm);
+    m_BufferLoader->CreateBufferForTextureInMemory(texm);
 }
-void RenderSystem::setActiveVaoPtr(unsigned int * vao)
-{
-	activeVaoPtr = vao;
-}
-

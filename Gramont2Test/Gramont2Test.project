@@ -28,6 +28,7 @@
     <File Name="src/SurfaceTest.cpp"/>
     <File Name="src/TransformableTest.cpp"/>
     <File Name="src/OutdatedTest.cpp"/>
+    <File Name="src/RenderSystemTest.cpp"/>
   </VirtualDirectory>
   <VirtualDirectory Name="libTestedClasses">
     <File Name="../src/Surface/surfaceonequad.cpp"/>

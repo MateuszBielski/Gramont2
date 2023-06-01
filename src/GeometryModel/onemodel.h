@@ -21,9 +21,9 @@ public:
 //    vector<unsigned int> vaos;
 //    void setWhichVao(param);
     unsigned int& getVao();
-    unsigned int * getVaoPtr();
-    bool AddTexture(spTextureForModel ,TextureForModel::TextureType type);
     spTextureForModel getTextureOfType(TextureForModel::TextureType);
+    bool AddTexture(spTextureForModel ,TextureForModel::TextureType type);
+    bool CopyFromMainTextureAs(TextureForModel::TextureType type);
 protected:
     ModelData data;
     spTextureForModel m_texture = nullptr;
