@@ -293,7 +293,8 @@ TEST(Surface,NoAddTextureWithoutPtrToCoordinates)
     tex->texCoord = nullptr;
     tex->nuTexCoord = 9;
     surf.AddTexture(tex,TextureForModel::TextureType::Height);
-    ASSERT_EQ(nullptr,surf.getTextureOfType(TextureForModel::TextureType::Height));
+    auto foundTex = surf.getTextureOfType(TextureForModel::TextureType::Height);
+    ASSERT_EQ(-1,(int)foundTex->bufTexCoordId);
 }
 TEST(Surface,NoAddTextureWithBadCoordNumber)
 {
@@ -303,7 +304,8 @@ TEST(Surface,NoAddTextureWithBadCoordNumber)
     tex->texCoord = coord;
     tex->nuTexCoord = 8;
     surf.AddTexture(tex,TextureForModel::TextureType::Height);
-    ASSERT_EQ(nullptr,surf.getTextureOfType(TextureForModel::TextureType::Height));
+    auto foundTex = surf.getTextureOfType(TextureForModel::TextureType::Height);
+    ASSERT_EQ(-1,(int)foundTex->bufTexCoordId);
 }
 TEST(Surface,AddTexture)
 {
@@ -318,7 +320,8 @@ TEST(Surface,AddTexture)
 TEST(Surface,CopyTextureFromMain_CorrectCoordNumbers)
 {
     Surface surf(2,2,100,100);
-    ASSERT_EQ(nullptr,surf.getTextureOfType(TextureForModel::TextureType::Height));
+    auto foundTex = surf.getTextureOfType(TextureForModel::TextureType::Height);
+    ASSERT_EQ(-1,(int)foundTex->bufTexCoordId);
     surf.CopyFromMainTextureAs(TextureForModel::TextureType::Height);
     auto res = surf.getTextureOfType(TextureForModel::TextureType::Height);
     ASSERT_NE(nullptr,res);

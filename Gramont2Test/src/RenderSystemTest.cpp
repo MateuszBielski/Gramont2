@@ -59,3 +59,17 @@ TEST(RenderSystem,ReloadVAO_LoadedBufferForTexture)
     ASSERT_FALSE(blm->LoadedBufferForTexture(t2));
     ASSERT_TRUE(blm->LoadedBufferForTexture(t1));
 }
+TEST(RenderSystem,CreateBuffersForEveryTexturesInModel)
+{
+    OneTextureRenderSystem rs;
+    auto triangle = make_shared<Triangle>();
+    triangle->CopyFromMainTextureAs(TextureForModel::TextureType::Height);
+    triangle->CopyFromMainTextureAs(TextureForModel::TextureType::Normal);
+    auto texHeigh = triangle->getTextureOfType(TextureForModel::TextureType::Height);
+    auto texNormal = triangle->getTextureOfType(TextureForModel::TextureType::Normal);
+    ASSERT_EQ(0,texHeigh->bufTexCoordId);
+    ASSERT_EQ(0,texNormal->bufTexCoordId);
+    rs.CreateGraphicBuffers(triangle);
+    ASSERT_GT(texHeigh->bufTexCoordId,0);
+    ASSERT_GT(texNormal->bufTexCoordId,0);
+}

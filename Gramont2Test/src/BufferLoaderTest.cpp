@@ -368,3 +368,11 @@ TEST_F(BufferLoader_Te,RecreateVao)
     ASSERT_NE(0,vao);
     ASSERT_NE(33558,vao);
 }
+TEST_F(BufferLoader_Te,notLoadBufferForNotFoundTexture)
+{
+    BufferLoader bl;
+    TextureForModelNotFound texNf;
+    
+    ASSERT_EQ(BufferLoaderProgress::TextureNotFound,bl.LoadBufferForTexture(texNf,7));
+}
+//BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, const int vao)

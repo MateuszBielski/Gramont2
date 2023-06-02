@@ -2,7 +2,8 @@
 
 OneModel::OneModel():addedTextures(TextureForModel::TextureType::TextureTypesSize)
 {
-	auto num = addedTextures.size();
+	for(int i = 0; i < TextureForModel::TextureType::TextureTypesSize ; i++ )addedTextures[i] = std::make_shared<TextureForModelNotFound>();
+    auto num = addedTextures.size();
     auto num2 = num;
 }
 OneModel::~OneModel()

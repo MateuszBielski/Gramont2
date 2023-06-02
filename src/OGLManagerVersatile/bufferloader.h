@@ -16,6 +16,7 @@ enum class BufferLoaderProgress
     ColorNormalsError,
     IndexError,
     TextureError,
+    TextureNotFound,
 };
 enum class BufferLoaderCounterType
 {

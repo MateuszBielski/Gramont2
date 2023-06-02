@@ -50,6 +50,9 @@ void RenderSystem::CreateGraphicBuffers(spOneModel model)
     auto& d = model->GetModelData();
     m_BufferLoader->CreateBuffersForModelGeometry(d);
     m_BufferLoader->CreateBufferForTextureCoord(tex);
+    //poniższe zrefaktoryzować
+    m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Height));
+    m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Normal));
 }
 void RenderSystem::CreateGraphicBuffers(TextureInMemory& texm)
 {

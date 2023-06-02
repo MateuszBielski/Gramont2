@@ -11,7 +11,7 @@ private:
     std::string imagePath;
     GLint textureUnit = 1;
     GLuint textureId = 0;
-    
+
 public:
     TextureInMemory(std::string imageFile);
     ~TextureInMemory();
@@ -20,7 +20,7 @@ public:
     bool hasImagePath();
     GLint& getTextureUnit();
     GLuint& getTextureId();
-    
+
     int width = 0,height = 0,nuChannels = 1;
 };
 
@@ -34,11 +34,10 @@ public:
     TextureForModel() {};
     ~TextureForModel() {};
     TextureForModel(TextureForModel& );
-    enum TextureType
-    {
-       Image,Height,TextureTypesSize
+    enum TextureType {
+        Image,Height,Normal,TextureTypesSize
     };
-    void setTextureInMemory(spTextureInMemory);
+    virtual void setTextureInMemory(spTextureInMemory);
     const GLint getTextureUnit();
     const GLuint getTextureId();
 //    bool CreateAndSetTextureInMemoryWithLoadedImageFile(std::string imageFile);
@@ -52,4 +51,13 @@ protected:
 };
 
 using spTextureForModel = std::shared_ptr<TextureForModel>;
+
+class TextureForModelNotFound : public TextureForModel
+{
+public:
+    TextureForModelNotFound() {
+        bufTexCoordId = (unsigned)-1;
+    }
+    virtual void setTextureInMemory(spTextureInMemory) override {}
+};
 #endif // TextureForModel_H

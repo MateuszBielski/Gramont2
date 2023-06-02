@@ -199,6 +199,7 @@ BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, co
     bool ok = true;
     ++counter[(size_t)BufferLoaderCounterType::LoadBufferForTextureStart];
     if(!vao)return BufferLoaderProgress::VaoNotInited;
+    if((int)tex.bufTexCoordId == -1 )return BufferLoaderProgress::TextureNotFound;
 
     glBindVertexArray(vao);
 
