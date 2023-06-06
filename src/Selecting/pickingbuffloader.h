@@ -9,7 +9,8 @@ class PickingBuffLoader : public BufferLoader
   public:
     PickingBuffLoader();
     virtual ~PickingBuffLoader();
-    virtual void LoadBuffers(spOneModel model) override;
+//    virtual void LoadBuffers(spOneModel model) override;
+    virtual BufferLoaderProgress LoadBuffersForModelGeometry(ModelData& d,const int vao) override;
     virtual void setLocationsFrom(spMyOGLShaders) override;
 protected:
 

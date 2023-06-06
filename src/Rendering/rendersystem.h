@@ -22,8 +22,8 @@ public:
     virtual
 #endif
     void ReloadVAO(spOneModel );
-    void CreateGraphicBuffers(ModelData& d, TextureForModel& tex);
-    void CreateGraphicBuffers(spOneModel );
+    virtual void LoadVAO(spOneModel ) {};
+    virtual void CreateGraphicBuffers(spOneModel ) {};
     void CreateGraphicBuffers(TextureInMemory& texm);
 protected:
     spOglRenderer m_renderer;

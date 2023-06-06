@@ -24,10 +24,12 @@ enum class BufferLoaderCounterType
     CreateBufferForTextureCoordStart,
     CreateBufferForTextureInMemoryStart,
     LoadBufferForTextureStart,
+    LoadBufferForModelGeometryStart,
     CreateBuffersForModelGeometryCompleted,
     CreateBufferForTextureCoordCompleted,
     CreateBufferForTextureInMemoryCompleted,
     LoadBufferForTextureCompleted,
+    LoadBufferForModelGeometryCompleted,
     BufferLoaderCounterTypeSize
 };
 
@@ -57,12 +59,9 @@ class BufferLoader
     virtual BufferLoaderProgress LoadBuffersForModelGeometry(ModelData& d,const int vao);
     virtual BufferLoaderProgress LoadBufferForTexture(TextureForModel& tex,const int vao);
 
-    virtual void LoadBuffers(spOneModel model) {};
+//    virtual void LoadBuffers(spOneModel model);
     virtual void setLocationsFrom(spMyOGLShaders);
     void ClearBuffersForSingleModelEntry(ModelData& d);
-//    unsigned int CreateBuffersCheckedCount();
-//    unsigned int LoadTextureSuccessCount();
-//    unsigned int LoadTextureFailsCount();
     const unsigned Counter(BufferLoaderCounterType couterType);
 
     bool LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d);

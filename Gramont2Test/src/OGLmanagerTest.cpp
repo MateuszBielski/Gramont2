@@ -577,15 +577,11 @@ TEST(MultiModelManager,setAndConfigureRenderSystem_BuffersCreatedForModels)
     spOneModel model2 = make_shared<Triangle>();
     man.setModels( {model1,model2});
 
-    spRenderSystemMock rsm = make_shared<RenderSystemMock>();
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
 
-    man.setAndConfigureRenderSystem(rsm);
+    man.setAndConfigureRenderSystem(rs);
     ASSERT_GT(model1->GetModelData().bufVertId,0);
     ASSERT_GT(model2->GetModelData().bufVertId,0);
-//    GLuint bufVertId = 0;
-//    GLuint bufColNorId = 0;
-//    GLuint bufIndexId = 0;
-//tex.bufTexCoordId
 }
 
 stack<const float *> matricesFv_stack;

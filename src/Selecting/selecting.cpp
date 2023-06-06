@@ -49,6 +49,13 @@ bool Selecting::ConfigurePickingShader()
     return true;
 }
 
+void Selecting::LoadVAO(spOneModel model)
+{
+    m_BufferLoader->CreateVao(model->getVAOforSelect());
+    m_BufferLoader->LoadBuffersForModelGeometry(model->GetModelData(),model->getVAOforSelect());
+    std::string str_log = "Texture buffers loaded into GPU for model Id = "+to_string(model->getUniqueId()) + " in Selecting::LoadVAO";
+    MyOnGLError(myoglERR_JUSTLOG, str_log.c_str());
+}
 void Selecting::setWindowSize(unsigned int w, unsigned int h)
 {
     if(WindowWidth == w
@@ -79,6 +86,7 @@ void Selecting::DisableWritingToFrameBuffer()
     glDisable(GL_DEPTH_TEST);
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
+
 void Selecting::CreateAndLoadFrameBuffer()
 {
     //całość można przenieść do buffLoadera;
@@ -231,3 +239,4 @@ void Selecting::SetFragmentShaderPath(string p)
 {
 //    m_fragmentShaderPath = p;
 }
+

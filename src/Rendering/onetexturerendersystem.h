@@ -11,6 +11,8 @@ class OneTextureRenderSystem : public RenderSystem
     OneTextureRenderSystem();
     virtual ~OneTextureRenderSystem();
 	virtual bool ConfigureShadersAndLocations() override;
+    void CreateGraphicBuffers(spOneModel model) override;
+    virtual void LoadVAO(spOneModel )  override;
 protected:
 
 private:

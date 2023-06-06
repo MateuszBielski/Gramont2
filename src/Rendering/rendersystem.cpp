@@ -36,24 +36,11 @@ spBufferLoader RenderSystem::getBufferLoader()
 }
 void RenderSystem::ReloadVAO(spOneModel model)
 {
-    auto& vao = model->getVao();//czy druga wersja jest gdzieś używana?
-    auto& tex = *model->MyTexture();
-    auto& d = model->GetModelData();
-    m_BufferLoader->RecreateVao(vao);
-    m_BufferLoader->LoadBuffersForModelGeometry(d,vao);
-    m_BufferLoader->LoadBufferForTexture(tex,vao);
+    m_BufferLoader->RecreateVao(model->getVao());
+    LoadVAO(model);
 }
 
-void RenderSystem::CreateGraphicBuffers(spOneModel model)
-{
-    auto& tex = *model->MyTexture();
-    auto& d = model->GetModelData();
-    m_BufferLoader->CreateBuffersForModelGeometry(d);
-    m_BufferLoader->CreateBufferForTextureCoord(tex);
-    //poniższe zrefaktoryzować
-    m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Height));
-    m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Normal));
-}
+
 void RenderSystem::CreateGraphicBuffers(TextureInMemory& texm)
 {
     m_BufferLoader->CreateBufferForTextureInMemory(texm);

@@ -2,6 +2,7 @@
 #include "rendersystemmock.h"
 #include "bufferloadermock.h"
 #include "onetexturerendersystem.h"
+#include "paralaxoclusionmaprendersystem.h"
 #include "triangle.h"
 
 using namespace std;
@@ -61,7 +62,7 @@ TEST(RenderSystem,ReloadVAO_LoadedBufferForTexture)
 }
 TEST(RenderSystem,CreateBuffersForEveryTexturesInModel)
 {
-    OneTextureRenderSystem rs;
+    ParalaxOclusionMapRenderSystem rs;
     auto triangle = make_shared<Triangle>();
     triangle->CopyFromMainTextureAs(TextureForModel::TextureType::Height);
     triangle->CopyFromMainTextureAs(TextureForModel::TextureType::Normal);
@@ -72,4 +73,40 @@ TEST(RenderSystem,CreateBuffersForEveryTexturesInModel)
     rs.CreateGraphicBuffers(triangle);
     ASSERT_GT(texHeigh->bufTexCoordId,0);
     ASSERT_GT(texNormal->bufTexCoordId,0);
+}
+TEST(RenderSystem,OneTexRs_LoadVAO_LoadedBuffersForModelGeometry)
+{
+    OneTextureRenderSystem otrs;
+    spOneModel model = make_shared<Triangle>();
+    auto buff = otrs.getBufferLoader();
+    buff->CreateVao(model->getVao());
+    otrs.LoadVAO(model);
+    ASSERT_EQ(1,buff->Counter(BufferLoaderCounterType::LoadBufferForModelGeometryCompleted));
+}
+TEST(RenderSystem,OneTexRs_LoadVAO_LoadedBuffersForTexture)
+{
+    OneTextureRenderSystem otrs;
+    spOneModel model = make_shared<Triangle>();
+    auto buff = otrs.getBufferLoader();
+    buff->CreateVao(model->getVao());
+    otrs.LoadVAO(model);
+    ASSERT_EQ(1,buff->Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
+}
+TEST(RenderSystem,ParalOclTexRs_LoadVAO_LoadedBuffersForModelGeometry)
+{
+    ParalaxOclusionMapRenderSystem pors;
+    spOneModel model = make_shared<Triangle>();
+    auto buff = pors.getBufferLoader();
+    buff->CreateVao(model->getVao());
+    pors.LoadVAO(model);
+    ASSERT_EQ(1,buff->Counter(BufferLoaderCounterType::LoadBufferForModelGeometryCompleted));
+}
+TEST(RenderSystem,ParalOclRs_LoadVAO_LoadedBuffersForTexture)
+{
+    ParalaxOclusionMapRenderSystem pors;
+    spOneModel model = make_shared<Triangle>();
+    auto buff = pors.getBufferLoader();
+    buff->CreateVao(model->getVao());
+    pors.LoadVAO(model);
+    ASSERT_EQ(1,buff->Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
 }

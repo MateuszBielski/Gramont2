@@ -67,7 +67,7 @@ public:
             notUsed_2 = 0.0f;
         }
     };
-    
+    virtual void LoadVAO(spOneModel ) override;
     virtual bool ConfigureShadersAndLocations() override;
     void RegisterSelectable(vector<spSelectable>&& );
     void setWindowSize(unsigned int, unsigned int);
@@ -77,8 +77,8 @@ public:
     void DisableWritingToFrameBuffer();
     void ReadInClickedPosition();
     SelectingResult getResult();
-    
-    
+
+
     void SetVertexShaderPath(string);
     void SetFragmentShaderPath(string);
 protected:

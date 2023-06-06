@@ -96,9 +96,7 @@ void MultiModelManager::SetShadersAndGeometry()
     
     setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
     
-    for(auto& model : models) {
-        m_selecting->getBufferLoader()->LoadBuffers(model);
-    }
+    CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
 
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());

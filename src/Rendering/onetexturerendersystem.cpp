@@ -42,3 +42,18 @@ bool OneTextureRenderSystem::ConfigureShadersAndLocations()
     m_BufferLoader->setLocationsFrom(m_shader);
     return true;
 }
+void OneTextureRenderSystem::CreateGraphicBuffers(spOneModel model)
+{
+    auto& tex = *model->MyTexture();
+    auto& d = model->GetModelData();
+    m_BufferLoader->CreateBuffersForModelGeometry(d);
+    m_BufferLoader->CreateBufferForTextureCoord(tex);
+}
+void OneTextureRenderSystem::LoadVAO(spOneModel model)
+{
+	auto& tex = *model->MyTexture();
+    auto& d = model->GetModelData();
+    auto& vao = model->getVao();
+    m_BufferLoader->LoadBuffersForModelGeometry(d,vao);
+    m_BufferLoader->LoadBufferForTexture(tex,vao);
+}
