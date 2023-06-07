@@ -108,6 +108,8 @@
     <File Name="ShaderyCoreProfile/triangVertexShader.c" ExcludeProjConfig="Debug"/>
     <File Name="ShaderyCoreProfile/textureFragmentShader.c" ExcludeProjConfig="Debug"/>
     <File Name="ShaderyCoreProfile/textureVertexShader.c" ExcludeProjConfig="Debug"/>
+    <File Name="ShaderyCoreProfile/pomVertexShader.c"/>
+    <File Name="ShaderyCoreProfile/pomFragmentShader.c"/>
   </VirtualDirectory>
   <Settings Type="Executable">
     <GlobalSettings>
@@ -223,6 +225,7 @@
     <File Name="ShaderyGLSL120/triangVertexShader.c"/>
     <File Name="ShaderyGLSL120/pickingFragmentShader.c"/>
     <File Name="ShaderyGLSL120/pickingVertexShader.c"/>
+    <File Name="ShaderyGLSL120/pomVertexShader.c"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>

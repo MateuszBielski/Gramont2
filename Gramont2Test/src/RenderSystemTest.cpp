@@ -110,3 +110,19 @@ TEST(RenderSystem,ParalOclRs_LoadVAO_LoadedBuffersForTexture)
     pors.LoadVAO(model);
     ASSERT_EQ(1,buff->Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
 }
+TEST(RenderSystem,ParalOclRs_shadAttribLocationsOfBuffLoaderHasCorrectSizeAfterConfigure)
+{
+    ParalaxOclusionMapRenderSystem pors;
+    pors.ConfigureShadersAndLocations();
+    auto buff = pors.getBufferLoader();
+    int expect = (int)pomShAttr::pomShAttrSize;
+    ASSERT_EQ(expect,buff->shadAttribLocations.size());
+}
+TEST(RenderSystem,ParalOclRs_shaderHasAttributesAfterConfigure)
+{
+    ParalaxOclusionMapRenderSystem pors;
+    spShadersMock shader = make_shared<OglShadersMock>();
+    pors.setShader(shader);
+    pors.ConfigureShadersAndLocations();
+    
+}

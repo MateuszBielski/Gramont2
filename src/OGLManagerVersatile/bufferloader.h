@@ -48,6 +48,7 @@ class BufferLoader
     };
     BufferLoader();
     Locations m_loc;
+    vector<unsigned> shadAttribLocations;//to replace with struct Locations
     BufferLoaderProgress CreateBuffersForModelGeometry(ModelData& d);
     BufferLoaderProgress CreateBufferForTextureCoord(TextureForModel& tex);
     BufferLoaderProgress CreateBufferForTextureInMemory(TextureInMemory& tex);
@@ -68,6 +69,7 @@ class BufferLoader
 protected:
 //unsigned loadTextureSuccessCount = 0, loadTextureFailsCount = 0, createBuffersCheckedCount = 0;
     vector<unsigned> counter;
+    
 };
 
 using spBufferLoader = std::shared_ptr<BufferLoader>;

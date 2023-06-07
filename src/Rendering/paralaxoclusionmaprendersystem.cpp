@@ -5,7 +5,7 @@
 
 bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
 {
-	const char * vertCode = textFileRead(d_textureVertexShaderPath);
+	const char * vertCode = textFileRead(d_pomVertexShaderPath);
     const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
     const char * fragCode = textFileRead(d_textureFragmentShaderPath);
     
@@ -22,6 +22,7 @@ bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
     m_shader->AddUnif("lightColour");
     m_shader->AddUnif("stringTexture");
     
+    m_BufferLoader->shadAttribLocations.resize((size_t)pomShAttr::pomShAttrSize);
     bool ok = true;
     ok &= (bool)vertCode;
     ok &= (bool)fragIlumCode;

@@ -5,6 +5,21 @@
 #include <memory>
 #include "rendersystem.h"
 
+#define CreateEnum( name, content ) enum class #name { #content };
+//?variadic macro
+
+
+//enum class pomShAttr
+//{
+//    aPos,
+//    aNormal,
+//    aTexCoords,
+//    aTangent,
+//    aBitangent,
+//    pomShAttrSize
+//};
+
+
 class ParalaxOclusionMapRenderSystem : public RenderSystem
 {
 private:

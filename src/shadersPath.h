@@ -18,5 +18,6 @@
 #define d_illuminationShaderPath d_path"illuminationShader.c"
 #define d_vertexPickingShaderPath d_path"pickingVertexShader.c"
 #define d_fragmentPickingShaderPath d_path"pickingFragmentShader.c"
+#define d_pomVertexShaderPath d_path"pomVertexShader.c"
 
 #endif
