@@ -2,6 +2,21 @@
 #include "shadersPath.h"
 #include "textfile.h"
 
+//https://cplusplus.com/articles/2wA0RXSz/
+const vector<string> explode(const string& s, const char& c)
+{
+    string buff{ "" };
+    vector<string> v;
+
+    for (auto n : s)
+    {
+        if (n != c) buff += n; else
+            if (n == c && buff != "") { v.push_back(buff); buff = ""; }
+    }
+    if (buff != "") v.push_back(buff);
+
+    return v;
+}
 
 bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
 {
@@ -9,9 +24,11 @@ bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
     const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
     const char * fragCode = textFileRead(d_textureFragmentShaderPath);
     
-    m_shader->AddCode(vertCode,GL_VERTEX_SHADER);
-    m_shader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
-    m_shader->AddCode(fragCode,GL_FRAGMENT_SHADER);
+    //m_shader->AddCode(vertCode,GL_VERTEX_SHADER);
+    //m_shader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
+    //m_shader->AddCode(fragCode,GL_FRAGMENT_SHADER);
+    CreateStrings(attribs, POM_SH_ATTR);
+    for (auto& attr : attribs)m_shader->AddAttrib(attr);
 
     m_shader->AddAttrib("in_sPosition");
     m_shader->AddAttrib("in_sNormal");

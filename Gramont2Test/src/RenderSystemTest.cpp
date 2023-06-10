@@ -4,6 +4,8 @@
 #include "onetexturerendersystem.h"
 #include "paralaxoclusionmaprendersystem.h"
 #include "triangle.h"
+#include <glshadersmock.h>
+
 
 using namespace std;
 
@@ -121,8 +123,13 @@ TEST(RenderSystem,ParalOclRs_shadAttribLocationsOfBuffLoaderHasCorrectSizeAfterC
 TEST(RenderSystem,ParalOclRs_shaderHasAttributesAfterConfigure)
 {
     ParalaxOclusionMapRenderSystem pors;
-    spShadersMock shader = make_shared<OglShadersMock>();
+    spShadersMock shader = make_shared<glShadersMock>();
     pors.setShader(shader);
     pors.ConfigureShadersAndLocations();
-    
+    CreateStrings(expectedShaderAttribs, POM_SH_ATTR)
+        for (auto attrib : expectedShaderAttribs)
+        {
+            ASSERT_TRUE(shader->hasAttrib(attrib));
+        }
+
 }

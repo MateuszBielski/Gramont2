@@ -5,19 +5,16 @@
 #include <memory>
 #include "rendersystem.h"
 
-#define CreateEnum( name, content ) enum class #name { #content };
-//?variadic macro
+//https://cplusplus.com/articles/2wA0RXSz/
+const vector<string> explode(const string& s, const char& c);
 
+#define POM_SH_ATTR aPos, aNormal, aTexCoords, aTangent, aBitangent, pomShAttrSize
+#define CreateEnum( className, ...) enum class className { __VA_ARGS__};
+#define Q(x) #x
+#define CreateStrings( varName, ...) const vector<string> varName = explode( Q(__VA_ARGS__), ',');
 
-//enum class pomShAttr
-//{
-//    aPos,
-//    aNormal,
-//    aTexCoords,
-//    aTangent,
-//    aBitangent,
-//    pomShAttrSize
-//};
+CreateEnum(pomShAttr, POM_SH_ATTR)
+
 
 
 class ParalaxOclusionMapRenderSystem : public RenderSystem
