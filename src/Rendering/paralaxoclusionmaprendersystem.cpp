@@ -24,22 +24,21 @@ bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
     const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
     const char * fragCode = textFileRead(d_textureFragmentShaderPath);
     
-    //m_shader->AddCode(vertCode,GL_VERTEX_SHADER);
-    //m_shader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
-    //m_shader->AddCode(fragCode,GL_FRAGMENT_SHADER);
-    CreateStrings(attribs, POM_SH_ATTR);
+    m_shader->AddCode(vertCode,GL_VERTEX_SHADER);
+    m_shader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
+    m_shader->AddCode(fragCode,GL_FRAGMENT_SHADER);
+    MA_CreateStrings(attribs, POM_SH_ATTR);
     for (auto& attr : attribs)m_shader->AddAttrib(attr);
-
-    m_shader->AddAttrib("in_sPosition");
-    m_shader->AddAttrib("in_sNormal");
-    m_shader->AddAttrib("in_TextPos");
-    m_shader->AddUnif("mMVP");
-    m_shader->AddUnif("mToViewSpace");
-    m_shader->AddUnif("lightProps");
-    m_shader->AddUnif("lightColour");
-    m_shader->AddUnif("stringTexture");
     
+    MA_CreateStrings(uniforms, POM_SH_UNIF);
+    for (auto& unif : uniforms)m_shader->AddUnif(unif);
+
     m_BufferLoader->shadAttribLocations.resize((size_t)pomShAttr::pomShAttrSize);
+    m_renderer->shadUnifLocations.resize((size_t)pomShUnif::pomShUnifSize);
+    for(short a = 0 ; a < (short)pomShAttr::pomShAttrSize ; a++)
+        m_BufferLoader->shadAttribLocations[a] = m_shader->GetAttribLoc(attribs[a]);
+    for(short u = 0 ; u < (short)pomShUnif::pomShUnifSize; u++)
+        m_renderer->shadUnifLocations[u] = m_shader->GetUnifLoc(uniforms[u]);
     bool ok = true;
     ok &= (bool)vertCode;
     ok &= (bool)fragIlumCode;
@@ -48,8 +47,8 @@ bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
 
     string nameOfFunction = "ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations";
     m_shader->Init(nameOfFunction);
-    m_renderer->setLocationsFrom(m_shader);
-    m_BufferLoader->setLocationsFrom(m_shader);
+//    m_renderer->setLocationsFrom(m_shader);
+//    m_BufferLoader->setLocationsFrom(m_shader);
     return true;
 }
 void ParalaxOclusionMapRenderSystem::CreateGraphicBuffers(spOneModel model)

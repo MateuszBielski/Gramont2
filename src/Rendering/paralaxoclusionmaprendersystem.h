@@ -9,11 +9,13 @@
 const vector<string> explode(const string& s, const char& c);
 
 #define POM_SH_ATTR aPos, aNormal, aTexCoords, aTangent, aBitangent, pomShAttrSize
-#define CreateEnum( className, ...) enum class className { __VA_ARGS__};
-#define Q(x) #x
-#define CreateStrings( varName, ...) const vector<string> varName = explode( Q(__VA_ARGS__), ',');
+#define POM_SH_UNIF projection, view, model, lightPos, viewPos, pomShUnifSize
+#define MA_CreateEnum( className, ...) enum class className { __VA_ARGS__};
+#define Q(...) #__VA_ARGS__
+#define MA_CreateStrings( varName, ...) const vector<string> varName = explode( Q(__VA_ARGS__), ',');
 
-CreateEnum(pomShAttr, POM_SH_ATTR)
+MA_CreateEnum(pomShAttr, POM_SH_ATTR)
+MA_CreateEnum(pomShUnif, POM_SH_UNIF)
 
 
 

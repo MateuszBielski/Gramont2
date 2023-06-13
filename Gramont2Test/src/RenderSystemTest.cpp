@@ -126,10 +126,73 @@ TEST(RenderSystem,ParalOclRs_shaderHasAttributesAfterConfigure)
     spShadersMock shader = make_shared<glShadersMock>();
     pors.setShader(shader);
     pors.ConfigureShadersAndLocations();
-    CreateStrings(expectedShaderAttribs, POM_SH_ATTR)
-        for (auto attrib : expectedShaderAttribs)
-        {
-            ASSERT_TRUE(shader->hasAttrib(attrib));
-        }
-
+    MA_CreateStrings(expectedShaderAttribs, POM_SH_ATTR)
+    for (auto attrib : expectedShaderAttribs) {
+        ASSERT_TRUE(shader->hasAttrib(attrib));
+    }
+}
+TEST(RenderSystem,ParalOclRs_buffLoadKnowsAttribLocationsAfterConfigure)
+{
+    ParalaxOclusionMapRenderSystem pors;
+    spShadersMock shader = make_shared<glShadersMock>();
+    pors.setShader(shader);
+    
+    MA_CreateStrings(shaderAttribNames, POM_SH_ATTR)
+    short pomShAttrSize = (short)pomShAttr::pomShAttrSize;
+    short expectLocations[pomShAttrSize], resultLocations[pomShAttrSize];
+    for(short a = 0; a < pomShAttrSize ; a++) {
+        expectLocations[a] = pomShAttrSize - a;
+        shader->setAttribLoc(shaderAttribNames[a], pomShAttrSize - a);
+    }
+    
+    pors.ConfigureShadersAndLocations();
+    auto buffLoader = pors.getBufferLoader();
+    for(short r = 0; r < pomShAttrSize ; r++) {
+        resultLocations[r] = buffLoader->shadAttribLocations[r];
+    }
+    for(short r = 0; r < pomShAttrSize ; r++) {
+        ASSERT_EQ(expectLocations[r],resultLocations[r]);
+    }
+}
+TEST(RenderSystem,ParalOclRs_shadUnifLocationsOfRendererHasCorrectSizeAfterConfigure)
+{
+    ParalaxOclusionMapRenderSystem pors;
+    pors.ConfigureShadersAndLocations();
+    auto rend = pors.getRenderer();
+    int expect = (int)pomShUnif::pomShUnifSize;
+    ASSERT_EQ(expect,rend->shadUnifLocations.size());
+}
+TEST(RenderSystem,ParalOclRs_shaderHasUniformsAfterConfigure)
+{
+    ParalaxOclusionMapRenderSystem pors;
+    spShadersMock shader = make_shared<glShadersMock>();
+    pors.setShader(shader);
+    pors.ConfigureShadersAndLocations();
+    MA_CreateStrings(expectedShaderUniforms, POM_SH_UNIF)
+    for (auto unif : expectedShaderUniforms) {
+        ASSERT_TRUE(shader->hasUnif(unif));
+    }
+}
+TEST(RenderSystem,ParalOclRs_rendererLoadKnowsUnifLocationsAfterConfigure)
+{
+    ParalaxOclusionMapRenderSystem pors;
+    spShadersMock shader = make_shared<glShadersMock>();
+    pors.setShader(shader);
+    
+    MA_CreateStrings(shaderUnifNames, POM_SH_UNIF)
+    short pomShUnifSize = (short)pomShUnif::pomShUnifSize;
+    short expectLocations[pomShUnifSize], resultLocations[pomShUnifSize];
+    for(short a = 0; a < pomShUnifSize ; a++) {
+        expectLocations[a] = pomShUnifSize - a;
+        shader->setUnifLoc(shaderUnifNames[a], pomShUnifSize - a);
+    }
+    
+    pors.ConfigureShadersAndLocations();
+    auto rend = pors.getRenderer();
+    for(short r = 0; r < pomShUnifSize ; r++) {
+        resultLocations[r] = rend->shadUnifLocations[r];
+    }
+    for(short r = 0; r < pomShUnifSize ; r++) {
+        ASSERT_EQ(expectLocations[r],resultLocations[r]);
+    }
 }
