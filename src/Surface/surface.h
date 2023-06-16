@@ -6,6 +6,8 @@
 #include <vector>
 
 using std::vector;
+using glm::vec2;
+using glm::vec3;
 
 class Surface : public OneModel
 {
@@ -14,8 +16,10 @@ public:
     Surface(GLuint segmentX,GLuint segmentY,float sizeX,float sizeY);
     ~Surface();
     const vector<GLuint> IndicesAdjacentToPoint(GLuint);
-    glm::vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts);//to move verts inside
-    glm::vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent);//to move verts inside
+    GLuint PointOppositeTo(GLuint);
+    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts);//to move verts inside
+    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent);//to move verts inside
+    bool CalculateTangentAndBitangentForAllPoints();
     void CalculateResultantNormalForAllPoints();
     void SetZcoordinateForOnePoint(GLuint, float);
 protected:

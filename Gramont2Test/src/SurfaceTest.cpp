@@ -344,3 +344,28 @@ TEST(Surface,CopyTextureFromMain_AsSeparate)
 //    ASSERT_NE(nullptr,res);
 //    ASSERT_EQ(9,res->nuTexCoord);
 //}
+TEST(Surface,PointOppositeTo_LeftBottomCorner)
+{
+    Surface surf(3,3,10,10);
+    ASSERT_EQ(5,surf.PointOppositeTo(0));
+}
+TEST(Surface,PointOppositeTo_RightBottomCorner)
+{
+    Surface surf(4,3,10,10);
+    ASSERT_EQ(8,surf.PointOppositeTo(4));
+}
+TEST(Surface,PointOppositeTo_LeftUpperCorner)
+{
+    Surface surf(1,1,10,10);
+    ASSERT_EQ(1,surf.PointOppositeTo(2));
+}
+TEST(Surface,PointOppositeTo_RighUpperCorner)
+{
+    Surface surf(5,5,10,10);
+    ASSERT_EQ(28,surf.PointOppositeTo(35));
+}
+TEST(Surface,PointOppositeTo_ZeroIfOutOfRange)
+{
+    Surface surf(1,1,10,10);
+    ASSERT_EQ(0,surf.PointOppositeTo(35));
+}

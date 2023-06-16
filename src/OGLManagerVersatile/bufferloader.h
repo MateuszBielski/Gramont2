@@ -50,6 +50,8 @@ class BufferLoader
     Locations m_loc;
     vector<unsigned> shadAttribLocations;//to replace with struct Locations
     BufferLoaderProgress CreateBuffersForModelGeometry(ModelData& d);
+//    BufferLoaderProgress CreateBufferForTagentAndBitangent(ModelData& d);
+    //BufferLoaderProgress CreateBufferForVerticesVectorsInSpace();//name to using
     BufferLoaderProgress CreateBufferForTextureCoord(TextureForModel& tex);
     BufferLoaderProgress CreateBufferForTextureInMemory(TextureInMemory& tex);
     bool CreateVao(unsigned int& vao);
@@ -59,6 +61,7 @@ class BufferLoader
     void RecreateVao(unsigned int& vao);
     virtual BufferLoaderProgress LoadBuffersForModelGeometry(ModelData& d,const int vao);
     virtual BufferLoaderProgress LoadBufferForTexture(TextureForModel& tex,const int vao);
+    
 
 //    virtual void LoadBuffers(spOneModel model);
     virtual void setLocationsFrom(spMyOGLShaders);

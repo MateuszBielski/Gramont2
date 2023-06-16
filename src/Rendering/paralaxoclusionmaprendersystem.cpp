@@ -21,11 +21,11 @@ const vector<string> explode(const string& s, const char& c)
 bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
 {
 	const char * vertCode = textFileRead(d_pomVertexShaderPath);
-    const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
-    const char * fragCode = textFileRead(d_textureFragmentShaderPath);
+//    const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
+    const char * fragCode = textFileRead(d_pomFragmentShaderPath);
     
     m_shader->AddCode(vertCode,GL_VERTEX_SHADER);
-    m_shader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
+//    m_shader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
     m_shader->AddCode(fragCode,GL_FRAGMENT_SHADER);
     MA_CreateStrings(attribs, POM_SH_ATTR);
     for (auto& attr : attribs)m_shader->AddAttrib(attr);
@@ -35,18 +35,20 @@ bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
 
     m_BufferLoader->shadAttribLocations.resize((size_t)pomShAttr::pomShAttrSize);
     m_renderer->shadUnifLocations.resize((size_t)pomShUnif::pomShUnifSize);
+    
+    bool ok = true;
+    ok &= (bool)vertCode;
+//    ok &= (bool)fragIlumCode;
+    ok &= (bool)fragCode;
+//    if(!ok)return false;
+
+    string nameOfFunction = "ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations";
+    if(ok)m_shader->Init(nameOfFunction);
+    //locations are accessible after compile and link shader
     for(short a = 0 ; a < (short)pomShAttr::pomShAttrSize ; a++)
         m_BufferLoader->shadAttribLocations[a] = m_shader->GetAttribLoc(attribs[a]);
     for(short u = 0 ; u < (short)pomShUnif::pomShUnifSize; u++)
         m_renderer->shadUnifLocations[u] = m_shader->GetUnifLoc(uniforms[u]);
-    bool ok = true;
-    ok &= (bool)vertCode;
-    ok &= (bool)fragIlumCode;
-    ok &= (bool)fragCode;
-    if(!ok)return false;
-
-    string nameOfFunction = "ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations";
-    m_shader->Init(nameOfFunction);
 //    m_renderer->setLocationsFrom(m_shader);
 //    m_BufferLoader->setLocationsFrom(m_shader);
     return true;

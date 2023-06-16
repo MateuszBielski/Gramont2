@@ -17,7 +17,9 @@ const vector<string> explode(const string& s, const char& c);
 MA_CreateEnum(pomShAttr, POM_SH_ATTR)
 MA_CreateEnum(pomShUnif, POM_SH_UNIF)
 
-
+//https://shot511.github.io/2018-10-12-parallax-mapping/
+//obliczanie Tangent i Bitangent
+//https://shot511.github.io/2018-10-10-normal-mapping/
 
 class ParalaxOclusionMapRenderSystem : public RenderSystem
 {

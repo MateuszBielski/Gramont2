@@ -101,6 +101,7 @@ BufferLoaderProgress BufferLoader::CreateBuffersForModelGeometry(ModelData& d)
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     return BufferLoaderProgress::Completed;
 }
+
 BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& tex)
 {
     bool ok = true;
