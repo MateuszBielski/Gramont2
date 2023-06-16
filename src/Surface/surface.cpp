@@ -145,6 +145,22 @@ const vector<GLuint> Surface::IndicesAdjacentToPoint(GLuint index)
     }
     return result;
 }
+GLuint Surface::PointOppositeTo(GLuint index)
+{	
+	if (index >= (m_segmentX + 1) * (m_segmentY + 1))return 0;
+    GLuint cpRow, cpCol;
+	GLuint resultRow, resultCol;
+    
+    cpCol = index % (m_segmentX + 1);
+    cpRow = (index - cpCol) / (m_segmentX + 1);
+    resultCol = cpCol + 1;
+    resultRow = cpRow + 1;
+    if(cpCol == m_segmentX) resultCol = cpCol - 1;
+    if(cpRow == m_segmentY) resultRow = cpRow - 1;
+    
+    GLuint resultPointIndex = resultRow * (m_segmentX + 1) + resultCol;
+    return resultPointIndex;
+}
 glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts)
 {
     //definition to erase
@@ -225,6 +241,14 @@ void Surface::CalculateResultantNormalForAllPoints()
     }
     data.normals = temp;
 }
+
+bool Surface::CalculateTangentAndBitangentForAllPointsBasedOn(TextureForModel& tex)
+{
+	if(tex.nuTexCoord != data.nuPoints) return false;
+    data.nuTangents = tex.nuTexCoord;
+    data.nuBitangents = tex.nuTexCoord;
+    return true;
+}
 void Surface::SetZcoordinateForOnePoint(GLuint index, float z_coord)
 {
     if(!data.verts)return;
@@ -234,19 +258,4 @@ void Surface::SetZcoordinateForOnePoint(GLuint index, float z_coord)
     delete [] data.verts;
     data.verts = temp;
 }
-GLuint Surface::PointOppositeTo(GLuint index)
-{	
-	if (index >= (m_segmentX + 1) * (m_segmentY + 1))return 0;
-    GLuint cpRow, cpCol;
-	GLuint resultRow, resultCol;
-    
-    cpCol = index % (m_segmentX + 1);
-    cpRow = (index - cpCol) / (m_segmentX + 1);
-    resultCol = cpCol + 1;
-    resultRow = cpRow + 1;
-    if(cpCol == m_segmentX) resultCol = cpCol - 1;
-    if(cpRow == m_segmentY) resultRow = cpRow - 1;
-    
-    GLuint resultPointIndex = resultRow * (m_segmentX + 1) + resultCol;
-    return resultPointIndex;
-}
+

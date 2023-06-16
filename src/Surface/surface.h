@@ -17,9 +17,11 @@ public:
     ~Surface();
     const vector<GLuint> IndicesAdjacentToPoint(GLuint);
     GLuint PointOppositeTo(GLuint);
-    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts);//to move verts inside
-    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent);//to move verts inside
-    bool CalculateTangentAndBitangentForAllPoints();
+    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts);
+    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent);//verts inside
+//    bool CalculateTangentAndBitangentForAllPoints();
+    //idea for future becouse modelData should to have coordinates  <- false
+    bool CalculateTangentAndBitangentForAllPointsBasedOn(TextureForModel& );
     void CalculateResultantNormalForAllPoints();
     void SetZcoordinateForOnePoint(GLuint, float);
 protected:

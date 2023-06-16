@@ -369,3 +369,12 @@ TEST(Surface,PointOppositeTo_ZeroIfOutOfRange)
     Surface surf(1,1,10,10);
     ASSERT_EQ(0,surf.PointOppositeTo(35));
 }
+TEST(Surface,CalculateTangentAndBitangent_Amount)
+{
+    Surface surf(8,9,10,10);
+    auto& tex = *surf.MyTexture();
+    auto& md = surf.GetModelData();
+    surf.CalculateTangentAndBitangentForAllPointsBasedOn(tex);
+    ASSERT_EQ(90,md.nuTangents);
+    ASSERT_EQ(90,md.nuBitangents);
+}
