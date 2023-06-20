@@ -96,6 +96,8 @@ Surface::~Surface()
     Release(data.normals);
     Release(data.indices);
     Release(data.colours);
+    Release(data.tangents);
+    Release(data.bitangents);
     Release(m_texture->texCoord);
 }
 
@@ -161,15 +163,15 @@ GLuint Surface::PointOppositeTo(GLuint index)
     GLuint resultPointIndex = resultRow * (m_segmentX + 1) + resultCol;
     return resultPointIndex;
 }
-glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts)
+vec3 Surface::ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts)
 {
     //definition to erase
 
     GLushort i = 0,nuNormals = adjacent.size() - 1;
-    std::vector<glm::vec3> normals(nuNormals);
+    std::vector<vec3> normals(nuNormals);
     GLuint px0 = point * 3,py0 = point * 3 + 1, pz0 = point * 3 + 2;
     GLuint px1, py1, pz1, px2, py2, pz2;
-    glm::vec3 v0(verts[px0],verts[py0],verts[pz0]),normal(0.0f,0.0f,0.0f);
+    vec3 v0(verts[px0],verts[py0],verts[pz0]),normal(0.0f,0.0f,0.0f);
     for(i ; i < nuNormals ; i++) {
         px1 = adjacent[i] * 3;
         py1 = adjacent[i] * 3 + 1;
@@ -179,9 +181,9 @@ glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point,const vector<GLuin
         pz2 = adjacent[i + 1] * 3 + 2;
 
 //        verts[]
-        glm::vec3 v1 = glm::vec3(verts[px1] - verts[px0],verts[py1] - verts[py0],verts[pz1] - verts[pz0]);
-        glm::vec3 v2 = glm::vec3(verts[px2] - verts[px0],verts[py2] - verts[py0],verts[pz2] - verts[pz0]);
-        glm::vec3 res = glm::cross(v1,v2);
+        vec3 v1 = vec3(verts[px1] - verts[px0],verts[py1] - verts[py0],verts[pz1] - verts[pz0]);
+        vec3 v2 = vec3(verts[px2] - verts[px0],verts[py2] - verts[py0],verts[pz2] - verts[pz0]);
+        vec3 res = glm::cross(v1,v2);
         normals[i] = res;
     }
     for(i = 0 ; i < nuNormals ; i++) {
@@ -195,14 +197,14 @@ glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point,const vector<GLuin
     int c = 3;
     return glm::normalize(normal);
 }
-glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point, const vector<GLuint> adjacent)
+vec3 Surface::ResultantNormalOnePoint(const GLuint point, const vector<GLuint> adjacent)
 {
     auto verts = data.verts;
     GLushort i = 0,nuNormals = adjacent.size() - 1;
-    std::vector<glm::vec3> normals(nuNormals);
+    std::vector<vec3> normals(nuNormals);
     GLuint px0 = point * 3,py0 = point * 3 + 1, pz0 = point * 3 + 2;
     GLuint px1, py1, pz1, px2, py2, pz2;
-    glm::vec3 v0(verts[px0],verts[py0],verts[pz0]),normal(0.0f,0.0f,0.0f);
+    vec3 v0(verts[px0],verts[py0],verts[pz0]),normal(0.0f,0.0f,0.0f);
     for(i ; i < nuNormals ; i++) {
         px1 = adjacent[i] * 3;
         py1 = adjacent[i] * 3 + 1;
@@ -211,9 +213,9 @@ glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point, const vector<GLui
         py2 = adjacent[i + 1] * 3 + 1;
         pz2 = adjacent[i + 1] * 3 + 2;
 
-        glm::vec3 v1 = glm::vec3(verts[px1] - verts[px0],verts[py1] - verts[py0],verts[pz1] - verts[pz0]);
-        glm::vec3 v2 = glm::vec3(verts[px2] - verts[px0],verts[py2] - verts[py0],verts[pz2] - verts[pz0]);
-        glm::vec3 res = glm::cross(v1,v2);
+        vec3 v1 = vec3(verts[px1] - verts[px0],verts[py1] - verts[py0],verts[pz1] - verts[pz0]);
+        vec3 v2 = vec3(verts[px2] - verts[px0],verts[py2] - verts[py0],verts[pz2] - verts[pz0]);
+        vec3 res = glm::cross(v1,v2);
         normals[i] = res;
     }
     for(i = 0 ; i < nuNormals ; i++) {
@@ -226,6 +228,7 @@ glm::vec3 Surface::ResultantNormalOnePoint(const GLuint point, const vector<GLui
     normal.z /= nuNormals;
     return glm::normalize(normal);
 }
+
 void Surface::CalculateResultantNormalForAllPoints()
 {
     if(data.nuNormals != data.nuPoints) return;
@@ -241,12 +244,75 @@ void Surface::CalculateResultantNormalForAllPoints()
     }
     data.normals = temp;
 }
+mat2x3 Surface::ResultantTangentAndBitangentOnePoint(const GLuint point, const vector<GLuint> adjacent, const float* texCoord)
+{
+    auto verts = data.verts;
+    GLuint i = 0, nuTangents = adjacent.size() - 1;
+    std::vector<vec3> tans(nuTangents);
+    std::vector<vec3> bitans(nuTangents);
+    GLuint px0 = point * 3,py0 = point * 3 + 1, pz0 = point * 3 + 2;
+    GLuint px1, py1, pz1, px2, py2, pz2;
+    GLuint cu0 = point * 2, cv0 = point * 2 + 1;
+    GLuint cu1, cv1, cu2, cv2;
+    //vec3 v0(verts[px0], verts[py0], verts[pz0]);
+    vec3 tangent(0.0f, 0.0f, 0.0f);
+    vec3 bitangent(0.0f, 0.0f, 0.0f);
+    vec2 uv0(texCoord[cu0],texCoord[cv0]);
 
+    for(i ; i < nuTangents; i++) {
+        px1 = adjacent[i] * 3;
+        py1 = adjacent[i] * 3 + 1;
+        pz1 = adjacent[i] * 3 + 2;
+        px2 = adjacent[i + 1] * 3;
+        py2 = adjacent[i + 1] * 3 + 1;
+        pz2 = adjacent[i + 1] * 3 + 2;
+
+        vec3 v1 = vec3(verts[px1] - verts[px0],verts[py1] - verts[py0],verts[pz1] - verts[pz0]);
+        vec3 v2 = vec3(verts[px2] - verts[px0],verts[py2] - verts[py0],verts[pz2] - verts[pz0]);
+        cu1 = adjacent[i] * 2;
+        cv1 = adjacent[i] * 2 + 1;
+        cu2 = adjacent[i + 1] * 2;
+        cv2 = adjacent[i + 1] * 2 + 1;
+        vec2 uv1(texCoord[cu1], texCoord[cv1]);
+        vec2 uv2(texCoord[cu2], texCoord[cv2]);
+        vec2 deltaUV1 = uv1 - uv0;
+        vec2 deltaUV2 = uv2 - uv0;
+        float f = 1.0f / (deltaUV1.x * deltaUV2.y - deltaUV2.x * deltaUV1.y);
+        tangent.x = f * (deltaUV2.y * v1.x - deltaUV1.y * v2.x);
+        tangent.y = f * (deltaUV2.y * v1.y - deltaUV1.y * v2.y);
+        tangent.z = f * (deltaUV2.y * v1.z - deltaUV1.y * v2.z);
+
+        bitangent.x = f * (-deltaUV2.x * v1.x + deltaUV1.x * v2.x);
+        bitangent.y = f * (-deltaUV2.x * v1.y + deltaUV1.x * v2.y);
+        bitangent.z = f * (-deltaUV2.x * v1.z + deltaUV1.x * v2.z);
+        
+        tangent = glm::normalize(tangent);
+        bitangent = glm::normalize(bitangent);
+        tans[i] = tangent;
+        bitans[i] = bitangent;
+        
+    }
+    for(i = 0 ; i < nuTangents ; i++) {
+        normal.x += normals[i].x;
+        normal.y += normals[i].y;
+        normal.z += normals[i].z;
+    }
+    normal.x /= nuNormals;
+    normal.y /= nuNormals;
+    normal.z /= nuNormals; 
+    return mat2x3(1.0);
+}
 bool Surface::CalculateTangentAndBitangentForAllPointsBasedOn(TextureForModel& tex)
 {
 	if(tex.nuTexCoord != data.nuPoints) return false;
     data.nuTangents = tex.nuTexCoord;
     data.nuBitangents = tex.nuTexCoord;
+    data.tangents = new float[3 * data.nuTangents];
+    data.bitangents = new float[3 * data.nuTangents];
+    for (unsigned p = 0; p < data.nuTangents; p++)
+    {
+
+    }
     return true;
 }
 void Surface::SetZcoordinateForOnePoint(GLuint index, float z_coord)

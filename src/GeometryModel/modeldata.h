@@ -4,12 +4,12 @@
 
 struct ModelData
 {
-    const GLfloat* verts;
-    const GLfloat* colours;
-    const GLfloat* normals;
-    const GLfloat* tangents;
-    const GLfloat* bitangents;
-    const GLuint* indices;
+    const GLfloat* verts = nullptr;
+    const GLfloat* colours = nullptr;
+    const GLfloat* normals = nullptr;
+    const GLfloat* tangents = nullptr;
+    const GLfloat* bitangents = nullptr;
+    const GLuint* indices = nullptr;
     GLuint nuPoints;
     GLuint nuNormals;
     GLuint nuColours;

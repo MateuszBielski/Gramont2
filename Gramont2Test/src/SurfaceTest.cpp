@@ -2,6 +2,7 @@
 #include "surfaceonequad.h"
 #include "surface.h"
 #include "onemodelmock.h"
+#include "SurfaceTest.h"
 
 TEST(Surface,OneQuadNuPoints)
 {
@@ -377,4 +378,31 @@ TEST(Surface,CalculateTangentAndBitangent_Amount)
     surf.CalculateTangentAndBitangentForAllPointsBasedOn(tex);
     ASSERT_EQ(90,md.nuTangents);
     ASSERT_EQ(90,md.nuBitangents);
+}
+TEST(Surface, CalculateTangent)
+{
+    Surface surf(8, 9, 10, 10);
+    auto& tex = *surf.MyTexture();
+    auto& md = surf.GetModelData();
+    vec3 aSlightlyTiltedNormal(normalize(vec3 ( - 0.08, 0.04, 1.0)));
+    unsigned givenPoint = 37;
+    float* n = new float[3 * md.nuNormals];
+    n[3 * givenPoint] = aSlightlyTiltedNormal.x;
+    n[3 * givenPoint + 1] = aSlightlyTiltedNormal.y;
+    n[3 * givenPoint + 2] = aSlightlyTiltedNormal.z;
+    delete[] md.normals;
+    md.normals = n;
+    surf.CalculateTangentAndBitangentForAllPointsBasedOn(tex);
+    vec3 expectTangentIgivenPoint(normalize(vec3(1.0, 0.08, 0.04)));
+    vec3 resultTangent(md.tangents[3 * givenPoint], md.tangents[3 * givenPoint + 1], md.tangents[3 * givenPoint + 2]);
+    ASSERT_EQ(expectTangentIgivenPoint, resultTangent);
+}
+TEST(Surface, ResultantTangentAndBitangentOnePoint)
+{
+    Surface surf(9, 8, 10, 10);
+    glm::mat2x3 tBi = surf.ResultantTangentAndBitangentOnePoint(0,surf.IndicesAdjacentToPoint(0));
+    glm::vec3 tangent(tBi[0]);
+    glm::vec3 bitangent(tBi[1]);
+    float angle = acos(glm::dot(tangent, bitangent));
+    ASSERT_EQ(3.1415 / 2, angle);
 }

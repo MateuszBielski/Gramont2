@@ -138,7 +138,7 @@ TEST(RenderSystem,ParalOclRs_buffLoadKnowsAttribLocationsAfterConfigure)
     pors.setShader(shader);
     
     MA_CreateStrings(shaderAttribNames, POM_SH_ATTR)
-    short pomShAttrSize = (short)pomShAttr::pomShAttrSize;
+    constexpr short pomShAttrSize = (short)pomShAttr::pomShAttrSize;
     short expectLocations[pomShAttrSize], resultLocations[pomShAttrSize];
     for(short a = 0; a < pomShAttrSize ; a++) {
         expectLocations[a] = pomShAttrSize - a;
@@ -180,7 +180,7 @@ TEST(RenderSystem,ParalOclRs_rendererLoadKnowsUnifLocationsAfterConfigure)
     pors.setShader(shader);
     
     MA_CreateStrings(shaderUnifNames, POM_SH_UNIF)
-    short pomShUnifSize = (short)pomShUnif::pomShUnifSize;
+    constexpr short pomShUnifSize = (short)pomShUnif::pomShUnifSize;
     short expectLocations[pomShUnifSize], resultLocations[pomShUnifSize];
     for(short a = 0; a < pomShUnifSize ; a++) {
         expectLocations[a] = pomShUnifSize - a;
