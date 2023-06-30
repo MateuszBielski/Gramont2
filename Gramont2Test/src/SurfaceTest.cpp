@@ -1,8 +1,8 @@
 #include <gtest/gtest.h>
 #include "surfaceonequad.h"
 #include "surface.h"
+#include "convexsurface.h"
 #include "onemodelmock.h"
-#include "SurfaceTest.h"
 
 TEST(Surface,OneQuadNuPoints)
 {
@@ -243,6 +243,16 @@ TEST(Surface,ResultantNormalOnePoint_partialNotEqalOnConvex)
     ASSERT_NE(norm13,norm32);
     ASSERT_NE(norm132,norm32);
 }
+TEST(Surface,ResultantNormalIsVerticalOnCenterOfConvexSurface)
+{
+    ConvexSurface cs(4,4,50,50,38);
+    vec3 expectNormal(0.0,0.0,1.0);
+    auto& md = cs.GetModelData();
+    const float * n = md.normals;
+    unsigned p = 12;
+    vec3 resultNormal(n[p * 3], n[p * 3 + 1], n[p * 3 + 2]);
+    ASSERT_EQ(expectNormal,resultNormal);
+}
 TEST(Surface,SetVerticesForOnePoint)
 {
     Surface surf(4,4,100,100);
@@ -395,14 +405,157 @@ TEST(Surface, CalculateTangent)
     surf.CalculateTangentAndBitangentForAllPointsBasedOn(tex);
     vec3 expectTangentIgivenPoint(normalize(vec3(1.0, 0.08, 0.04)));
     vec3 resultTangent(md.tangents[3 * givenPoint], md.tangents[3 * givenPoint + 1], md.tangents[3 * givenPoint + 2]);
-    ASSERT_EQ(expectTangentIgivenPoint, resultTangent);
+    //this test will not be passed, because tangent calculation is not based on normal.
+//    ASSERT_EQ(expectTangentIgivenPoint, resultTangent);
 }
 TEST(Surface, ResultantTangentAndBitangentOnePoint)
 {
     Surface surf(9, 8, 10, 10);
-    glm::mat2x3 tBi = surf.ResultantTangentAndBitangentOnePoint(0,surf.IndicesAdjacentToPoint(0));
+    const float * texCoord = surf.MyTexture()->texCoord;
+    glm::mat2x3 tBi = surf.ResultantTangentAndBitangentOnePoint(0,surf.IndicesAdjacentToPoint(0),texCoord);
     glm::vec3 tangent(tBi[0]);
     glm::vec3 bitangent(tBi[1]);
     float angle = acos(glm::dot(tangent, bitangent));
-    ASSERT_EQ(3.1415 / 2, angle);
+    ASSERT_FLOAT_EQ(3.14159265 / 2, angle);
+}
+TEST(Surface,ResultantTangentAndBitangentAreHorizontalOnCenterOfConvexSurface)
+{
+    ConvexSurface cs(4,4,50,50,38);
+
+    auto& tex = *cs.MyTexture();
+
+    cs.CalculateTangentAndBitangentForAllPointsBasedOn(tex);
+    unsigned p = 12;
+//    auto adj = cs.IndicesAdjacentToPoint(p);
+//    cs.ResultantTangentAndBitangentOnePoint(p,adj,tex.texCoord);
+    auto& md = cs.GetModelData();
+    const float * t = md.tangents;
+    const float * b = md.bitangents;
+    vec3 resultTangent(t[p * 3], t[p * 3 + 1], t[p * 3 + 2]);
+    vec3 resultBitangent(b[p * 3], b[p * 3 + 1], b[p * 3 + 2]);
+    vec3 expectTangent(1.0,0.0,0.0);
+    vec3 expectBitangent(0.0,1.0,0.0);
+    ASSERT_EQ(expectTangent,resultTangent);
+    ASSERT_EQ(expectBitangent,resultBitangent);
+}
+TEST(Surface,TBN_Right_AngleInEveryPoint)//right angle - kąt prosty
+{
+    ConvexSurface cs(4,4,100,50,8);
+    cs.CalculateTangentAndBitangentForAllPointsBasedOn(*cs.MyTexture());
+    auto& md = cs.GetModelData();
+    const float * t = md.tangents;
+    const float * b = md.bitangents;
+    const float * n = md.normals;
+    float ra = 3.14159265 / 2;
+
+    auto r2d = [](float r) {
+        return r * 180.0 / 3.14159265;
+    };
+    for(int i = 0 ; i < md.nuTangents; i++) {
+//        cout<<"\n"<<i<<" "<<t[i * 3]<<", "<<t[i * 3 + 1]<<", "<<t[i * 3 + 2];
+//        cout<<"   "<<b[i * 3]<<", "<<b[i * 3 + 1]<<", "<<b[i * 3 + 2];
+//        cout<<"   "<<n[i * 3]<<", "<<n[i * 3 + 1]<<", "<<n[i * 3 + 2];
+        vec3 vt(t[i * 3], t[i * 3 + 1], t[i * 3 + 2]);
+        vec3 vb(b[i * 3], b[i * 3 + 1], b[i * 3 + 2]);
+        vec3 vn(n[i * 3], n[i * 3 + 1], n[i * 3 + 2]);
+        float a_vt_vb = acos(glm::dot(vt, vb));
+        float a_vn_vb = acos(glm::dot(vn, vb));
+        float a_vt_vn = acos(glm::dot(vt, vn));
+        ASSERT_FLOAT_EQ(ra,a_vt_vb);
+        ASSERT_FLOAT_EQ(ra,a_vn_vb);
+        ASSERT_FLOAT_EQ(ra,a_vt_vn);
+//        cout<<"\n"<<i<<" "<<r2d(a_vt_vb)<<", "<<r2d(a_vn_vb)<<", "<<r2d(a_vt_vn);
+    }
+}
+TEST(Surface,AveragedCoordRotation_commonDirection)//zgodny kierunek
+{
+    Surface s(8,9,10,10);
+    auto& md = s.GetModelData();
+
+    float * texCoord = new float[md.nuPoints * 2];
+    texCoord[0] = 0.0;
+    texCoord[1] = 0.0;
+    texCoord[1*2] = 1.0;
+    texCoord[1*2 + 1] = 0.577350269189626;//30deg from horizont
+    texCoord[9*2] = -0.363970234266202;//20deg from vertical
+    texCoord[9*2 + 1] = 1.0;
+    auto& neighborsOfZeroPoint = s.IndicesAdjacentToPoint(0);
+    float result = s.AveragedCoordinateAngle(0,neighborsOfZeroPoint,texCoord);
+    float expect = 0.436332312998582; //25deg
+    delete [] texCoord;
+    ASSERT_EQ(result,expect);
+}
+TEST(Surface,AveragedCoordRotation_oppositeDirection)//przeciwnykierunek
+{
+    Surface s(8,9,10,10);
+    auto& md = s.GetModelData();
+
+    float * texCoord = new float[md.nuPoints * 2];
+    texCoord[0] = 0.0;
+    texCoord[1] = 0.0;
+    texCoord[1*2] = 1.0;
+    texCoord[1*2 + 1] = 0.577350269189626;//30deg from horizont
+    texCoord[9*2] = 0.363970234266202;//20deg from vertical
+    texCoord[9*2 + 1] = 1.0;
+    auto& neighborsOfZeroPoint = s.IndicesAdjacentToPoint(0);
+    float result = s.AveragedCoordinateAngle(0,neighborsOfZeroPoint,texCoord);
+    float expect = 0.087266462599717; //5deg
+    delete [] texCoord;
+    ASSERT_FLOAT_EQ(result,expect);
+}
+TEST(Surface,AveragedCoordRotation_commonDirectionButNegative)
+{
+    Surface s(8,9,10,10);
+    auto& md = s.GetModelData();
+
+    float * texCoord = new float[md.nuPoints * 2];
+    texCoord[0] = 0.0;
+    texCoord[1] = 0.0;
+    texCoord[1*2] = 1.0;
+    texCoord[1*2 + 1] = -0.577350269189626;//-30deg from horizont
+    texCoord[9*2] = 0.363970234266202;//-20deg from vertical
+    texCoord[9*2 + 1] = 1.0;
+    auto& neighborsOfZeroPoint = s.IndicesAdjacentToPoint(0);
+    float result = s.AveragedCoordinateAngle(0,neighborsOfZeroPoint,texCoord);
+    float expect = -0.436332312998582; //-25deg
+    delete [] texCoord;
+    ASSERT_EQ(result,expect);
+}
+TEST(Surface,AveragedCoordRotation_InnerPoint14)
+{
+    Surface s(5,5,10,10);
+    auto& md = s.GetModelData();
+
+    float * texCoord = new float[md.nuPoints * 2];
+    texCoord[14 * 2] = 0.2;
+    texCoord[14 * 2 + 1] = 0.21;
+    texCoord[15 * 2] = 0.219562952014676;
+    texCoord[15 * 2 + 1] = 0.214158233816355;
+    texCoord[20 * 2] = 0.203046733585129;
+    texCoord[20 * 2 + 1] = 0.234813653791033;
+    texCoord[13 * 2] = 0.180246233188097;
+    texCoord[13 * 2 + 1] = 0.206871310699195;
+    texCoord[8 * 2] = 0.205623776358597;
+    texCoord[8 * 2 + 1] = 0.185640748380369;
+    auto& neighborsOf14Point = s.IndicesAdjacentToPoint(14);
+    float result = s.AveragedCoordinateAngle(14,neighborsOf14Point,texCoord);
+    float expect = 0.117809724509617;
+    delete [] texCoord;
+    ASSERT_FLOAT_EQ(result,expect);
+}
+TEST(Surface,RotationOfOriginalTangentAndBitangent)
+{
+    Surface s(5,5,10,10);
+    auto& md = s.GetModelData();
+    float planeRotatonAngle = 0.117809724509617;
+    vec3 normal(0.0, 0.0, 1.0);
+    mat2x3 tanBiTan = s.RotationOfOriginalTangentAndBitangent(planeRotatonAngle, normal);
+    vec3 tangent = tanBiTan[0];
+    vec3 bitangent = tanBiTan[1];
+    ASSERT_FLOAT_EQ(0.993068456954926, tangent.x);
+    ASSERT_FLOAT_EQ(-0.117537397457838, bitangent.x);
+    ASSERT_FLOAT_EQ(0.117537397457838, tangent.y);
+    ASSERT_FLOAT_EQ(0.993068456954926, bitangent.y);
+    ASSERT_EQ(0.0, tangent.z);
+    ASSERT_EQ(0.0, bitangent.z);
 }

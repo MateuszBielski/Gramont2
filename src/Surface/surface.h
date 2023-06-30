@@ -6,7 +6,7 @@
 #include <vector>
 
 using std::vector;
-using glm::vec2, glm::vec3, glm::mat2x3;
+using glm::vec2, glm::vec3, glm::mat2x3, glm::quat;
 
 class Surface : public OneModel
 {
@@ -16,10 +16,10 @@ public:
     ~Surface();
     const vector<GLuint> IndicesAdjacentToPoint(GLuint);
     GLuint PointOppositeTo(GLuint);
-    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent, const float * verts);
-    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint> adjacent);//verts inside
-    mat2x3 ResultantTangentAndBitangentOnePoint(const GLuint point, const vector<GLuint> adjacent, const float * texCoord);
-//    bool CalculateTangentAndBitangentForAllPoints();
+    float AveragedCoordinateAngle(const GLuint point, const vector<GLuint>& adjacent, const float* texCoord);
+    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint>& adjacent, const float * verts);
+    vec3 ResultantNormalOnePoint(const GLuint point,const vector<GLuint>& adjacent);//verts inside
+    mat2x3 RotationOfOriginalTangentAndBitangent(float planeRotation, vec3& normal);
     //idea for future becouse modelData should to have coordinates  <- false
     bool CalculateTangentAndBitangentForAllPointsBasedOn(TextureForModel& );
     void CalculateResultantNormalForAllPoints();
