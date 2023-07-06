@@ -14,8 +14,8 @@ struct ModelData
     GLuint nuNormals;
     GLuint nuColours;
     GLuint nuIndices;
-    GLuint nuTangents;
-    GLuint nuBitangents;
+    GLuint nuTangents = 0;//info for CreateBuffers
+    GLuint nuBitangents = 0;
     
     GLenum primitiveMode = GL_TRIANGLE_STRIP;
     GLuint bufVertId = 0;//genBuffers starts generate from number 1

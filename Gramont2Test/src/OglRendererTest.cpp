@@ -19,10 +19,10 @@ TEST(OglRenderer,ShaderNotInitialized)
 TEST(OglRenderer,MatricesNotInitialized_AtStartObject)
 {
     OglRenderer renderer;
-    ASSERT_EQ(renderer.m_matrices.matMVP,nullptr);
-    ASSERT_EQ(renderer.m_matrices.matToVw,nullptr);
-    ASSERT_EQ(renderer.m_matrices.light_position,nullptr);
-    ASSERT_EQ(renderer.m_matrices.light_colour,nullptr);
+    ASSERT_EQ(renderer.m_viewParamsfv.matMVP,nullptr);
+    ASSERT_EQ(renderer.m_viewParamsfv.matToVw,nullptr);
+    ASSERT_EQ(renderer.m_viewParamsfv.light_position,nullptr);
+    ASSERT_EQ(renderer.m_viewParamsfv.light_colour,nullptr);
 }
 TEST(OglRenderer,DrawTexture_MaricesNotInitialized)
 {
@@ -40,10 +40,10 @@ TEST(OglRenderer,DrawTexture_LocationsNotInitialized)
     TextureForModel tex;
     ModelData d;
     float f;
-    renderer.m_matrices.matMVP = &f;
-    renderer.m_matrices.matToVw = &f;
-    renderer.m_matrices.light_position = &f;
-    renderer.m_matrices.light_colour = &f;
+    renderer.m_viewParamsfv.matMVP = &f;
+    renderer.m_viewParamsfv.matToVw = &f;
+    renderer.m_viewParamsfv.light_position = &f;
+    renderer.m_viewParamsfv.light_colour = &f;
 
     ASSERT_EQ(OglRendererProgress::BeforeOgl,renderer.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader));
 }
@@ -71,11 +71,11 @@ TEST(OglRenderer,Mock_DrawTexture_pushesOnStack_sumOfmatMVP)
     float matMVP_2[] = {4.1,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0};
     float matMVP_3[] = {6.7,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0};
     OglRendererMock rend;
-    rend.m_matrices.matMVP = matMVP_1;
+    rend.m_viewParamsfv.matMVP = matMVP_1;
     rend.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader);
-    rend.m_matrices.matMVP = matMVP_2;
+    rend.m_viewParamsfv.matMVP = matMVP_2;
     rend.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader);
-    rend.m_matrices.matMVP = matMVP_3;
+    rend.m_viewParamsfv.matMVP = matMVP_3;
     rend.DrawTextureForSingleModelEntry(3,tex,d,InitializedShader);
     auto st = rend.getSumsOfmatMVP();
     ASSERT_EQ(3,st.size());

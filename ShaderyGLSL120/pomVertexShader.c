@@ -14,24 +14,24 @@ varying vec3 TangentFragPos;
 uniform mat4 mMVP;
 //uniform mat4 projection;
 //uniform mat4 view;
-//uniform mat4 model;//tu może być problem
+uniform mat4 model;
 
-//uniform vec3 lightPos;
-//uniform vec3 viewPos;
+uniform vec3 lightPos;
+uniform vec3 viewPos;
 
 void main()
 {
-//    vs_out.FragPos = vec3(model * vec4(aPos, 1.0)); 
+    FragPos = vec3(model * vec4(aPos, 1.0)); 
     TexCoords = aTexCoords;   
     
-//    vec3 T = normalize(mat3(model) * aTangent);
-//    vec3 B = normalize(mat3(model) * aBitangent);
-//    vec3 N = normalize(mat3(model) * aNormal);
-//    mat3 TBN = transpose(mat3(T, B, N));
-//
-//    vs_out.TangentLightPos = TBN * lightPos;
-//    vs_out.TangentViewPos  = TBN * viewPos;
-//    vs_out.TangentFragPos  = TBN * vs_out.FragPos;
+    vec3 T = normalize(mat3(model) * aTangent);
+    vec3 B = normalize(mat3(model) * aBitangent);
+    vec3 N = normalize(mat3(model) * aNormal);
+    mat3 TBN = transpose(mat3(T, B, N));
+
+    TangentLightPos = TBN * lightPos;
+    TangentViewPos  = TBN * viewPos;
+    TangentFragPos  = TBN * vs_out.FragPos;
     
     gl_Position = mMVP * vec4(aPos, 1.0);
 }

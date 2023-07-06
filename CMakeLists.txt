@@ -65,6 +65,7 @@ set ( CXX_SRCS
     src/Rendering/rendersystem.cpp
     src/Rendering/onetexturerendersystem.cpp
     src/Rendering/paralaxoclusionmaprendersystem.cpp
+    src/Rendering/pomrenderer.cpp
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS})

@@ -1,13 +1,10 @@
 #version 120 core
-out vec4 FragColor;
 
-in VS_OUT {
-    vec3 FragPos;
-    vec2 TexCoords;
-    vec3 TangentLightPos;
-    vec3 TangentViewPos;
-    vec3 TangentFragPos;
-} fs_in;
+varying vec3 FragPos;
+varying vec2 TexCoords;
+varying vec3 TangentLightPos;
+varying vec3 TangentViewPos;
+varying vec3 TangentFragPos;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
@@ -85,5 +82,6 @@ void main()
     float spec = pow(max(dot(normal, halfwayDir), 0.0), 32.0);
 
     vec3 specular = vec3(0.2) * spec;
-    FragColor = vec4(ambient + diffuse + specular, 1.0);
+//    FragColor = vec4(ambient + diffuse + specular, 1.0);330 version
+    gl_FragColor = vec4(ambient + diffuse + specular, 1.0);
 }

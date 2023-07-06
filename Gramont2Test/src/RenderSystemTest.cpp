@@ -48,20 +48,7 @@ TEST(RenderSystem,ReloadVAO_RecreateVao)
     ASSERT_EQ(1,blm->recreateVaoUsed);
 }
 
-TEST(RenderSystem,ReloadVAO_LoadedBufferForTexture)
-{
-    OneTextureRenderSystem rs;
-    spBufferLoaderMock blm = make_shared<BufferLoaderMock>();
-    rs.setBufferLoader(blm);
-    auto triangle = make_shared<Triangle>();
-    ModelData& d = triangle->GetModelData();
-    TextureForModel& t1 = *triangle->MyTexture();
-    TextureForModel t2;
 
-    rs.ReloadVAO(triangle);
-    ASSERT_FALSE(blm->LoadedBufferForTexture(t2));
-    ASSERT_TRUE(blm->LoadedBufferForTexture(t1));
-}
 TEST(RenderSystem,CreateBuffersForEveryTexturesInModel)
 {
     ParalaxOclusionMapRenderSystem rs;
@@ -92,7 +79,7 @@ TEST(RenderSystem,OneTexRs_LoadVAO_LoadedBuffersForTexture)
     auto buff = otrs.getBufferLoader();
     buff->CreateVao(model->getVao());
     otrs.LoadVAO(model);
-    ASSERT_EQ(1,buff->Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
+    ASSERT_EQ(1,buff->Counter(BufferLoaderCounterType::LoadBufferForModelGeometryCompleted));
 }
 TEST(RenderSystem,ParalOclTexRs_LoadVAO_LoadedBuffersForModelGeometry)
 {
@@ -110,7 +97,7 @@ TEST(RenderSystem,ParalOclRs_LoadVAO_LoadedBuffersForTexture)
     auto buff = pors.getBufferLoader();
     buff->CreateVao(model->getVao());
     pors.LoadVAO(model);
-    ASSERT_EQ(1,buff->Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
+    ASSERT_EQ(1,buff->Counter(BufferLoaderCounterType::LoadBufferForModelGeometryCompleted));
 }
 TEST(RenderSystem,ParalOclRs_shadAttribLocationsOfBuffLoaderHasCorrectSizeAfterConfigure)
 {

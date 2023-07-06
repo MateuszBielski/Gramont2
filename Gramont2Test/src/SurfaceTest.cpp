@@ -412,7 +412,8 @@ TEST(Surface, ResultantTangentAndBitangentOnePoint)
 {
     Surface surf(9, 8, 10, 10);
     const float * texCoord = surf.MyTexture()->texCoord;
-    glm::mat2x3 tBi = surf.ResultantTangentAndBitangentOnePoint(0,surf.IndicesAdjacentToPoint(0),texCoord);
+    vec3 normal(0.0, 0.0, 1.0);
+    glm::mat2x3 tBi = surf.RotationOfOriginalTangentAndBitangent(0.126, normal);
     glm::vec3 tangent(tBi[0]);
     glm::vec3 bitangent(tBi[1]);
     float angle = acos(glm::dot(tangent, bitangent));

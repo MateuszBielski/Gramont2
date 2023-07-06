@@ -135,6 +135,17 @@ TEST(MatrixStack,ModelGlmMatrixUsedInStack)
     ASSERT_EQ(1.0,matrixToView[10]);
     ASSERT_EQ(1.0,matrixToView[15]);
 }
+TEST(MatrixStack,UpdateFvModelMat_afterSet)
+{
+    MatrixStack ms;
+    glm::dmat4x4 modelMat(1.0);
+    ms.setModelGlmMatrixdv(&modelMat);
+    ASSERT_EQ(1.0,ms.getModelMatrixfv()[0]);
+    ASSERT_EQ(0.0,ms.getModelMatrixfv()[1]);
+    modelMat[0].x = 1.2;
+    ms.setModelGlmMatrixdv(&modelMat);
+    ASSERT_FLOAT_EQ(1.2,ms.getModelMatrixfv()[0]);
+}
 TEST(CameraTrial,needUpdateProjMat_After_ViewSizeChanged)
 {
     CameraTrial cam;

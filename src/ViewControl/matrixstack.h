@@ -23,6 +23,7 @@ public:
 
     const float * getModelViewProjectionMatrixfv();
     const float * getViewMatrixfv();
+    const float * getModelMatrixfv();
     glm::dmat4x4 * getViewGlmMatrixdv() {return viewGlmMatv;}
 #ifdef TESTOWANIE_F
     glm::dmat4x4 * getProjGlmMatrixdv() {return projGlmMatv;}
@@ -34,6 +35,7 @@ protected:
     bool * needUpd_model, * needUpd_proj, * needUpd_camMode;
     float modelViewProjectionMatrix[16];
     float viewMatrix[16];
+    float modelMatrix[16];
     bool modelSetted = false, viewSetted = false, projectionSetted = false, camModeMatSetted = false;
 private:
     glm::dmat4x4 m_dToVw, m_dMVP;

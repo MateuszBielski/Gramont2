@@ -2,7 +2,7 @@
 
 void PickingRenderer::setViewMatrices(spMatrixStack ms)
 {
-    m_matrices.matMVP = ms->getModelViewProjectionMatrixfv();
+    m_viewParamsfv.matMVP = ms->getModelViewProjectionMatrixfv();
 }
 void PickingRenderer::setLocationsFrom(spMyOGLShaders shader)
 {
@@ -17,7 +17,7 @@ OglRendererProgress PickingRenderer::DrawModel(spOneModel model, unsigned int gl
     glUseProgram(gl_ProgramId);
     glBindVertexArray(model->getVAOforSelect());
 
-    glUniformMatrix4fv(m_loc.mMVP, 1, GL_FALSE, m_matrices.matMVP);
+    glUniformMatrix4fv(m_loc.mMVP, 1, GL_FALSE, m_viewParamsfv.matMVP);
     glUniform1i(m_objectIndexLocation, model->getUniqueId() + BACKGROUND_COMPENSATION);
 
     glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);

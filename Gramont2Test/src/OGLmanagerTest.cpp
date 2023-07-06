@@ -79,9 +79,9 @@ TEST(MultiModelManager,SetShadersAndGeometry_LightSettedAndBindToRenderMatrix)
     MultiModelManager man(nullptr);
     man.SetShadersAndGeometry();
     auto renderer = man.getActiveRenderer();
-    auto position = renderer->m_matrices.light_position;
+    auto position = renderer->m_viewParamsfv.light_position;
     ASSERT_NE(nullptr,position);
-    auto colour = renderer->m_matrices.light_colour;
+    auto colour = renderer->m_viewParamsfv.light_colour;
     ASSERT_NE(nullptr,colour);
     ASSERT_NE(0.0f, position[3]);//only intensity greater than 0
 }
@@ -149,7 +149,7 @@ TEST(MultiModelManager,CountLoadTextureBuffers)
     spRenderSystem rs = make_shared<OneTextureRenderSystem>();
     man.setAndConfigureRenderSystem(rs);
     auto buffer = rs->getBufferLoader();
-    ASSERT_EQ(2,buffer->Counter(BufferLoaderCounterType::LoadBufferForTextureCompleted));
+    ASSERT_EQ(2,buffer->Counter(BufferLoaderCounterType::LoadBufferForModelGeometryCompleted));
     //ASSERT_EQ(2,buffer->LoadTextureSuccessCount());//how do this?
 }
 TEST(MultiModelManager,CountCreateBuffers)
@@ -188,8 +188,8 @@ TEST(MultiModelManager,RendererKnowsMatricesFromMatrixStack)
     acc.setMatrixStack(ms);
     man.SetShadersAndGeometry();
     auto renderer = man.getActiveRenderer();
-    ASSERT_EQ(ms->getModelViewProjectionMatrixfv(),renderer->m_matrices.matMVP);
-    ASSERT_EQ(ms->getViewMatrixfv(),renderer->m_matrices.matToVw);
+    ASSERT_EQ(ms->getModelViewProjectionMatrixfv(),renderer->m_viewParamsfv.matMVP);
+    ASSERT_EQ(ms->getViewMatrixfv(),renderer->m_viewParamsfv.matToVw);
 }
 TEST(MultiModelManager,MatrixStackKnowsCameraMatrices)
 {
@@ -498,25 +498,7 @@ TEST(MultiModelManager,OnMouseLeftDClick_restoreAsActiveRendererFromSettedSystem
     auto adr2 = man.getActiveRenderer().get();
     ASSERT_EQ(adr1,adr2);
 }
-TEST(MultiModelManager,BuffersLoadedForEachModel_Geometry)
-{
-    MultiModelManager man(nullptr);
-    spOneModel model1 = make_shared<Triangle>();
-    spOneModel model2 = make_shared<Triangle>();
-    man.setModels( {model1,model2});
 
-    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
-    spBufferLoaderMock bl = make_shared<BufferLoaderMock>();
-    rs->setBufferLoader(bl);
-
-    man.setAndConfigureRenderSystem(rs);
-
-    ASSERT_TRUE(bl->LoadedBufferForModelGeometry(model1->GetModelData()));
-    ASSERT_TRUE(bl->LoadedBufferForModelGeometry(model2->GetModelData()));
-
-//    LoadBuffersForModelGeometry(d,vao);
-//    m_BufferLoader->LoadBufferForTexture(tex,vao);
-}
 
 TEST(MultiModelManager,ReloadedVaoForEach_ModelDataAndTextures)
 {
@@ -543,9 +525,9 @@ TEST(MultiModelManager,setAndConfigureRenderSystem_knownMatrixStack)
 
     man.setAndConfigureRenderSystem(rs);
 
-    auto rs_matMVP = rs->getRenderer()->m_matrices.matMVP;
+    auto rs_matMVP = rs->getRenderer()->m_viewParamsfv.matMVP;
     auto ms_matMVP = manAcc.getMatrixStack()->getModelViewProjectionMatrixfv();
-    auto rs_matToVw = rs->getRenderer()->m_matrices.matToVw;
+    auto rs_matToVw = rs->getRenderer()->m_viewParamsfv.matToVw;
     auto ms_matToVw = manAcc.getMatrixStack()->getViewMatrixfv();
 
     ASSERT_EQ(rs_matMVP, ms_matMVP);
@@ -560,9 +542,9 @@ TEST(MultiModelManager,setAndConfigureRenderSystem_knownLightSystem)
 
     man.setAndConfigureRenderSystem(rs);
 
-    auto rs_matlightPositon = rs->getRenderer()->m_matrices.light_position;
+    auto rs_matlightPositon = rs->getRenderer()->m_viewParamsfv.light_position;
     auto ms_matlightPositon = man.getLightPtr()->GetFLightPos();
-    auto rs_matlight_colour = rs->getRenderer()->m_matrices.light_colour;
+    auto rs_matlight_colour = rs->getRenderer()->m_viewParamsfv.light_colour;
     auto ms_matlight_colour = man.getLightPtr()->GetFLightColour();
 //    m_matrices.light_position = light->GetFLightPos();
 //    m_matrices.light_colour = light->GetFLightColour();

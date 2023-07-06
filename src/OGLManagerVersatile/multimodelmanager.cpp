@@ -79,6 +79,7 @@ void MultiModelManager::CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem
 void MultiModelManager::ConfigureWithMyViewControl(spRenderSystem rs)
 {
     rs->getRenderer()->setViewMatrices(m_ptrMatrixStack);
+    rs->getRenderer()->m_viewParamsfv.viewPosition = cameraTrial->getPositonfv();
 }
 
 void MultiModelManager::SetShadersAndGeometry()

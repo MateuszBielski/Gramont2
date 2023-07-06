@@ -12,6 +12,7 @@ enum class OglRendererProgress
 {
     Completed,
     BeforeOgl,
+    VaoNotInited,
 };
 class MultiModelManager;
 
@@ -20,11 +21,13 @@ class OglRenderer
 private:
     
 public:
-    struct Matrices {
+    struct ViewParamsfv {
+        const float * matModel = nullptr;
         const float * matMVP = nullptr;
         const float * matToVw = nullptr;
         const float * light_position = nullptr;
         const float * light_colour = nullptr;
+        const float * viewPosition = nullptr;
     };
     struct Locations {
         int mMVP = 0;
@@ -33,7 +36,7 @@ public:
         int lightColour = 0;
         int stringTexture = 0;
     };
-    Matrices m_matrices;
+    ViewParamsfv m_viewParamsfv;
     Locations m_loc;
     vector<unsigned> shadUnifLocations;//to replace with struct Locations
     OglRendererProgress DrawSingleModelEntry(ModelData& d, unsigned int gl_ProgramId);
@@ -45,6 +48,8 @@ public:
     virtual void setLocationsFrom(spMyOGLShaders);
 protected:
     unsigned int startCallCount = 0;
+    void DrawIndicesAndFinish(ModelData& d);
+//    spMatrixStack m_matrixStack = nullptr;
 };
 
 using spOglRenderer = std::shared_ptr<OglRenderer>;

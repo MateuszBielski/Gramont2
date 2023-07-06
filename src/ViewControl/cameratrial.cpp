@@ -9,6 +9,9 @@ using namespace std;
 CameraTrial::CameraTrial():q_rotation(1.0,0.0,0.0,0.0)
 {
     position = dvec3(m_camPosition.x,m_camPosition.y,m_camPosition.z);
+    position3f[0] = static_cast<float>(m_camPosition.x);
+    position3f[1] = static_cast<float>(m_camPosition.y);
+    position3f[2] = static_cast<float>(m_camPosition.z);
     target = dvec3(m_camTarget.x,m_camTarget.y,m_camTarget.z);
     camUp = dvec3(m_camUp.x,m_camUp.y,m_camUp.z);
     rotCenter = target;
@@ -63,6 +66,13 @@ dmat4x4* CameraTrial::getViewGlmMatrixdv()
 dmat4x4* CameraTrial::getProjGlmMatrixdv()
 {
     return &dmat4proj;
+}
+float * CameraTrial::getPositonfv()
+{
+    //to jest potrzebne w rendererze dla ParalaxOclusionMapRenderSystem
+    //wydaje się niezmienne w miarę ruchów kamery, 
+    //bo obecnie aktualizowane na bieżąco są macierze widok i projekcja
+    return position3f;
 }
 void CameraTrial::ViewSizeChanged(int newWidth, int newHeight)
 {

@@ -296,3 +296,37 @@ TEST(MultiModelManager,SetShadersAndGeometry_LocationsForRendererSetted)
     ASSERT_EQ(19,renderer->m_loc.stringTexture);
 
 }
+TEST(RenderSystem,ReloadVAO_LoadedBufferForTexture)
+{
+    OneTextureRenderSystem rs;
+    spBufferLoaderMock blm = make_shared<BufferLoaderMock>();
+    rs.setBufferLoader(blm);
+    auto triangle = make_shared<Triangle>();
+    ModelData& d = triangle->GetModelData();
+    TextureForModel& t1 = *triangle->MyTexture();
+    TextureForModel t2;
+    rs.ConfigureShadersAndLocations();
+    rs.ReloadVAO(triangle);
+    //outdated logic
+    ASSERT_FALSE(blm->LoadedBufferForTexture(t2));
+    ASSERT_TRUE(blm->LoadedBufferForTexture(t1));
+}
+TEST(MultiModelManager,BuffersLoadedForEachModel_Geometry)
+{
+    MultiModelManager man(nullptr);
+    spOneModel model1 = make_shared<Triangle>();
+    spOneModel model2 = make_shared<Triangle>();
+    man.setModels( {model1,model2});
+
+    spRenderSystem rs = make_shared<OneTextureRenderSystem>();
+    spBufferLoaderMock bl = make_shared<BufferLoaderMock>();
+    rs->setBufferLoader(bl);
+
+    man.setAndConfigureRenderSystem(rs);
+//outdated logic
+    ASSERT_TRUE(bl->LoadedBufferForModelGeometry(model1->GetModelData()));
+    ASSERT_TRUE(bl->LoadedBufferForModelGeometry(model2->GetModelData()));
+
+//    LoadBuffersForModelGeometry(d,vao);
+//    m_BufferLoader->LoadBufferForTexture(tex,vao);
+}

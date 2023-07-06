@@ -12,6 +12,7 @@ enum class BufferLoaderProgress
     Completed,
     Checked,
     VaoNotInited,
+    VaoReadyForLoad,
     VertexError,
     ColorNormalsError,
     IndexError,
@@ -35,9 +36,9 @@ enum class BufferLoaderCounterType
 
 class BufferLoader
 {
-    private:
+private:
 
-    public:
+public:
     struct Locations {
         int position;
         int position_tex;
@@ -61,7 +62,11 @@ class BufferLoader
     void RecreateVao(unsigned int& vao);
     virtual BufferLoaderProgress LoadBuffersForModelGeometry(ModelData& d,const int vao);
     virtual BufferLoaderProgress LoadBufferForTexture(TextureForModel& tex,const int vao);
-    
+    BufferLoaderProgress StartLoadingBuffersWith(unsigned vao);
+    void LoadBufferOnLocation3f(unsigned buffId,size_t loc);
+    void LoadSubBufferOnLocation3f(unsigned buffId,size_t loc,size_t offsetStep,size_t nuSteps);
+    void LoadBufferOnLocation2f(unsigned buffId,size_t loc);
+    BufferLoaderProgress LoadIndicesAndFinish(unsigned buffId);
 
 //    virtual void LoadBuffers(spOneModel model);
     virtual void setLocationsFrom(spMyOGLShaders);
@@ -72,7 +77,7 @@ class BufferLoader
 protected:
 //unsigned loadTextureSuccessCount = 0, loadTextureFailsCount = 0, createBuffersCheckedCount = 0;
     vector<unsigned> counter;
-    
+
 };
 
 using spBufferLoader = std::shared_ptr<BufferLoader>;

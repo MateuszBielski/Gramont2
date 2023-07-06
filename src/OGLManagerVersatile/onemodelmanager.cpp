@@ -80,10 +80,10 @@ void OneModelManager::InitModelShader()
 }
 void OneModelManager::setMatricesForRender(spOglRenderer rend)
 {
-    rend->m_matrices.matMVP = m_Camera->GetFloatMVP();
-    rend->m_matrices.matToVw = m_Camera->GetFloatToVw();
-    rend->m_matrices.light_position = m_Light.GetFLightPos();
-    rend->m_matrices.light_colour = m_Light.GetFLightColour();
+    rend->m_viewParamsfv.matMVP = m_Camera->GetFloatMVP();
+    rend->m_viewParamsfv.matToVw = m_Camera->GetFloatToVw();
+    rend->m_viewParamsfv.light_position = m_Light.GetFLightPos();
+    rend->m_viewParamsfv.light_colour = m_Light.GetFLightColour();
 }
 void OneModelManager::InitTextureShader()
 {

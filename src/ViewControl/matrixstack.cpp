@@ -28,6 +28,7 @@ MatrixStack::~MatrixStack()
 void MatrixStack::setModelGlmMatrixdv(glm::dmat4x4 * modelM)
 {
     modelGlmMatv = modelM;
+    SetAsGLFloat4x4(glm::value_ptr(*modelM),modelMatrix,16);
 //    modelSetted = true;
 }
 void MatrixStack::setViewGlmMatrixdv(glm::dmat4x4 * viewM)
@@ -89,6 +90,10 @@ const float* MatrixStack::getModelViewProjectionMatrixfv()
 const float* MatrixStack::getViewMatrixfv()
 {
     return viewMatrix;
+}
+const float* MatrixStack::getModelMatrixfv()
+{
+	return modelMatrix;
 }
 //glm::dmat4x4* MatrixStack::getViewGlmMatrixv()
 //{

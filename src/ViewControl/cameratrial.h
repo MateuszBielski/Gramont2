@@ -28,6 +28,7 @@ private:
     dmat4 dmat4view;
     dmat4 dmat4proj;
     dvec3 position;
+    float position3f[3];
     dvec3 target;
     dvec3 camUp;
     dvec3 rotCenter;
@@ -47,6 +48,7 @@ public:
     const double * getModeMatrixdv();//?
     dmat4x4 * getViewGlmMatrixdv();
     dmat4x4 * getProjGlmMatrixdv();
+    float * getPositonfv();
     bool needUpdateViewMat;
     bool needUpdateProjMat;
     bool needUpdateModeMat;

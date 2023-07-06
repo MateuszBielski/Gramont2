@@ -80,6 +80,18 @@ BufferLoaderProgress BufferLoader::CreateBuffersForModelGeometry(ModelData& d)
         nBytes = d.nuNormals * 3 * sizeof(GLfloat);
         glBufferSubData(GL_ARRAY_BUFFER, d.offsetForNormalSubBuf, nBytes, d.normals);
     }
+    if(!d.bufTangentId && d.nuTangents) {
+        glGenBuffers(1, &d.bufTangentId);
+        glBindBuffer(GL_ARRAY_BUFFER, d.bufTangentId);
+        nBytes = d.nuTangents * 3 * sizeof(GLfloat); //3 components {x,y,z}
+        glBufferData(GL_ARRAY_BUFFER, nBytes, d.tangents, GL_STATIC_DRAW);
+    }
+    if(!d.bufBitangentId && d.nuBitangents) {
+        glGenBuffers(1, &d.bufBitangentId);
+        glBindBuffer(GL_ARRAY_BUFFER, d.bufBitangentId);
+        nBytes = d.nuBitangents * 3 * sizeof(GLfloat); //3 components {x,y,z}
+        glBufferData(GL_ARRAY_BUFFER, nBytes, d.bitangents, GL_STATIC_DRAW);
+    }
     if(!d.bufIndexId) {
 
         // Graphics card buffer for indices.
@@ -130,7 +142,7 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& 
 }
 BufferLoaderProgress BufferLoader::CreateBufferForTextureInMemory(TextureInMemory& texm)
 {
-    texm.getTextureUnit() = 1;
+    texm.getTextureUnit() = 2;
     glActiveTexture(GL_TEXTURE0 + texm.getTextureUnit());
     glGenTextures(1, &texm.getTextureId());
     glBindTexture(GL_TEXTURE_2D, texm.getTextureId());
@@ -187,6 +199,17 @@ BufferLoaderProgress BufferLoader::LoadBuffersForModelGeometry(ModelData& d,cons
     GLsizeiptr bufoffset = d.nuColours * 4 *sizeof(GLfloat);
     glVertexAttribPointer(m_loc.normal_tex, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)bufoffset);
 
+//    if(d.bufTangentId) {
+//        glBindBuffer(GL_ARRAY_BUFFER, d.bufTangentId);
+//        glEnableVertexAttribArray(m_loc.position_tex???);
+//        glVertexAttribPointer(m_loc.position_tex???, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
+//    }
+//    if(d.bufBitangentId) {
+//        glBindBuffer(GL_ARRAY_BUFFER, d.bufBitangentId);
+//        glEnableVertexAttribArray(m_loc.position_tex???);
+//        glVertexAttribPointer(m_loc.position_tex???, 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
+//    }
+
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, d.bufIndexId);
 
     glBindVertexArray(0);
@@ -214,17 +237,47 @@ BufferLoaderProgress BufferLoader::LoadBufferForTexture(TextureForModel& tex, co
     ++counter[(size_t)BufferLoaderCounterType::LoadBufferForTextureCompleted];
     return BufferLoaderProgress::Completed;
 }
-//void BufferLoader::LoadBuffers(spOneModel model)
-//{
-//próbować przenieść wywołanie do Render System i zrezygnować z ogólnej funkcji LoadBuffers
-//    auto& tex = *model->MyTexture();
-//    auto& d = model->GetModelData();
-//    auto& vao = model->getVao();
-//    LoadBuffersForModelGeometry(d,vao);
-//    LoadBufferForTexture(tex,vao);
 
+BufferLoaderProgress BufferLoader::StartLoadingBuffersWith(unsigned vao)
+{
+    ++counter[(size_t)BufferLoaderCounterType::LoadBufferForModelGeometryStart];
+    if(!vao)return BufferLoaderProgress::VaoNotInited;
+    glBindVertexArray(vao);
+    return BufferLoaderProgress::VaoReadyForLoad;
+}
 
-//}
+void BufferLoader::LoadBufferOnLocation3f(unsigned buffId,size_t loc)
+{
+    if(!shadAttribLocations.size())return;
+    glBindBuffer(GL_ARRAY_BUFFER, buffId);
+    glEnableVertexAttribArray(shadAttribLocations[loc]);
+    glVertexAttribPointer(shadAttribLocations[loc], 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
+}
+void BufferLoader::LoadSubBufferOnLocation3f(unsigned buffId,size_t loc,size_t offsetStep,size_t nuSteps)
+{
+    if(!shadAttribLocations.size())return;
+    glBindBuffer(GL_ARRAY_BUFFER, buffId);
+    glEnableVertexAttribArray(shadAttribLocations[loc]);
+    GLsizeiptr bufoffset = nuSteps * offsetStep *sizeof(GLfloat);
+    glVertexAttribPointer(shadAttribLocations[loc], 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)bufoffset);
+}
+void BufferLoader::LoadBufferOnLocation2f(unsigned buffId,size_t loc)
+{
+    if(!shadAttribLocations.size())return;
+    glBindBuffer(GL_ARRAY_BUFFER, buffId);
+    glEnableVertexAttribArray(shadAttribLocations[loc]);
+    glVertexAttribPointer(shadAttribLocations[loc], 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
+}
+BufferLoaderProgress BufferLoader::LoadIndicesAndFinish(unsigned buffId)
+{
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffId);
+
+    glBindVertexArray(0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    ++counter[(size_t)BufferLoaderCounterType::LoadBufferForModelGeometryCompleted];
+    return BufferLoaderProgress::Completed;
+}
 const unsigned BufferLoader::Counter(BufferLoaderCounterType couterType)
 {
     return counter[(size_t)couterType];
@@ -234,6 +287,7 @@ void BufferLoader::setLocationsFrom(spMyOGLShaders shader)
     m_loc.position_tex = shader->GetAttribLoc("in_sPosition");
     m_loc.normal_tex = shader->GetAttribLoc("in_sNormal");
     m_loc.textureCoord = shader->GetAttribLoc("in_TextPos");
+    
 }
 //function used only in OneModelManager
 bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d)
