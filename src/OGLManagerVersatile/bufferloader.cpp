@@ -142,7 +142,7 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& 
 }
 BufferLoaderProgress BufferLoader::CreateBufferForTextureInMemory(TextureInMemory& texm)
 {
-    texm.getTextureUnit() = 2;
+    texm.getTextureUnit() = 0;
     glActiveTexture(GL_TEXTURE0 + texm.getTextureUnit());
     glGenTextures(1, &texm.getTextureId());
     glBindTexture(GL_TEXTURE_2D, texm.getTextureId());
@@ -156,6 +156,7 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureInMemory(TextureInMemor
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, 0);
 
     MyOnGLError(myoglERR_CLEAR);
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);//potrzebne dla tekstur o nietypowych wymiarach, https://stackoverflow.com/questions/58925604/glteximage2d-crashing-program
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB,(GLsizei)texm.width, (GLsizei)texm.height, 0,GL_RGB, GL_UNSIGNED_BYTE, texm.TextureData());
 
     if ( ! MyOnGLError(myoglERR_TEXTIMAGE) ) {

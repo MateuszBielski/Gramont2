@@ -35,9 +35,13 @@ void MultiModelManager::setModels(vector<spOneModel>&& m)
 void MultiModelManager::MakeAndSetCustomModels()
 {
 #ifndef TESTOWANIE_F
-//#define TEXTURE_IMAGE "Resources/andromeda.jpg"
-#define TEXTURE_IMAGE "../ResourcesGramont2/MB640x400.jpg"
-#define TEXTURE_IMAGE2 "../ResourcesGramont2/ksiezyc.jpg"
+#define TEXTURE_IMAGE2 "../ResourcesGramont2/MB640x400.png"
+//#define TEXTURE_IMAGE2 "../ResourcesGramont2/ksiezyc.jpg"
+//#define TEXTURE_IMAGE2 "../ResourcesGramont2/andromeda1955.jpg"
+
+#define T_BASE_1 "../ResourcesGramont2/maleKamienie1024base.jpg"
+#define T_NORMAL_1 "../ResourcesGramont2/maleKamienie1024normal.jpg"
+#define T_HEIGHT_1 "../ResourcesGramont2/maleKamienie1024height.jpg"
     auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
     auto model_2 = make_shared<ConvexSurface>(80,80,100,100,30);
     setModels( {model_1,model_2});
@@ -46,13 +50,26 @@ void MultiModelManager::MakeAndSetCustomModels()
     model_2->Rotate(60.0f, {0.0f,0.3f,0.8f});
     model_2->Translate( {-60.0f,0.0f,0.0f});
     
-    spTextureInMemory texm_1, texm_2;
-    texm_1 = make_shared<TextureInMemory>(TEXTURE_IMAGE2);
-    texm_2 = make_shared<TextureInMemory>(TEXTURE_IMAGE);
-    texms.push_back(texm_1);
+    spTextureInMemory texm_1, texm_2, texm_base_1, texm_normal_1, texm_height_1;
+    texm_base_1 = make_shared<TextureInMemory>(T_BASE_1);
+    texm_normal_1 = make_shared<TextureInMemory>(T_BASE_1);
+    texm_height_1 = make_shared<TextureInMemory>(T_HEIGHT_1);
+    texm_2 = make_shared<TextureInMemory>(TEXTURE_IMAGE2);
+    texms.push_back(texm_base_1);
+    texms.push_back(texm_normal_1);
+    texms.push_back(texm_height_1);
     texms.push_back(texm_2);
-    model_1->MyTexture()->setTextureInMemory(texm_1);
+    
+    model_1->MyTexture()->setTextureInMemory(texm_base_1);
     model_2->MyTexture()->setTextureInMemory(texm_2);
+    
+    spTextureForModel texHg, texNr;
+    texHg = make_shared<TextureForModel>();
+    texNr = make_shared<TextureForModel>();
+    texHg->setTextureInMemory(texm_height_1);
+    texNr->setTextureInMemory(texm_normal_1);
+    model_1->AddTexture(texHg,TextureForModel::Height);
+    model_1->AddTexture(texNr,TextureForModel::Normal);
 
     m_selecting->RegisterSelectable( {model_1,model_2});
 #endif
