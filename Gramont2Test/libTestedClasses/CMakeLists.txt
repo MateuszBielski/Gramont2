@@ -24,6 +24,7 @@ set ( CXX_SRCS
     ../../src/Rendering/rendersystem.cpp
     ../../src/Rendering/paralaxoclusionmaprendersystem.cpp
     ../../src/Rendering/onetexturerendersystem.cpp
+    ../../src/Rendering/pomrenderer.cpp
     ../../lib/funcs/textfile.cpp
     ../../lib/funcs/funkcje.cpp
     )

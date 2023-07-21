@@ -50,7 +50,7 @@ void MultiModelManager::MakeAndSetCustomModels()
     model_2->Rotate(60.0f, {0.0f,0.3f,0.8f});
     model_2->Translate( {-60.0f,0.0f,0.0f});
     
-    spTextureInMemory texm_1, texm_2, texm_base_1, texm_normal_1, texm_height_1;
+    spTextureInMemory texm_2, texm_base_1, texm_normal_1, texm_height_1;
     texm_base_1 = make_shared<TextureInMemory>(T_BASE_1);
     texm_normal_1 = make_shared<TextureInMemory>(T_BASE_1);
     texm_height_1 = make_shared<TextureInMemory>(T_HEIGHT_1);
@@ -112,8 +112,8 @@ void MultiModelManager::SetShadersAndGeometry()
     m_selecting->ConfigureShadersAndLocations();
     ConfigureWithMyViewControl(m_selecting);
     
-//    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
-    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
+    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
+//    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
     
     CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
 

@@ -31,7 +31,7 @@ void main()
 
     TangentLightPos = TBN * lightPos;
     TangentViewPos  = TBN * viewPos;
-    TangentFragPos  = TBN * vs_out.FragPos;
+    TangentFragPos  = TBN * FragPos;
     
     gl_Position = mMVP * vec4(aPos, 1.0);
 }

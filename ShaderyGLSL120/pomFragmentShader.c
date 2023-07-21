@@ -1,4 +1,4 @@
-#version 120 core
+#version 120
 
 varying vec3 FragPos;
 varying vec2 TexCoords;
@@ -28,14 +28,14 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
   
     // get initial values
     vec2  currentTexCoords     = texCoords;
-    float currentDepthMapValue = texture(depthMap, currentTexCoords).r;
+    float currentDepthMapValue = texture2D(depthMap, currentTexCoords).r;
       
     while(currentLayerDepth < currentDepthMapValue)
     {
         // shift texture coordinates along direction of P
         currentTexCoords -= deltaTexCoords;
         // get depthmap value at current texture coordinates
-        currentDepthMapValue = texture(depthMap, currentTexCoords).r;  
+        currentDepthMapValue = texture2D(depthMap, currentTexCoords).r;  
         // get depth of next layer
         currentLayerDepth += layerDepth;  
     }
@@ -45,7 +45,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 
     // get depth after and before collision for linear interpolation
     float afterDepth  = currentDepthMapValue - currentLayerDepth;
-    float beforeDepth = texture(depthMap, prevTexCoords).r - currentLayerDepth + layerDepth;
+    float beforeDepth = texture2D(depthMap, prevTexCoords).r - currentLayerDepth + layerDepth;
  
     // interpolation of texture coordinates
     float weight = afterDepth / (afterDepth - beforeDepth);
@@ -57,23 +57,23 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 void main()
 {           
     // offset texture coordinates with Parallax Mapping
-    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
-    vec2 texCoords = fs_in.TexCoords;
+    vec3 viewDir = normalize(TangentViewPos - TangentFragPos);
+    vec2 texCoords = TexCoords;
     
-    texCoords = ParallaxMapping(fs_in.TexCoords,  viewDir);       
+    texCoords = ParallaxMapping(TexCoords,  viewDir);       
     if(texCoords.x > 1.0 || texCoords.y > 1.0 || texCoords.x < 0.0 || texCoords.y < 0.0)
         discard;
 
     // obtain normal from normal map
-    vec3 normal = texture(normalMap, texCoords).rgb;
+    vec3 normal = texture2D(normalMap, texCoords).rgb;
     normal = normalize(normal * 2.0 - 1.0);   
    
     // get diffuse color
-    vec3 color = texture(diffuseMap, texCoords).rgb;
+    vec3 color = texture2D(diffuseMap, texCoords).rgb;
     // ambient
     vec3 ambient = 0.1 * color;
     // diffuse
-    vec3 lightDir = normalize(fs_in.TangentLightPos - fs_in.TangentFragPos);
+    vec3 lightDir = normalize(TangentLightPos - TangentFragPos);
     float diff = max(dot(lightDir, normal), 0.0);
     vec3 diffuse = diff * color;
     // specular    

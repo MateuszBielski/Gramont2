@@ -16,7 +16,8 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
 //    ok &= (bool)m_loc.mToViewSpace;
 //    ok &= (bool)m_loc.lightProps;
 //    ok &= (bool)m_loc.lightColour;
-    if(!ok)
+
+//    if(!ok)
         return OglRendererProgress::BeforeOgl;
 
     glUseProgram(gl_ProgramId);
