@@ -32,7 +32,8 @@ enum {
     myoglERR_TEXTIMAGE,
 
     myoglERR_DRAWING_TRI,
-    myoglERR_DRAWING_STR
+    myoglERR_DRAWING_STR,
+    myoglERR_OTHER_ERROR,
 };
 
 // Used to handle GL errors in other part of the app.

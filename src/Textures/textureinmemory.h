@@ -9,7 +9,7 @@ class TextureInMemory
 private:
     unsigned char * textureData = nullptr;
     std::string imagePath;
-    GLint textureUnit = 1;
+    
     GLuint textureId = 0;
 
 public:
@@ -18,7 +18,7 @@ public:
     void LoadImageFile(std::string imageFile);
     unsigned char * TextureData();
     bool hasImagePath();
-    GLint& getTextureUnit();
+//    GLint& getTextureUnit();
     GLuint& getTextureId();
 
     int width = 0,height = 0,nuChannels = 1;

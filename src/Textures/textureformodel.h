@@ -9,13 +9,15 @@ class TextureForModel
 {
 public:
     TextureForModel() {};
-    ~TextureForModel() {};
+    ~TextureForModel();
     TextureForModel(TextureForModel& );
     enum TextureType {
         Image,Height,Normal,TextureTypesSize
     };
     virtual void setTextureInMemory(spTextureInMemory);
-    const GLint getTextureUnit();
+    void setCoordinates(std::shared_ptr<TextureForModel> );
+//    const GLint getTextureUnit();
+    GLint& getTextureUnit();
     const GLuint getTextureId();
 //    bool CreateAndSetTextureInMemoryWithLoadedImageFile(std::string imageFile);
 
@@ -24,6 +26,7 @@ public:
     GLuint bufTexCoordId = 0;
     GLuint textureVAO = 0;
 protected:
+    GLint textureUnit = 1;
     spTextureInMemory m_texm_ptr;
 };
 

@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "textureformodel.h"
 #include "triangle.h"
-//#include "../src/Surface/surface.h"
+#include "surface.h"
 TEST(Texture,ReturnNullForNotExistingFile)
 {
     TextureInMemory tex1("NieIstniejacyPlik.jpg");
@@ -28,6 +28,22 @@ TEST(Texture,KnowImagePath)
 {
     TextureInMemory tex("NieIstniejacyPlik.jpg");
     ASSERT_TRUE(tex.hasImagePath());
+}
+TEST(Texture,setCoordinatesFromOtherTexture)
+{
+    TextureForModel tex1;
+    Surface surf(3,5,50,32);
+    spTextureForModel spTex2 = surf.MyTexture();
+
+    tex1.setCoordinates(spTex2);
+    ASSERT_EQ(24,tex1.nuTexCoord);
+//    for(int i = 0; i < tex1.nuTexCoord; i++)
+//    {
+//        cout<<"\n "<<i<<" "<<spTex2->texCoord[i * 2]<<", "<<spTex2->texCoord[i * 2 + 1];
+//    }
+//    15 1, 0.6
+    ASSERT_FLOAT_EQ(1,tex1.texCoord[15 * 2]);
+    ASSERT_FLOAT_EQ(0.6,tex1.texCoord[15 * 2 + 1]);
 }
 TEST(Triangle,nuTextureCoordinates)
 {

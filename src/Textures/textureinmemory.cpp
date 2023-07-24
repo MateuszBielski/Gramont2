@@ -38,10 +38,7 @@ bool TextureInMemory::hasImagePath()
 {
     return (bool)imagePath.size();
 }
-GLint& TextureInMemory::getTextureUnit()
-{
-    return textureUnit;
-}
+
 GLuint& TextureInMemory::getTextureId()
 {	
 	return textureId;

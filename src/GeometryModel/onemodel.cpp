@@ -31,6 +31,7 @@ bool OneModel::AddTexture(spTextureForModel tex, TextureForModel::TextureType ty
 {
 	if(!tex->texCoord || tex->nuTexCoord != data.nuPoints)return false;
     addedTextures[(unsigned int)typeTex] = tex;
+    tex->getTextureUnit() = typeTex;
     return true;
 }
 bool OneModel::CopyFromMainTextureAs(TextureForModel::TextureType typeTex)

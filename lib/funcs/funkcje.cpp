@@ -31,6 +31,9 @@ void fOGLErrHandler(int err, int glerr, const GLchar* glMsg)
     case myoglERR_DRAWING_STR:
         msg = _("Error: Can't draw the string.");
         break;
+    case myoglERR_OTHER_ERROR:
+        msg = _("Error: ");
+        break;
     case myoglERR_JUSTLOG:
         msg = _("Log info: ");
         break;

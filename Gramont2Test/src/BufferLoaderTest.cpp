@@ -103,21 +103,25 @@ TEST_F(BufferLoader_Te,NotCreateTextureBuffersIfCreated)
     TextureForModel t;
     t.nuTexCoord = 2;
     t.bufTexCoordId = 3;
+    t.texCoord = new float[2 * t.nuTexCoord];
     
     ASSERT_EQ(BufferLoaderProgress::Completed,buf.CreateBufferForTextureCoord(t));
     ASSERT_EQ(t.bufTexCoordId,3);
+    delete [] t.texCoord;
 }
 TEST_F(BufferLoader_Te,CreateTextureBuffersIf_InitialValue_NotCreated)
 {
     BufferLoader buf;
     TextureForModel t;
     t.nuTexCoord = 2;
+    t.texCoord = new float[2 * t.nuTexCoord];
     
     unsigned int texCoord = t.bufTexCoordId;
     
     ASSERT_EQ(BufferLoaderProgress::Completed,buf.CreateBufferForTextureCoord(t));
     ASSERT_GT(t.bufTexCoordId,0);
     ASSERT_NE(t.bufTexCoordId,texCoord);
+    delete [] t.texCoord;
 }
 TEST_F(BufferLoader_Te,CreateBuffersCheckedCount)
 {

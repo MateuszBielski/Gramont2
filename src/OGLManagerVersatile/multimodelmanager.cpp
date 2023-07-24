@@ -52,7 +52,7 @@ void MultiModelManager::MakeAndSetCustomModels()
     
     spTextureInMemory texm_2, texm_base_1, texm_normal_1, texm_height_1;
     texm_base_1 = make_shared<TextureInMemory>(T_BASE_1);
-    texm_normal_1 = make_shared<TextureInMemory>(T_BASE_1);
+    texm_normal_1 = make_shared<TextureInMemory>(T_NORMAL_1);
     texm_height_1 = make_shared<TextureInMemory>(T_HEIGHT_1);
     texm_2 = make_shared<TextureInMemory>(TEXTURE_IMAGE2);
     texms.push_back(texm_base_1);
@@ -67,8 +67,11 @@ void MultiModelManager::MakeAndSetCustomModels()
     texHg = make_shared<TextureForModel>();
     texNr = make_shared<TextureForModel>();
     texHg->setTextureInMemory(texm_height_1);
+    texHg->setCoordinates(model_1->MyTexture());
     texNr->setTextureInMemory(texm_normal_1);
+    texNr->setCoordinates(model_1->MyTexture());
     model_1->AddTexture(texHg,TextureForModel::Height);
+//    model_1->CopyCoordintatesFromMainTex(texHg,TextureForModel::Height);//brzydko wygląda
     model_1->AddTexture(texNr,TextureForModel::Normal);
 
     m_selecting->RegisterSelectable( {model_1,model_2});
@@ -112,8 +115,8 @@ void MultiModelManager::SetShadersAndGeometry()
     m_selecting->ConfigureShadersAndLocations();
     ConfigureWithMyViewControl(m_selecting);
     
-//    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
-    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
+    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
+//    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
     
     CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
 

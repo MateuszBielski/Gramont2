@@ -17,7 +17,7 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
 //    ok &= (bool)m_loc.lightProps;
 //    ok &= (bool)m_loc.lightColour;
 
-//    if(!ok)
+    if(!ok)
         return OglRendererProgress::BeforeOgl;
 
     glUseProgram(gl_ProgramId);
@@ -33,16 +33,29 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
     auto& tex = *model->MyTexture();
     auto d = model->GetModelData();
     
-    //dla każdej tekstury potrzebne są te trzy
-    glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
-    glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
-    glUniform1i(m_loc.stringTexture, tex.getTextureUnit());// tu nie może być getTextureId(), czy więc getTextureUnit() jest unikalne dla każdej tekstury?
-//    getTextureUnit() - dla OneTexRS każda tekstura ma ten sam numer, pomimo że są różne dla różnych obiektów. Będzie trzeba generować kolejne numery, jeśli są po trzy tekstury
     //są trzy tekstury:
 //    diffuseMap;
 //    normalMap;
 //    depthMap;
-
+    //dla każdej tekstury potrzebne są te trzy
+    glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
+    glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
+    glUniform1i(shadUnifLocations[(size_t)pomShUnif::diffuseMap], tex.getTextureUnit());// tu nie może być getTextureId(), czy więc getTextureUnit() jest unikalne dla każdej tekstury?
+    
+    auto& texNormalMap = *model->getTextureOfType(TextureForModel::Normal);
+    glActiveTexture(GL_TEXTURE0 + texNormalMap.getTextureUnit());
+    glBindTexture(GL_TEXTURE_2D, texNormalMap.getTextureId());
+    glUniform1i(shadUnifLocations[(size_t)pomShUnif::normalMap], texNormalMap.getTextureUnit());
+    
+    auto& texHeightMap = *model->getTextureOfType(TextureForModel::Height);
+    glActiveTexture(GL_TEXTURE0 + texHeightMap.getTextureUnit());
+    glBindTexture(GL_TEXTURE_2D, texHeightMap.getTextureId());
+    glUniform1i(shadUnifLocations[(size_t)pomShUnif::depthMap], texHeightMap.getTextureUnit());
+    
+    /*******/
+    return OglRendererProgress::BeforeOgl;
+    /*******/
+    
     DrawIndicesAndFinish(d);
     return OglRendererProgress::Completed;
 }

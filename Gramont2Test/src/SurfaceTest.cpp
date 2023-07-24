@@ -328,6 +328,16 @@ TEST(Surface,AddTexture)
     surf.AddTexture(tex,TextureForModel::TextureType::Height);
     ASSERT_EQ(tex,surf.getTextureOfType(TextureForModel::TextureType::Height));
 }
+TEST(Surface,GiveTextureUnit_DuringAddTexture)
+{
+    Surface surf(2,2,100,100);
+    spTextureForModel tex = make_shared<TextureForModel>();
+    float coord[9];
+    tex->texCoord = coord;
+    tex->nuTexCoord = 9;
+    surf.AddTexture(tex,TextureForModel::Normal);
+    ASSERT_EQ(TextureForModel::Normal,tex->getTextureUnit());
+}
 TEST(Surface,CopyTextureFromMain_CorrectCoordNumbers)
 {
     Surface surf(2,2,100,100);

@@ -65,10 +65,21 @@ void ParalaxOclusionMapRenderSystem::CreateGraphicBuffers(spOneModel model)
 {
     auto& tex = *model->MyTexture();
     auto& d = model->GetModelData();
-    m_BufferLoader->CreateBuffersForModelGeometry(d);
-    m_BufferLoader->CreateBufferForTextureCoord(tex);
-    m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Height));
-    m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Normal));
+//    auto loadStatus;
+    string messageLoadNotCompleted;
+    auto CheckStatus = [&](BufferLoaderProgress loadStatus, string&& mes) {
+        if(loadStatus != BufferLoaderProgress::Completed)messageLoadNotCompleted += mes;
+    };
+    
+    CheckStatus(m_BufferLoader->CreateBuffersForModelGeometry(d)," model");
+    CheckStatus(m_BufferLoader->CreateBufferForTextureCoord(tex)," texDiffuse");
+    CheckStatus(m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Height))," texHeight");
+    CheckStatus(m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Normal))," texNormal");
+    if(messageLoadNotCompleted.size())
+    {
+        messageLoadNotCompleted = "Buffers not complete loaded for: " + messageLoadNotCompleted;
+        MyOnGLError(myoglERR_OTHER_ERROR,messageLoadNotCompleted.c_str() );
+    }
 }
 void ParalaxOclusionMapRenderSystem::LoadVAO(spOneModel model)
 {

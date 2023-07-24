@@ -49,20 +49,20 @@ OglRendererProgress OglRenderer::DrawTextureForSingleModelEntry(const unsigned i
         return OglRendererProgress::BeforeOgl;
     
     glUseProgram(gl_ProgramId);
-//    glBindVertexArray(tex.textureVAO);
     glBindVertexArray(vao);
-//    glUniformMatrix4fv(m_loc.mModel?, 1, GL_FALSE, m_viewParamsfv.matModel);
     glUniformMatrix4fv(m_loc.mMVP, 1, GL_FALSE, m_viewParamsfv.matMVP);
     glUniformMatrix4fv(m_loc.mToViewSpace, 1, GL_FALSE, m_viewParamsfv.matToVw);
     glUniform4fv(m_loc.lightProps, 1, m_viewParamsfv.light_position);
     glUniform3fv(m_loc.lightColour, 1, m_viewParamsfv.light_colour);
-//    glUniform3fv(m_loc.viewPosition?, 1, m_viewParamsfv.viewPosition);
+
     //without two following models are black rendered
     //order is important
-    glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
+    
     glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
+    glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
 
     glUniform1i(m_loc.stringTexture, tex.getTextureUnit());
+//    glUniform1i(m_loc.stringTexture, texUnit);//nie działa
 //    glUniform1i(m_loc.stringTexture, tex.getTextureId());//nie działa
 
     DrawIndicesAndFinish(d);
