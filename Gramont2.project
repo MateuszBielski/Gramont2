@@ -63,6 +63,8 @@
     <VirtualDirectory Name="Textures">
       <File Name="src/Textures/textureformodel.h"/>
       <File Name="src/Textures/textureformodel.cpp"/>
+      <File Name="src/Textures/textureinmemory.cpp"/>
+      <File Name="src/Textures/textureinmemory.h"/>
     </VirtualDirectory>
     <VirtualDirectory Name="Selecting">
       <File Name="src/Selecting/selecting.h"/>

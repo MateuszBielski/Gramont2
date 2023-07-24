@@ -112,8 +112,8 @@ void MultiModelManager::SetShadersAndGeometry()
     m_selecting->ConfigureShadersAndLocations();
     ConfigureWithMyViewControl(m_selecting);
     
-    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
-//    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
+//    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
+    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
     
     CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
 

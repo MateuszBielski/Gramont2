@@ -143,7 +143,7 @@ BufferLoaderProgress BufferLoader::CreateBufferForTextureCoord(TextureForModel& 
 BufferLoaderProgress BufferLoader::CreateBufferForTextureInMemory(TextureInMemory& texm)
 {
     texm.getTextureUnit() = 0;
-    glActiveTexture(GL_TEXTURE0 + texm.getTextureUnit());
+//    glActiveTexture(GL_TEXTURE0 + texm.getTextureUnit());
     glGenTextures(1, &texm.getTextureId());
     glBindTexture(GL_TEXTURE_2D, texm.getTextureId());
     // Avoid some artifacts

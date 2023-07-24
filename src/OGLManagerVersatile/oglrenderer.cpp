@@ -59,10 +59,11 @@ OglRendererProgress OglRenderer::DrawTextureForSingleModelEntry(const unsigned i
 //    glUniform3fv(m_loc.viewPosition?, 1, m_viewParamsfv.viewPosition);
     //without two following models are black rendered
     //order is important
-    glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
     glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
+    glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
 
     glUniform1i(m_loc.stringTexture, tex.getTextureUnit());
+//    glUniform1i(m_loc.stringTexture, tex.getTextureId());//nie działa
 
     DrawIndicesAndFinish(d);
     return OglRendererProgress::Completed;

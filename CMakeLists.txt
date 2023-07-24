@@ -50,6 +50,7 @@ set ( CXX_SRCS
     src/OGLManagerVersatile/multimodelmanager.cpp
     src/OGLManagerVersatile/oglrenderer.cpp
     src/OGLManagerVersatile/bufferloader.cpp
+    src/Textures/textureinmemory.cpp
     src/Textures/textureformodel.cpp
     src/Transform/transformable.cpp
     src/Surface/surface.cpp

@@ -7,6 +7,7 @@ set ( CXX_SRCS
     ../../src/Surface/convexsurface.cpp
     ../../src/GeometryModel/onemodel.cpp
     ../../src/GeometryModel/triangle.cpp
+    ../../src/Textures/textureinmemory.cpp
     ../../src/Textures/textureformodel.cpp
     ../../src/OGLManagerVersatile/modelmanager.cpp
     ../../src/OGLManagerVersatile/onemodelmanager.cpp
