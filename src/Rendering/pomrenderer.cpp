@@ -32,30 +32,28 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
 
     auto& tex = *model->MyTexture();
     auto d = model->GetModelData();
-    
-    //są trzy tekstury:
-//    diffuseMap;
-//    normalMap;
-//    depthMap;
-    //dla każdej tekstury potrzebne są te trzy
+
     glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
     glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
     glUniform1i(shadUnifLocations[(size_t)pomShUnif::diffuseMap], tex.getTextureUnit());// tu nie może być getTextureId(), czy więc getTextureUnit() jest unikalne dla każdej tekstury?
-    
+
     auto& texNormalMap = *model->getTextureOfType(TextureForModel::Normal);
-    glActiveTexture(GL_TEXTURE0 + texNormalMap.getTextureUnit());
-    glBindTexture(GL_TEXTURE_2D, texNormalMap.getTextureId());
-    glUniform1i(shadUnifLocations[(size_t)pomShUnif::normalMap], texNormalMap.getTextureUnit());
-    
+    if(texNormalMap.bufTexCoordId != (unsigned)-1) {
+        glActiveTexture(GL_TEXTURE0 + texNormalMap.getTextureUnit());
+        glBindTexture(GL_TEXTURE_2D, texNormalMap.getTextureId());
+        glUniform1i(shadUnifLocations[(size_t)pomShUnif::normalMap], texNormalMap.getTextureUnit());
+    }
+
     auto& texHeightMap = *model->getTextureOfType(TextureForModel::Height);
-    glActiveTexture(GL_TEXTURE0 + texHeightMap.getTextureUnit());
-    glBindTexture(GL_TEXTURE_2D, texHeightMap.getTextureId());
-    glUniform1i(shadUnifLocations[(size_t)pomShUnif::depthMap], texHeightMap.getTextureUnit());
-    
+    if(texHeightMap.bufTexCoordId != (unsigned)-1) {
+        glActiveTexture(GL_TEXTURE0 + texHeightMap.getTextureUnit());
+        glBindTexture(GL_TEXTURE_2D, texHeightMap.getTextureId());
+        glUniform1i(shadUnifLocations[(size_t)pomShUnif::depthMap], texHeightMap.getTextureUnit());
+    }
     /*******/
     return OglRendererProgress::BeforeOgl;
     /*******/
-    
+
     DrawIndicesAndFinish(d);
     return OglRendererProgress::Completed;
 }

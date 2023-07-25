@@ -12,14 +12,29 @@ const vector<string> explode(const string& s, const char& c)
     for (auto n : s) {
         if (n != c) buff += n;
         else if (n == c && buff != "") {
+            size_t start = buff.find_first_not_of(" ");
+            buff = (start == std::string::npos) ? buff : buff.substr(start);
+//            size_t start = s.find_first_not_of(WHITESPACE);
+//            return (start == std::string::npos) ? "" : s.substr(start);
             v.push_back(buff);
             buff = "";
         }
     }
-    if (buff != "") v.push_back(buff);
+    if (buff != "") {
+        v.push_back(buff);
+    }
 
     return v;
 }
+
+const vector<string> trimLast(const vector<string>&& v)
+{
+	int newSize = v.size() - 1;
+    vector<string> result(newSize);
+    for(int i = 0 ; i < newSize ; i++)result[i] = std::move(v[i]);
+    return result;
+}
+
 ParalaxOclusionMapRenderSystem::ParalaxOclusionMapRenderSystem()
 {
     m_renderer = std::make_unique<PomRenderer>();
@@ -51,14 +66,21 @@ bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
 
     string nameOfFunction = "ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations";
     if(ok)m_shader->Init(nameOfFunction);
-    //locations are accessible after compile and link shader
-    for(short a = 0 ; a < (short)pomShAttr::pomShAttrSize ; a++)
-        m_BufferLoader->shadAttribLocations[a] = m_shader->GetAttribLoc(attribs[a]);
-    for(short u = 0 ; u < (short)pomShUnif::pomShUnifSize; u++)
-        m_renderer->shadUnifLocations[u] = m_shader->GetUnifLoc(uniforms[u]);
-    auto Draw = []() {
 
-    };
+
+    int atLoc[(size_t)pomShAttr::pomShAttrSize], unifLoc[(size_t)pomShUnif::pomShUnifSize];//******DEBUG*
+    string unifNames[(size_t)pomShUnif::pomShUnifSize];
+    //locations are accessible after compile and link shader
+    for(short a = 0 ; a < (short)pomShAttr::pomShAttrSize ; a++) {
+        m_BufferLoader->shadAttribLocations[a] = m_shader->GetAttribLoc(attribs[a]);
+        atLoc[a] = m_BufferLoader->shadAttribLocations[a];//******DEBUG*
+    }
+
+    for(short u = 0 ; u < (short)pomShUnif::pomShUnifSize; u++) {
+        m_renderer->shadUnifLocations[u] = m_shader->GetUnifLoc(uniforms[u]);
+        unifNames[u] = uniforms[u];
+        unifLoc[u] = m_renderer->shadUnifLocations[u];//******DEBUG*
+    }
     return true;
 }
 void ParalaxOclusionMapRenderSystem::CreateGraphicBuffers(spOneModel model)
@@ -70,13 +92,14 @@ void ParalaxOclusionMapRenderSystem::CreateGraphicBuffers(spOneModel model)
     auto CheckStatus = [&](BufferLoaderProgress loadStatus, string&& mes) {
         if(loadStatus != BufferLoaderProgress::Completed)messageLoadNotCompleted += mes;
     };
-    
+
     CheckStatus(m_BufferLoader->CreateBuffersForModelGeometry(d)," model");
     CheckStatus(m_BufferLoader->CreateBufferForTextureCoord(tex)," texDiffuse");
     CheckStatus(m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Height))," texHeight");
     CheckStatus(m_BufferLoader->CreateBufferForTextureCoord(*model->getTextureOfType(TextureForModel::TextureType::Normal))," texNormal");
-    if(messageLoadNotCompleted.size())
-    {
+    if(messageLoadNotCompleted.size()) {
+        //całe to zabezpieczenie miało wyłapać, czy aby każda tekstura ma swoją mapę współrzędnych, co jak się okazuje nie ma sensu, bo i tak
+        //shader przyjmuje tylko jeden rodzaj współrzednych i uzywa ich wspólnie.
         messageLoadNotCompleted = "Buffers not complete loaded for: " + messageLoadNotCompleted;
         MyOnGLError(myoglERR_OTHER_ERROR,messageLoadNotCompleted.c_str() );
     }
