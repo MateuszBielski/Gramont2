@@ -25,9 +25,10 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
     glBindVertexArray(vao);
     glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::model], 1, GL_FALSE, m_viewParamsfv.matModel);
     glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mMVP], 1, GL_FALSE, m_viewParamsfv.matMVP);
-//    glUniformMatrix4fv(m_loc.mToViewSpace, 1, GL_FALSE, m_viewParamsfv.matToVw);
-    glUniform4fv(shadUnifLocations[(size_t)pomShUnif::lightPos], 1, m_viewParamsfv.light_position);
-//    glUniform3fv(m_loc.lightColour, 1, m_viewParamsfv.light_colour);
+    glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mToViewSpace], 1, GL_FALSE, m_viewParamsfv.matToVw);//experimental
+//    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightPos], 1, m_viewParamsfv.light_position);//problem z ilością zmiennych
+    glUniform4fv(shadUnifLocations[(size_t)pomShUnif::lightProps], 1, m_viewParamsfv.light_position);//experimental
+    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightColour], 1, m_viewParamsfv.light_colour);//experimental
     glUniform3fv(shadUnifLocations[(size_t)pomShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
 
     auto& tex = *model->MyTexture();
@@ -35,23 +36,26 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
 
     glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
     glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
-    glUniform1i(shadUnifLocations[(size_t)pomShUnif::diffuseMap], tex.getTextureUnit());// tu nie może być getTextureId(), czy więc getTextureUnit() jest unikalne dla każdej tekstury?
-
+    glUniform1i(shadUnifLocations[(size_t)pomShUnif::diffuseMap], tex.getTextureUnit());
+    
+    int pomEnabled = 1;
     auto& texNormalMap = *model->getTextureOfType(TextureForModel::Normal);
     if(texNormalMap.bufTexCoordId != (unsigned)-1) {
         glActiveTexture(GL_TEXTURE0 + texNormalMap.getTextureUnit());
         glBindTexture(GL_TEXTURE_2D, texNormalMap.getTextureId());
         glUniform1i(shadUnifLocations[(size_t)pomShUnif::normalMap], texNormalMap.getTextureUnit());
-    }
+    }else{pomEnabled = 0;}
 
     auto& texHeightMap = *model->getTextureOfType(TextureForModel::Height);
     if(texHeightMap.bufTexCoordId != (unsigned)-1) {
         glActiveTexture(GL_TEXTURE0 + texHeightMap.getTextureUnit());
         glBindTexture(GL_TEXTURE_2D, texHeightMap.getTextureId());
         glUniform1i(shadUnifLocations[(size_t)pomShUnif::depthMap], texHeightMap.getTextureUnit());
-    }
+    }else{pomEnabled = 0;}
+    
+    glUniform1i(shadUnifLocations[(size_t)pomShUnif::pomEnabled], (int)pomEnabled);
     /*******/
-    return OglRendererProgress::BeforeOgl;
+//    return OglRendererProgress::BeforeOgl;
     /*******/
 
     DrawIndicesAndFinish(d);

@@ -94,19 +94,19 @@ GLuint myOGLShaders::GetAttribLoc(const std::string& name)
 // Store the locations in program for uniforms vars
 bool myOGLShaders::AskUnifLocations()
 {
+    bool isNoError = true;
     for (shaVars_v::iterator it = m_shaUnif.begin(); it != m_shaUnif.end(); ++it) {
         GLint glret = glGetUniformLocation(m_proId, it->name.c_str());
         if ( glret == -1 ) {
-            // Return now, this GPU program can not be used because we will
-            // pass data to unknown/unused uniform locations
             string err = "uniform " + it->name + " not found";
             MyOnGLError(myoglERR_SHADERLOCATION, err.c_str());
-            return false;
+            isNoError = false;
+            continue;
         }
         it->loc = glret;
     }
 
-    return true;
+    return isNoError;
 }
 
 GLuint myOGLShaders::GetUnifLoc(const std::string& name)

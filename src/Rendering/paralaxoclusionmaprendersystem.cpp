@@ -43,11 +43,11 @@ ParalaxOclusionMapRenderSystem::ParalaxOclusionMapRenderSystem()
 bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
 {
     const char * vertCode = textFileRead(d_pomVertexShaderPath);
-//    const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
+    const char * fragIlumCode = textFileRead(d_illuminationShaderPath);
     const char * fragCode = textFileRead(d_pomFragmentShaderPath);
 
     m_shader->AddCode(vertCode,GL_VERTEX_SHADER);
-//    m_shader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
+    m_shader->AddCode(fragIlumCode,GL_FRAGMENT_SHADER);
     m_shader->AddCode(fragCode,GL_FRAGMENT_SHADER);
     MA_CreateStrings(attribs, POM_SH_ATTR);
     for (auto& attr : attribs)m_shader->AddAttrib(attr);
