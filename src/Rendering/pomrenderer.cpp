@@ -26,7 +26,7 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
     glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::model], 1, GL_FALSE, m_viewParamsfv.matModel);
     glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mMVP], 1, GL_FALSE, m_viewParamsfv.matMVP);
     glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mToViewSpace], 1, GL_FALSE, m_viewParamsfv.matToVw);//experimental
-//    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightPos], 1, m_viewParamsfv.light_position);//problem z ilością zmiennych
+    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightPos], 1, m_viewParamsfv.light_position);//first three is position
     glUniform4fv(shadUnifLocations[(size_t)pomShUnif::lightProps], 1, m_viewParamsfv.light_position);//experimental
     glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightColour], 1, m_viewParamsfv.light_colour);//experimental
     glUniform3fv(shadUnifLocations[(size_t)pomShUnif::viewPos], 1, m_viewParamsfv.viewPosition);

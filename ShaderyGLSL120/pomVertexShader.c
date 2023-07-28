@@ -5,7 +5,7 @@ attribute vec2 aTexCoords;
 attribute vec3 aTangent;
 attribute vec3 aBitangent;
 
-varying vec3 FragPos;
+//varying vec3 FragPos;
 varying vec2 TexCoords;
 varying vec3 TangentLightPos;
 varying vec3 TangentViewPos;
@@ -19,7 +19,7 @@ uniform mat4 mToViewSpace; /*experiment*/
 //uniform mat4 projection;
 //uniform mat4 view;
 
-//uniform vec3 lightPos;//problem z ilością zmiennych
+uniform vec3 lightPos;
 uniform vec3 viewPos;
 
 void main()
@@ -34,17 +34,17 @@ void main()
     theNormal = normalize(temp4.xyz);
     /*textureShader finish*/
     
-    FragPos = vec3(model * vec4(aPos, 1.0)); 
-//    TexCoords = aTexCoords;   
-//    
-//    vec3 T = normalize(mat3(model) * aTangent);
-//    vec3 B = normalize(mat3(model) * aBitangent);
-//    vec3 N = normalize(mat3(model) * aNormal);
-//    mat3 TBN = transpose(mat3(T, B, N));
-//
-//    TangentLightPos = TBN * lightPos;
-//    TangentViewPos  = TBN * viewPos;
-//    TangentFragPos  = TBN * FragPos;
+    vec3 FragPos = vec3(model * vec4(aPos, 1.0)); 
+    TexCoords = aTexCoords;   
+    
+    vec3 T = normalize(mat3(model) * aTangent);
+    vec3 B = normalize(mat3(model) * aBitangent);
+    vec3 N = normalize(mat3(model) * aNormal);
+    mat3 TBN = transpose(mat3(T, B, N));
+
+    TangentLightPos = TBN * lightPos;
+    TangentViewPos  = TBN * viewPos;
+    TangentFragPos  = TBN * FragPos;
 //    
 //    gl_Position = mMVP * vec4(aPos, 1.0);
 }
