@@ -68,6 +68,7 @@ set ( CXX_SRCS
     src/Rendering/paralaxoclusionmaprendersystem.cpp
     src/Rendering/normalmaprendersystem.cpp
     src/Rendering/pomrenderer.cpp
+    src/Rendering/normalrenderer.cpp
     src/Rendering/rspreprocdefinition.cpp
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant

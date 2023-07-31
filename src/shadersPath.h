@@ -20,5 +20,7 @@
 #define d_fragmentPickingShaderPath d_path"pickingFragmentShader.c"
 #define d_pomVertexShaderPath d_path"pomVertexShader.c"
 #define d_pomFragmentShaderPath d_path"pomFragmentShader.c"
+#define d_normalVertexShaderPath d_path"normalVertexShader.c"
+#define d_normalFragmentShaderPath d_path"normalFragmentShader.c"
 
 #endif

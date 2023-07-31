@@ -101,6 +101,9 @@
       <File Name="src/Rendering/rspreproc.h"/>
       <File Name="src/Rendering/rspreprocdefinition.cpp"/>
       <File Name="src/Rendering/normalmaprendersystem.cpp"/>
+      <File Name="src/Rendering/normalrenderer.cpp"/>
+      <File Name="src/Rendering/normalrenderer.h"/>
+      <File Name="src/Rendering/normalpreproc.h"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
@@ -236,6 +239,8 @@
     <File Name="ShaderyGLSL120/pickingVertexShader.c"/>
     <File Name="ShaderyGLSL120/pomVertexShader.c"/>
     <File Name="ShaderyGLSL120/pomFragmentShader.c"/>
+    <File Name="ShaderyGLSL120/normalFragmentShader.c"/>
+    <File Name="ShaderyGLSL120/normalVertexShader.c"/>
   </VirtualDirectory>
   <Dependencies Name="Debug"/>
   <Dependencies Name="Release"/>
