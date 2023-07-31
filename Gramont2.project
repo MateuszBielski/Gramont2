@@ -97,6 +97,10 @@
       <File Name="src/Rendering/pomrenderer.h"/>
       <File Name="src/Rendering/pomrenderer.cpp"/>
       <File Name="src/Rendering/pompreproc.h"/>
+      <File Name="src/Rendering/normalmaprendersystem.h"/>
+      <File Name="src/Rendering/rspreproc.h"/>
+      <File Name="src/Rendering/rspreprocdefinition.cpp"/>
+      <File Name="src/Rendering/normalmaprendersystem.cpp"/>
     </VirtualDirectory>
   </VirtualDirectory>
   <VirtualDirectory Name="include">
