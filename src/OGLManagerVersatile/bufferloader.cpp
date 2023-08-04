@@ -250,14 +250,14 @@ BufferLoaderProgress BufferLoader::StartLoadingBuffersWith(unsigned vao)
 
 void BufferLoader::LoadBufferOnLocation3f(unsigned buffId,size_t loc)
 {
-    if(!shadAttribLocations.size())return;
+    if(loc >= shadAttribLocations.size())return;
     glBindBuffer(GL_ARRAY_BUFFER, buffId);
     glEnableVertexAttribArray(shadAttribLocations[loc]);
     glVertexAttribPointer(shadAttribLocations[loc], 3, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);
 }
 void BufferLoader::LoadSubBufferOnLocation3f(unsigned buffId,size_t loc,size_t offsetStep,size_t nuSteps)
 {
-    if(!shadAttribLocations.size())return;
+    if(loc >= shadAttribLocations.size())return;
     glBindBuffer(GL_ARRAY_BUFFER, buffId);
     glEnableVertexAttribArray(shadAttribLocations[loc]);
     GLsizeiptr bufoffset = nuSteps * offsetStep *sizeof(GLfloat);
@@ -265,7 +265,7 @@ void BufferLoader::LoadSubBufferOnLocation3f(unsigned buffId,size_t loc,size_t o
 }
 void BufferLoader::LoadBufferOnLocation2f(unsigned buffId,size_t loc)
 {
-    if(!shadAttribLocations.size())return;
+    if(loc >= shadAttribLocations.size())return;
     glBindBuffer(GL_ARRAY_BUFFER, buffId);
     glEnableVertexAttribArray(shadAttribLocations[loc]);
     glVertexAttribPointer(shadAttribLocations[loc], 2, GL_FLOAT, GL_FALSE, 0, (GLvoid *)0);

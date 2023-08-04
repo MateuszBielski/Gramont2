@@ -66,8 +66,8 @@ void NormalMapRenderSystem::LoadVAO(spOneModel model)
     auto& vao = model->getVao();
     m_BufferLoader->StartLoadingBuffersWith(vao);
     m_BufferLoader->LoadBufferOnLocation3f(d.bufVertId,(size_t)normalShAttr::aPos);
-//    m_BufferLoader->LoadBufferOnLocation3f(d.bufTangentId,(size_t)normalShAttr::aTangent);
-//    m_BufferLoader->LoadBufferOnLocation3f(d.bufBitangentId,(size_t)normalShAttr::aBitangent);
+    m_BufferLoader->LoadBufferOnLocation3f(d.bufTangentId,(size_t)normalShAttr::aTangent);
+    m_BufferLoader->LoadBufferOnLocation3f(d.bufBitangentId,(size_t)normalShAttr::aBitangent);
     m_BufferLoader->LoadSubBufferOnLocation3f(d.bufColNorId,(size_t)normalShAttr::aNormal,4,d.nuColours);
     m_BufferLoader->LoadBufferOnLocation2f(tex.bufTexCoordId,(size_t)normalShAttr::aTexCoords);
     m_BufferLoader->LoadIndicesAndFinish(d.bufIndexId);
