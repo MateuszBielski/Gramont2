@@ -40,7 +40,8 @@ void MultiModelManager::MakeAndSetCustomModels()
 //#define TEXTURE_IMAGE2 "../ResourcesGramont2/ksiezyc.jpg"
 //#define TEXTURE_IMAGE2 "../ResourcesGramont2/andromeda1955.jpg"
 
-#define T_BASE_1 "../ResourcesGramont2/maleKamienie1024base.jpg"
+//#define T_BASE_1 "../ResourcesGramont2/maleKamienie1024base.jpg"
+#define T_BASE_1 "../ResourcesGramont2/MB640x400.png"
 #define T_NORMAL_1 "../ResourcesGramont2/maleKamienie1024normal.jpg"
 #define T_HEIGHT_1 "../ResourcesGramont2/maleKamienie1024height.jpg"
     auto model_1 = make_shared<ConvexSurface>(80,80,200,200,50);
