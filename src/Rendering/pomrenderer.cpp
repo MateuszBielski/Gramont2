@@ -30,6 +30,7 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
     glUniform4fv(shadUnifLocations[(size_t)pomShUnif::lightProps], 1, m_viewParamsfv.light_position);//experimental
     glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightColour], 1, m_viewParamsfv.light_colour);//experimental
     glUniform3fv(shadUnifLocations[(size_t)pomShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
+   
 
     auto& tex = *model->MyTexture();
     auto d = model->GetModelData();

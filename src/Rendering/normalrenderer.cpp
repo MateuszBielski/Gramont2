@@ -31,6 +31,10 @@ OglRendererProgress NormalRenderer::DrawModel(spOneModel model, unsigned int gl_
     glUniform4fv(shadUnifLocations[(size_t)normalShUnif::lightProps], 1, m_viewParamsfv.light_position);
     glUniform3fv(shadUnifLocations[(size_t)normalShUnif::lightColour], 1, m_viewParamsfv.light_colour);
     glUniform3fv(shadUnifLocations[(size_t)normalShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
+    
+     
+//    const float * v = m_viewParamsfv.viewPosition;
+//    std::cout<<"\n"<<v[0]<<", "<<v[1]<<", "<<v[2];
 
     auto& tex = *model->MyTexture();
     auto d = model->GetModelData();

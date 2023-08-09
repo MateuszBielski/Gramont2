@@ -35,28 +35,34 @@ void main(void)
     vec3 theBitangent = temp4.xyz;
     temp4 = mToViewSpace * vec4(viewPos, 1.0);
     vec3 theViewPos = temp4.xyz;
-    temp4 = mToViewSpace * vec4(lightPos, 1.0);
+    temp4 = mMVP * vec4(lightPos, 1.0);
     vec3 theLightPos = temp4.xyz;
     /*normal*/
-    FragPos = vec3(model * vec4(aPos, 1.0));
+//    FragPos = vec3(model * vec4(aPos, 1.0));
+    FragPos = vec3(mToViewSpace * vec4(aPos, 1.0));
     
 
-    vec3 T = normalize(mat3(model) * theTangent);
+    vec3 T = normalize(theTangent);
+//    vec3 T = normalize(mat3(model) * theTangent);
     //vec3 T = normalize(mat3(mToViewSpace) * aTangent);
-    vec3 B = normalize(mat3(model) * theBitangent);
+    
+    vec3 B = normalize(theBitangent);
+//    vec3 B = normalize(mat3(model) * theBitangent);
     //vec3 B = normalize(mat3(mToViewSpace) * aBitangent);
-    vec3 N = normalize(mat3(model) * theNormal);
+    vec3 N = normalize(theNormal);
+//    vec3 N = normalize(mat3(model) * theNormal);
     //vec3 N = normalize(mat3(mToViewSpace) * aNormal);
     mat3 TBN = mat3(T, B, N);
-    //mat3 TBN = mat3(B, T, N);
+//    mat3 TBN = mat3(B, T, N);
     //mat3 TBN = mat3(B, N, T);
     //mat3 TBN = transpose(mat3(T, B, N));
 
     TangentLightPos = TBN * lightPos;
-    //TangentLightPos = TBN * theLightPos;//bad result
+//    TangentLightPos = TBN * theLightPos;
     TangentViewPos = TBN * viewPos;
-    //TangentViewPos = TBN * theViewPos;//bad result
-    TangentFragPos = TBN * FragPos;
+//    TangentViewPos = TBN * theViewPos;
+//    TangentFragPos = TBN * FragPos;
+    TangentFragPos = TBN * pointPos;
 
     gl_Position = mMVP * vec4(aPos, 1.0);
 }
