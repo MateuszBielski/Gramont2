@@ -15,54 +15,26 @@ uniform vec3 viewPos;
 varying vec3 theNormal;
 varying vec3 pointPos;
 varying vec2 textCoord;
-varying vec3 FragPos;
-varying vec3 TangentLightPos;
-varying vec3 TangentViewPos;
- varying vec3 TangentFragPos;
+//varying mat4 mTBNmodelView;
+varying mat3 TBN3;
+varying mat4 transform;
+
+//varying vec3 TangentLightPos;
+//varying vec3 TangentViewPos;
+// varying vec3 TangentFragPos;
 void main(void)
 {
-    
+
     textCoord = aTexCoords;
     vec4 temp4 = mToViewSpace * vec4(aPos, 1.0);
     pointPos = temp4.xyz;
     temp4 = mToViewSpace * vec4(aNormal, 0.0);
     theNormal = normalize(temp4.xyz);
 
-    /*mb proba*/
-    temp4 = mToViewSpace * vec4(aTangent, 1.0);
-    vec3 theTangent = temp4.xyz;
-    temp4 = mToViewSpace * vec4(aBitangent, 1.0);
-    vec3 theBitangent = temp4.xyz;
-    temp4 = mToViewSpace * vec4(viewPos, 1.0);
-    vec3 theViewPos = temp4.xyz;
-    temp4 = mMVP * vec4(lightPos, 1.0);
-    vec3 theLightPos = temp4.xyz;
-    /*normal*/
-//    FragPos = vec3(model * vec4(aPos, 1.0));
-    FragPos = vec3(mToViewSpace * vec4(aPos, 1.0));
     
-
-    vec3 T = normalize(theTangent);
-//    vec3 T = normalize(mat3(model) * theTangent);
-    //vec3 T = normalize(mat3(mToViewSpace) * aTangent);
-    
-    vec3 B = normalize(theBitangent);
-//    vec3 B = normalize(mat3(model) * theBitangent);
-    //vec3 B = normalize(mat3(mToViewSpace) * aBitangent);
-    vec3 N = normalize(theNormal);
-//    vec3 N = normalize(mat3(model) * theNormal);
-    //vec3 N = normalize(mat3(mToViewSpace) * aNormal);
-    mat3 TBN = mat3(T, B, N);
-//    mat3 TBN = mat3(B, T, N);
-    //mat3 TBN = mat3(B, N, T);
-    //mat3 TBN = transpose(mat3(T, B, N));
-
-    TangentLightPos = TBN * lightPos;
-//    TangentLightPos = TBN * theLightPos;
-    TangentViewPos = TBN * viewPos;
-//    TangentViewPos = TBN * theViewPos;
-//    TangentFragPos = TBN * FragPos;
-    TangentFragPos = TBN * pointPos;
+    TBN3 = mat3(aTangent, aBitangent, aNormal);
+    mat4 TBN4 = mat4(TBN3);
+    transform = mToViewSpace * TBN4;
 
     gl_Position = mMVP * vec4(aPos, 1.0);
 }

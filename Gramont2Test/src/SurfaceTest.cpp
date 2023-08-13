@@ -570,3 +570,17 @@ TEST(Surface,RotationOfOriginalTangentAndBitangent)
     ASSERT_EQ(0.0, tangent.z);
     ASSERT_EQ(0.0, bitangent.z);
 }
+TEST(Surface, whatmakesTBNmatrix)
+{
+    ConvexSurface cs(5, 5, 100, 100, 50);
+    cs.CalculateTangentAndBitangentForAllPointsBasedOn(*cs.MyTexture());
+    auto& md = cs.GetModelData();
+    int p(5 * 1 + 1);
+    glm::vec3 t{ md.tangents[p * 3], md.tangents[p * 3 + 1],  md.tangents[p * 3 + 2] };
+    glm::vec3 b{ md.bitangents[p * 3], md.bitangents[p * 3 + 1],  md.bitangents[p * 3 + 2] };
+    glm::vec3 n{ md.normals[p * 3], md.normals[p * 3 + 1], md.normals[p * 3 + 2] };
+    glm::mat3x3 TBN(t, b, n);
+    vec3 v(0, 0, 1);
+    vec3 newV = TBN * v;
+}
+

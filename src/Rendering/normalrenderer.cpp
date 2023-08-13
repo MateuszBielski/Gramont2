@@ -23,14 +23,14 @@ OglRendererProgress NormalRenderer::DrawModel(spOneModel model, unsigned int gl_
     glUseProgram(gl_ProgramId);
 //    glBindVertexArray(tex.textureVAO);
     glBindVertexArray(vao);
-    glUniformMatrix4fv(shadUnifLocations[(size_t)normalShUnif::model], 1, GL_FALSE, m_viewParamsfv.matModel);
+    //glUniformMatrix4fv(shadUnifLocations[(size_t)normalShUnif::model], 1, GL_FALSE, m_viewParamsfv.matModel);
     glUniformMatrix4fv(shadUnifLocations[(size_t)normalShUnif::mMVP], 1, GL_FALSE, m_viewParamsfv.matMVP);
     glUniformMatrix4fv(shadUnifLocations[(size_t)normalShUnif::mToViewSpace], 1, GL_FALSE, m_viewParamsfv.matToVw);
 
-    glUniform3fv(shadUnifLocations[(size_t)normalShUnif::lightPos], 1, m_viewParamsfv.light_position);//first three is position
+    //glUniform3fv(shadUnifLocations[(size_t)normalShUnif::lightPos], 1, m_viewParamsfv.light_position);//first three is position
     glUniform4fv(shadUnifLocations[(size_t)normalShUnif::lightProps], 1, m_viewParamsfv.light_position);
     glUniform3fv(shadUnifLocations[(size_t)normalShUnif::lightColour], 1, m_viewParamsfv.light_colour);
-    glUniform3fv(shadUnifLocations[(size_t)normalShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
+    //glUniform3fv(shadUnifLocations[(size_t)normalShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
     
      
 //    const float * v = m_viewParamsfv.viewPosition;

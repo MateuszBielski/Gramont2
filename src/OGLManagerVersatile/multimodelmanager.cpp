@@ -65,6 +65,7 @@ void MultiModelManager::MakeAndSetCustomModels()
     
     model_1->MyTexture()->setTextureInMemory(texm_base_1);
     model_2->MyTexture()->setTextureInMemory(texm_2);
+    model_1->CalculateTangentAndBitangentForAllPointsBasedOn(*model_1->MyTexture());
     
     spTextureForModel texHg, texNr;
     texHg = make_shared<TextureForModel>();
