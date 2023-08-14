@@ -5,7 +5,7 @@ attribute vec3 aTangent;
 attribute vec3 aBitangent;
 attribute vec2 aTexCoords;
 
-uniform mat4 model;
+//uniform mat4 model;
 uniform mat4 mMVP;
 uniform mat4 mToViewSpace;
 
@@ -15,26 +15,19 @@ uniform vec3 viewPos;
 varying vec3 theNormal;
 varying vec3 pointPos;
 varying vec2 textCoord;
-//varying mat4 mTBNmodelView;
-varying mat3 TBN3;
+//varying mat3 TBN3;
 varying mat4 transform;
 
-//varying vec3 TangentLightPos;
-//varying vec3 TangentViewPos;
-// varying vec3 TangentFragPos;
 void main(void)
 {
-
     textCoord = aTexCoords;
     vec4 temp4 = mToViewSpace * vec4(aPos, 1.0);
     pointPos = temp4.xyz;
     temp4 = mToViewSpace * vec4(aNormal, 0.0);
     theNormal = normalize(temp4.xyz);
 
-    
-    TBN3 = mat3(aTangent, aBitangent, aNormal);
-    mat4 TBN4 = mat4(TBN3);
-    transform = mToViewSpace * TBN4;
+    mat4 TBN4 = mat4(mat3(aTangent, aBitangent, aNormal));
+    transform = mToViewSpace * TBN4;// ;
 
     gl_Position = mMVP * vec4(aPos, 1.0);
 }

@@ -1,7 +1,7 @@
 #include "multimodelmanager.h"
 #include "convexsurface.h"
-//#include "paralaxoclusionmaprendersystem.h"
-#include "normalmaprendersystem.h"
+#include "paralaxoclusionmaprendersystem.h"
+//#include "normalmaprendersystem.h"
 
 using namespace std;
 
@@ -119,8 +119,8 @@ void MultiModelManager::SetShadersAndGeometry()
     m_selecting->ConfigureShadersAndLocations();
     ConfigureWithMyViewControl(m_selecting);
     
-    //setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
-    setAndConfigureRenderSystem(make_unique<NormalMapRenderSystem>());
+    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
+//    setAndConfigureRenderSystem(make_unique<NormalMapRenderSystem>());
 //    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
     
     CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
