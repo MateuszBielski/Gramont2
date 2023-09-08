@@ -29,7 +29,7 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
 //    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightPos], 1, m_viewParamsfv.light_position);//first three is position
     glUniform4fv(shadUnifLocations[(size_t)pomShUnif::lightProps], 1, m_viewParamsfv.light_position);//experimental
     glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightColour], 1, m_viewParamsfv.light_colour);//experimental
-//    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
+    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
    
 
     auto& tex = *model->MyTexture();
@@ -51,7 +51,7 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
     if(texHeightMap.bufTexCoordId != (unsigned)-1) {
         glActiveTexture(GL_TEXTURE0 + texHeightMap.getTextureUnit());
         glBindTexture(GL_TEXTURE_2D, texHeightMap.getTextureId());
-//        glUniform1i(shadUnifLocations[(size_t)pomShUnif::depthMap], texHeightMap.getTextureUnit());
+        glUniform1i(shadUnifLocations[(size_t)pomShUnif::depthMap], texHeightMap.getTextureUnit());
     }else{pomEnabled = 0;}
     
     glUniform1i(shadUnifLocations[(size_t)pomShUnif::pomEnabled], (int)pomEnabled);

@@ -71,6 +71,8 @@ void ParalaxOclusionMapRenderSystem::CreateGraphicBuffers(spOneModel model)
         messageLoadNotCompleted = "Buffers not complete loaded for: " + messageLoadNotCompleted;
         MyOnGLError(myoglERR_OTHER_ERROR,messageLoadNotCompleted.c_str() );
     }
+    vec_for_subbuf tbnInversed = CalculateInversedMatricesForModel(model);
+    m_BufferLoader->CreateBufferWithSubs(tbnInversedBufferIdForModel(model->getModelId()),tbnInversed);
 }
 void ParalaxOclusionMapRenderSystem::LoadVAO(spOneModel model)
 {

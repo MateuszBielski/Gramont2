@@ -10,7 +10,7 @@ uniform mat4 mMVP;
 uniform mat4 mToViewSpace;
 
 uniform vec3 lightPos;
-uniform vec3 viewPos;
+
 
 varying vec3 theNormal;
 varying vec3 pointPos;

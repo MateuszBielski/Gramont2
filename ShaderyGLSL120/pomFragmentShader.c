@@ -4,16 +4,17 @@ varying vec3 theNormal;
 varying vec3 pointPos;
 varying mat4 transform;
 
-uniform vec4 lightProps; 
+uniform vec4 lightProps;
 uniform vec3 lightColour;
+uniform vec3 viewPos;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
-//uniform sampler2D depthMap;
+uniform sampler2D depthMap;
 uniform int pomEnabled;
 
 uniform float heightScale = 0.1;
-/*
+
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
     // number of depth layers
@@ -57,14 +58,18 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 //    return texCoords;
     return finalTexCoords;
 }
-*/
 vec3 Illuminate(vec4 LiProps, vec3 LiColour, vec4 PColour,
                 vec3 PNormal, vec3 PPos);
 void main(void)
 {
     vec3 normal;
     if (pomEnabled == 1) {
-        normal = texture2D(normalMap, textCoord).rgb;
+
+        vec3 viewDir = normalize(viewPos - pointPos);
+        vec2 modTexCoords = textCoord;
+
+        modTexCoords = ParallaxMapping(textCoord,  viewDir);
+        normal = texture2D(normalMap, modTexCoords).rgb;
         // transform normal vector to range [-1,1]
         normal = normalize((normal * 2.0 - 1.0));
         vec4 temp4 = transform * vec4(normal, 0.0);

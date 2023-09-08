@@ -31,6 +31,25 @@ void BufferLoader::ClearBuffersForSingleModelEntry(ModelData& d)
 
     d.modelVAO = d.bufIndexId = d.bufColNorId = d.bufVertId = 0;
 }
+BufferLoaderProgress BufferLoader::CreateBufferWithSubs(unsigned int& bufId, vec_for_subbuf& data)//nazwa do potwierdzenia lub zmiany
+{
+    //consecutiveQuantities -> kolejneIlości
+    if(bufId) return BufferLoaderProgress::Checked;
+    glGenBuffers(1, &bufId);
+    glBindBuffer(GL_ARRAY_BUFFER, bufId);
+    int nBytes = 0;
+    for(auto& sub : data)nBytes += get<0>(sub) * get<1>(sub) * sizeof(GLfloat);
+    glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
+
+    int nuSubs = data.size();
+    int offset = 0;
+    for(short i = 0; i < nuSubs; i++) {
+        nBytes = get<0>(data[i]) * get<1>(data[i]) * sizeof(GLfloat);
+        glBufferSubData(GL_ARRAY_BUFFER, offset, nBytes, get<2>(data[i]));
+        offset = nBytes;
+    }
+    return BufferLoaderProgress::Completed;
+}
 BufferLoaderProgress BufferLoader::CreateBuffersForModelGeometry(ModelData& d)
 {
     bool ok = true;
@@ -57,29 +76,12 @@ BufferLoaderProgress BufferLoader::CreateBuffersForModelGeometry(ModelData& d)
             return BufferLoaderProgress::VertexError;
         }
     }
-//    GLsizeiptr bufoffset;
-    if(!d.bufColNorId) {
+//
+    vec_for_subbuf data;
+    data.push_back(make_tuple(d.nuColours, 4, d.colours));
+    data.push_back(make_tuple(d.nuNormals, 3, d.normals));
+    CreateBufferWithSubs(d.bufColNorId,data);
 
-
-        // Graphics card buffer for colours and normals.
-        glGenBuffers(1, &d.bufColNorId);
-        glBindBuffer(GL_ARRAY_BUFFER, d.bufColNorId);
-        // Allocate space for both arrays
-        nBytes = (d.nuColours * 4 + d.nuNormals * 3) * sizeof(GLfloat);
-        glBufferData(GL_ARRAY_BUFFER, nBytes, NULL, GL_STATIC_DRAW);
-        if ( ! MyOnGLError(myoglERR_BUFFER) ) {
-            // Likely the GPU got out of memory
-            ClearBuffersForSingleModelEntry(d);
-            return BufferLoaderProgress::ColorNormalsError;
-        }
-        // Populate part of the buffer with the array "colo"
-        nBytes = d.nuColours * 4 * sizeof(GLfloat); // rgba components
-        glBufferSubData(GL_ARRAY_BUFFER, 0, nBytes, d.colours);
-        // Add the array "norm" to the buffer
-        d.offsetForNormalSubBuf = nBytes;
-        nBytes = d.nuNormals * 3 * sizeof(GLfloat);
-        glBufferSubData(GL_ARRAY_BUFFER, d.offsetForNormalSubBuf, nBytes, d.normals);
-    }
     if(!d.bufTangentId && d.nuTangents) {
         glGenBuffers(1, &d.bufTangentId);
         glBindBuffer(GL_ARRAY_BUFFER, d.bufTangentId);
@@ -289,7 +291,7 @@ void BufferLoader::setLocationsFrom(spMyOGLShaders shader)
     m_loc.position_tex = shader->GetAttribLoc("in_sPosition");
     m_loc.normal_tex = shader->GetAttribLoc("in_sNormal");
     m_loc.textureCoord = shader->GetAttribLoc("in_TextPos");
-    
+
 }
 //function used only in OneModelManager
 bool BufferLoader::LoadTextureBuffersForSingleModelEntry(TextureForModel& tex, ModelData& d)

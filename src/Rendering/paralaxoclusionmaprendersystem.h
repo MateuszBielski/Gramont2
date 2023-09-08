@@ -10,6 +10,8 @@
 //https://shot511.github.io/2018-10-12-parallax-mapping/
 //obliczanie Tangent i Bitangent
 //https://shot511.github.io/2018-10-10-normal-mapping/
+//https://learnopengl.com/code_viewer_gh.php?code=src/5.advanced_lighting/5.3.parallax_occlusion_mapping/5.3.parallax_mapping.vs
+//https://learnopengl.com/code_viewer_gh.php?code=src/5.advanced_lighting/5.3.parallax_occlusion_mapping/5.3.parallax_mapping.fs
 
 class ParalaxOclusionMapRenderSystem : public RenderSystem
 {

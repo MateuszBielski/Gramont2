@@ -7,6 +7,9 @@
 #include "textureformodel.h"
 #include "onemodel.h"
 
+using std::tuple;
+using vec_for_subbuf = vector<tuple<unsigned int, int,const float *>>;
+
 enum class BufferLoaderProgress
 {
     Completed,
@@ -50,6 +53,7 @@ public:
     BufferLoader();
     Locations m_loc;
     vector<unsigned> shadAttribLocations;//to replace with struct Locations
+    BufferLoaderProgress CreateBufferWithSubs(unsigned int& bufId, vec_for_subbuf& data);
     BufferLoaderProgress CreateBuffersForModelGeometry(ModelData& d);
 //    BufferLoaderProgress CreateBufferForTagentAndBitangent(ModelData& d);
     //BufferLoaderProgress CreateBufferForVerticesVectorsInSpace();//name to using
