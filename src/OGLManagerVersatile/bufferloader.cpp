@@ -44,8 +44,11 @@ BufferLoaderProgress BufferLoader::CreateBufferWithSubs(unsigned int& bufId, vec
     int nuSubs = data.size();
     int offset = 0;
     for(short i = 0; i < nuSubs; i++) {
-        nBytes = get<0>(data[i]) * get<1>(data[i]) * sizeof(GLfloat);
-        glBufferSubData(GL_ARRAY_BUFFER, offset, nBytes, get<2>(data[i]));
+        auto numPoints = get<0>(data[i]);
+        auto vecSize = get<1>(data[i]);
+        auto dataPointer = get<2>(data[i]);
+        nBytes = numPoints * vecSize * sizeof(GLfloat);
+        glBufferSubData(GL_ARRAY_BUFFER, offset, nBytes, dataPointer);
         offset = nBytes;
     }
     return BufferLoaderProgress::Completed;

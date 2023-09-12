@@ -3,6 +3,8 @@
 #include "textfile.h"
 #include "pomrenderer.h"
 
+using namespace std;
+
 ParalaxOclusionMapRenderSystem::ParalaxOclusionMapRenderSystem()
 {
     m_renderer = std::make_unique<PomRenderer>();
@@ -51,6 +53,42 @@ bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
     }
     return true;
 }
+vec_for_subbuf ParalaxOclusionMapRenderSystem::CalculateInversedMatricesForModel(spOneModel model)
+{
+    auto& d = model->GetModelData();
+    if(!d.tangents || !d.bitangents)return vec_for_subbuf();
+    
+    unsigned i = 0, amountOfMatrices = d.nuNormals;
+    float * inv_t = new float[3 * amountOfMatrices];
+    float * inv_b = new float[3 * amountOfMatrices];
+    float * inv_n = new float[3 * amountOfMatrices];
+
+    for(i ; i < amountOfMatrices; i++) {
+        glm::mat3x3 tbn(
+            d.tangents[3*i],
+            d.tangents[3*i + 1],
+            d.tangents[3*i + 2],
+            d.bitangents[3*i],
+            d.bitangents[3*i + 1],
+            d.bitangents[3*i + 2],
+            d.normals[3*i],
+            d.normals[3*i + 1],
+            d.normals[3*i + 2]
+        );
+        glm::mat3x3 inv_mtbn(inverse(tbn));
+        size_t siz_vec_f = 3 * sizeof(float);
+        for(short j = 0 ; j < 3 ; j++) {
+            inv_t[i * 3 + j] = inv_mtbn[0][j];
+            inv_b[i * 3 + j] = inv_mtbn[1][j];
+            inv_n[i * 3 + j] = inv_mtbn[2][j];
+        }
+    }
+    return vec_for_subbuf {
+        make_tuple(amountOfMatrices,3,inv_t),
+        make_tuple(amountOfMatrices,3,inv_b),
+        make_tuple(amountOfMatrices,3,inv_n),
+    };
+}
 void ParalaxOclusionMapRenderSystem::CreateGraphicBuffers(spOneModel model)
 {
     auto& tex = *model->MyTexture();
@@ -71,8 +109,28 @@ void ParalaxOclusionMapRenderSystem::CreateGraphicBuffers(spOneModel model)
         messageLoadNotCompleted = "Buffers not complete loaded for: " + messageLoadNotCompleted;
         MyOnGLError(myoglERR_OTHER_ERROR,messageLoadNotCompleted.c_str() );
     }
+    if(!d.tangents || !d.bitangents)return;
     vec_for_subbuf tbnInversed = CalculateInversedMatricesForModel(model);
-    m_BufferLoader->CreateBufferWithSubs(tbnInversedBufferIdForModel(model->getModelId()),tbnInversed);
+    /***********DEBUG************/
+    unsigned pointIndex = 3100;
+    float t[3],b[3],n[3];
+    
+    size_t siz_v = 3 * sizeof(float);
+    memcpy(t,d.tangents + pointIndex * siz_v, siz_v);
+    memcpy(b,d.bitangents + pointIndex * siz_v, siz_v);
+    memcpy(n,d.normals + pointIndex * siz_v, siz_v);
+    auto Print = [](float * v) {
+        cout<<"\n"<<v[0]<<", "<<v[1]<<", "<<v[2];
+    };
+    Print(t);
+    Print(b);
+    Print(n);
+
+
+    /***********************/
+    tbnInversedBufferIdForModel[model->getUniqueId()] = 0;
+    m_BufferLoader->CreateBufferWithSubs(tbnInversedBufferIdForModel[model->getUniqueId()],tbnInversed);
+    for(auto& v : tbnInversed)delete [] get<2>(v);
 }
 void ParalaxOclusionMapRenderSystem::LoadVAO(spOneModel model)
 {
