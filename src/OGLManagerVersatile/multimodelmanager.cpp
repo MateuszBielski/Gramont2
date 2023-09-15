@@ -44,15 +44,15 @@ void MultiModelManager::MakeAndSetCustomModels()
 #define T_BASE_1 "../ResourcesGramont2/MB640x400.png"
 #define T_NORMAL_1 "../ResourcesGramont2/maleKamienie1024normal.jpg"
 #define T_HEIGHT_1 "../ResourcesGramont2/maleKamienie1024height.jpg"
-    auto model_1 = make_shared<ConvexSurface>(80,80,200,200,80);
+    auto model_1 = make_shared<ConvexSurface>(80,80,205,205,80);
     auto model_2 = make_shared<ConvexSurface>(80,80,200,200,80);
     setModels( {model_1,model_2});
-    
+
     model_1->Rotate(60.0f, {0.0f,0.3f,0.8f});
     model_1->Translate( {60.0f,0.0f,0.0f});
     model_2->Rotate(60.0f, {0.0f,0.3f,0.8f});
     model_2->Translate( {-60.0f,0.0f,0.0f});
-    
+
     spTextureInMemory texm_2, texm_base_1, texm_normal_1, texm_height_1;
     texm_base_1 = make_shared<TextureInMemory>(T_BASE_1);
     texm_normal_1 = make_shared<TextureInMemory>(T_NORMAL_1);
@@ -62,11 +62,11 @@ void MultiModelManager::MakeAndSetCustomModels()
     texms.push_back(texm_normal_1);
     texms.push_back(texm_height_1);
     texms.push_back(texm_2);
-    
+
     model_1->MyTexture()->setTextureInMemory(texm_base_1);
     model_2->MyTexture()->setTextureInMemory(texm_2);
     model_1->CalculateTangentAndBitangentForAllPointsBasedOn(*model_1->MyTexture());
-    
+
     spTextureForModel texHg, texNr;
     texHg = make_shared<TextureForModel>();
     texNr = make_shared<TextureForModel>();
@@ -88,15 +88,13 @@ void MultiModelManager::RenderSystemSetIfWant()
 }
 void MultiModelManager::CallForMyRenderable(FunReSys_spOm FunToCall, spRenderSystem rs)
 {
-    for(auto& model : models) 
-    {
+    for(auto& model : models) {
         ((*rs).*FunToCall)(model);
     }
 }
 void MultiModelManager::CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs)
 {
-    for(auto& textureInMemory : texms)
-    {
+    for(auto& textureInMemory : texms) {
         ((*rs).*FunToCall)(*textureInMemory);
     }
 }
@@ -118,11 +116,11 @@ void MultiModelManager::SetShadersAndGeometry()
 
     m_selecting->ConfigureShadersAndLocations();
     ConfigureWithMyViewControl(m_selecting);
-    
+
     setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
 //    setAndConfigureRenderSystem(make_unique<NormalMapRenderSystem>());
 //    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
-    
+
     CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
 
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
@@ -136,6 +134,18 @@ void MultiModelManager::Draw3d()
         m_ptrMatrixStack->setModelGlmMatrixdv(model->getModelGlmMatrixdv());
         m_ptrMatrixStack->UpdateMatrices();
         activeRenderer->DrawModel(model,activeShader->getProgramId());
+        /*******
+        glm::dvec4 corner(d.verts[0],d.verts[1],d.verts[2],1.0);
+        std::cout<<"\npunkt pierwszy:\n"<<corner.x<<" "<<corner.y<<" "<<corner.z;
+        glm::dvec4 modelCorner = *model->getModelGlmMatrixdv() * corner;
+        std::cout<<"\npunkt pierwszy macierz model:\n"<<modelCorner.x<<" "<<modelCorner.y<<" "<<modelCorner.z;
+        glm::dmat4x4 * viewMatrix = m_ptrMatrixStack->getViewGlmMatrixdv();
+        glm::dvec4 modelViewCorner = *viewMatrix * modelCorner;
+        std::cout<<"\npunkt pierwszy macierz model widok:\n"<<modelViewCorner.x<<" "<<modelViewCorner.y<<" "<<modelViewCorner.z;
+        glm::dmat4x4 * projMatrix = m_ptrMatrixStack->getProjGlmMatrixdv();
+        glm::dvec4 mVPcorner = *projMatrix * modelViewCorner;
+        std::cout<<"\npunkt pierwszy macierz mvp:\n"<<mVPcorner.x<<" "<<mVPcorner.y<<" "<<mVPcorner.z;
+        *******/
     }
 }
 void MultiModelManager::OnMouseMiddleClick(int posX, int posY)

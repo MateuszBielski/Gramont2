@@ -70,7 +70,7 @@ dmat4x4* CameraTrial::getProjGlmMatrixdv()
 float * CameraTrial::getPositonfv()
 {
     //to jest potrzebne w rendererze dla ParalaxOclusionMapRenderSystem
-    //wydaje się niezmienne w miarę ruchów kamery, 
+    //wydaje się niezmienne w miarę ruchów kamery,
     //bo obecnie aktualizowane na bieżąco są macierze widok i projekcja
     return position3f;
 }
@@ -85,14 +85,18 @@ void CameraTrial::UpdateViewMatrix()
     dvec3 newPosition = position;
     transformation = scale(dmat4x4(1.0),dvec3(m_scale,m_scale,m_scale));
     newPosition = xyz(transformation * dvec4(position,1.0));
-    
+
     transformation = toMat4(q_rotation);
     newPosition = xyz(transformation * dvec4(newPosition,1.0));
     dvec3 newCamUp = xyz(transformation * dvec4(camUp,1.0));
     dvec3 newTarget = xyz(transformation * dvec4(target,1.0));
     dmat4view = lookAt(newPosition + rotCenter,newTarget + rotCenter,newCamUp);
+    /**DEBUG***/
+    dvec3 newCamPos = newPosition + rotCenter;
+    cout<<"\ncamPosition:\n"<<newCamPos.x<<" "<<newCamPos.y<<" "<<newCamPos.z;
+    /*****/
     camDistance = glm::distance(newPosition,newTarget);
-    
+
     MyPerspective(m_fov, aspect, m_nearD, m_farD, m_dProj);
     dmat4proj = glm::make_mat4x4(m_dProj);
 }
@@ -103,12 +107,12 @@ void CameraTrial::MoveOnScreenPlane(int m_mousePrevX,int  m_mousePrevY,int  posX
     double ydiff = 1.0f * (posY - m_mousePrevY);
 
     glm::dvec4 moveInCameraCoord(xdiff,ydiff,0.0,0.0);
-    glm::dvec4 moveInWorldCoord = 
-    inverse(dmat4view) * 
-    moveInCameraCoord;
-    
+    glm::dvec4 moveInWorldCoord =
+        inverse(dmat4view) *
+        moveInCameraCoord;
+
     rotCenter = rotCenter - xyz(moveInWorldCoord);
-    
+
     UpdateViewMatrix();
 }
 
@@ -123,7 +127,7 @@ dquat CameraTrial::RotationFromScreenMove(ScreenMove& move, bool reverseAngle)
     double yw2 = (2.0 * move.toY - m_winHeight) / m_winHeight;
     double z1 = GetTrackballZ(xw1, yw1, 0.8);
     double z2 = GetTrackballZ(xw2, yw2, 0.8);
-    
+
 
     dvec3 v1 = normalize(dvec3 {xw1, yw1, z1});
     dvec3 v2 = normalize(dvec3 {xw2, yw2, z2});
@@ -151,20 +155,16 @@ void CameraTrial::MouseRotation(int fromX, int fromY, int toX, int toY)
     dquat q_diff = RotationFromScreenMove(move,reverseAngle);
 
     q_rotation = q_diff * q_rotation;
-    
+
     UpdateViewMatrix();
 }
 void CameraTrial::MoveBackForWard(int distance)
 {
-	double factor = 1.05;
-    if(distance < 0)
-    {
+    double factor = 1.05;
+    if(distance < 0) {
         m_scale *= factor;
-    }
-    else m_scale /= factor;
+    } else m_scale /= factor;
     m_farD = m_nearD + camDistance;
 //    MyPerspective(m_fov, aspect, m_nearD, m_farD, m_dProj);
     UpdateViewMatrix();
 }
-
-

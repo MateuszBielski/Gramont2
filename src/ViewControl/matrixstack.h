@@ -25,9 +25,9 @@ public:
     const float * getViewMatrixfv();
     const float * getModelMatrixfv();
     glm::dmat4x4 * getViewGlmMatrixdv() {return viewGlmMatv;}
-#ifdef TESTOWANIE_F
+//#ifdef TESTOWANIE_F
     glm::dmat4x4 * getProjGlmMatrixdv() {return projGlmMatv;}
-#endif
+//#endif
 protected:
     glm::dmat4x4 * modelGlmMatv = nullptr;
     glm::dmat4x4 * viewGlmMatv = nullptr;

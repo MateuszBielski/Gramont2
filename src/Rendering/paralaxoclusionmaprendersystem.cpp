@@ -111,23 +111,35 @@ void ParalaxOclusionMapRenderSystem::CreateGraphicBuffers(spOneModel model)
     }
     if(!d.tangents || !d.bitangents)return;
     vec_for_subbuf tbnInversed = CalculateInversedMatricesForModel(model);
-    /***********DEBUG************/
-    unsigned pointIndex = 3100;
-    float t[3],b[3],n[3];
-    
+    /***********DEBUG************
+    unsigned pointIndex = 2100;
+//    unsigned pointIndex = 1;
+    float t[3],b[3],n[3],ti[3],bi[3],ni[3];
+    float  x[] = {0.0, 0.0, 0.0};
     size_t siz_v = 3 * sizeof(float);
-    memcpy(t,d.tangents + pointIndex * siz_v, siz_v);
-    memcpy(b,d.bitangents + pointIndex * siz_v, siz_v);
-    memcpy(n,d.normals + pointIndex * siz_v, siz_v);
+    memcpy(t,d.tangents + pointIndex * 3, siz_v);
+    memcpy(b,d.bitangents + pointIndex * 3, siz_v);
+    memcpy(n,d.normals + pointIndex * 3, siz_v);
+    memcpy(ti,get<2>(tbnInversed[0]) + pointIndex * 3, siz_v);
+    memcpy(bi,get<2>(tbnInversed[1]) + pointIndex * 3, siz_v);
+    memcpy(ni,get<2>(tbnInversed[2]) + pointIndex * 3, siz_v);
     auto Print = [](float * v) {
         cout<<"\n"<<v[0]<<", "<<v[1]<<", "<<v[2];
     };
+    
     Print(t);
     Print(b);
     Print(n);
+    Print(ti);
+    Print(bi);
+    Print(ni);
+    
+    Print(x);
+    
+    
 
 
-    /***********************/
+    ***********************/
     tbnInversedBufferIdForModel[model->getUniqueId()] = 0;
     m_BufferLoader->CreateBufferWithSubs(tbnInversedBufferIdForModel[model->getUniqueId()],tbnInversed);
     for(auto& v : tbnInversed)delete [] get<2>(v);

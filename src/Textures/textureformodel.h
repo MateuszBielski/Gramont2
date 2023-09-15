@@ -12,7 +12,7 @@ public:
     ~TextureForModel();
     TextureForModel(TextureForModel& );
     enum TextureType {
-        Image,Height,Normal,TextureTypesSize
+        None,Diffuse,Height,Normal,TextureTypesSize//None = 0
     };
     virtual void setTextureInMemory(spTextureInMemory);
     void setCoordinates(std::shared_ptr<TextureForModel> );
@@ -26,7 +26,7 @@ public:
     GLuint bufTexCoordId = 0;
     GLuint textureVAO = 0;
 protected:
-    GLint textureUnit = 1;
+    GLint textureUnit = TextureType::Diffuse;
     spTextureInMemory m_texm_ptr;
 };
 

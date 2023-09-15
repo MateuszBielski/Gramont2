@@ -25,11 +25,10 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
     glBindVertexArray(vao);
 //    glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::model], 1, GL_FALSE, m_viewParamsfv.matModel);
     glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mMVP], 1, GL_FALSE, m_viewParamsfv.matMVP);
-    glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mToViewSpace], 1, GL_FALSE, m_viewParamsfv.matToVw);//experimental
-//    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightPos], 1, m_viewParamsfv.light_position);//first three is position
-    glUniform4fv(shadUnifLocations[(size_t)pomShUnif::lightProps], 1, m_viewParamsfv.light_position);//experimental
-    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightColour], 1, m_viewParamsfv.light_colour);//experimental
-    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
+    glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mToViewSpace], 1, GL_FALSE, m_viewParamsfv.matToVw);
+    glUniform4fv(shadUnifLocations[(size_t)pomShUnif::lightProps], 1, m_viewParamsfv.light_position);
+    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightColour], 1, m_viewParamsfv.light_colour);
+//    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
    
 
     auto& tex = *model->MyTexture();
@@ -40,13 +39,14 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
     glUniform1i(shadUnifLocations[(size_t)pomShUnif::diffuseMap], tex.getTextureUnit());
     
     int pomEnabled = 1;
+
     auto& texNormalMap = *model->getTextureOfType(TextureForModel::Normal);
     if(texNormalMap.bufTexCoordId != (unsigned)-1) {
         glActiveTexture(GL_TEXTURE0 + texNormalMap.getTextureUnit());
         glBindTexture(GL_TEXTURE_2D, texNormalMap.getTextureId());
         glUniform1i(shadUnifLocations[(size_t)pomShUnif::normalMap], texNormalMap.getTextureUnit());
     }else{pomEnabled = 0;}
-
+    
     auto& texHeightMap = *model->getTextureOfType(TextureForModel::Height);
     if(texHeightMap.bufTexCoordId != (unsigned)-1) {
         glActiveTexture(GL_TEXTURE0 + texHeightMap.getTextureUnit());
@@ -55,9 +55,6 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
     }else{pomEnabled = 0;}
     
     glUniform1i(shadUnifLocations[(size_t)pomShUnif::pomEnabled], (int)pomEnabled);
-    /*******/
-//    return OglRendererProgress::BeforeOgl;
-    /*******/
 
     DrawIndicesAndFinish(d);
     return OglRendererProgress::Completed;
