@@ -4,6 +4,8 @@ varying vec3 theNormal;
 varying vec3 pointPos;
 varying mat4 transform;
 varying mat3 invTBN3;
+varying vec3 viewPosVary;
+varying mat4 invModelView4;
 
 uniform vec4 lightProps;
 uniform vec3 lightColour;
@@ -14,7 +16,7 @@ uniform sampler2D normalMap;
 uniform sampler2D depthMap;
 uniform int pomEnabled;
 
-uniform float heightScale = 0.1;
+uniform float heightScale = 0.5;
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
@@ -36,7 +38,7 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 
     int count = 1;
 //
-    while(currentLayerDepth < currentDepthMapValue || count < 64) {
+    while(currentLayerDepth < currentDepthMapValue) {
         // shift texture coordinates along direction of P
         currentTexCoords -= deltaTexCoords;
         // get depthmap value at current texture coordinates
@@ -70,7 +72,9 @@ void main(void)
 
     if (pomEnabled == 1) {
 
-        vec3 viewDir = normalize (invTBN3 * vec3(0,0,1));
+        vec3 viewDir = normalize (viewPosVary - pointPos);
+        vec4 tempVd = invModelView4 * vec4(viewDir, 1.0);//mat4(invTBN3) * 
+        viewDir = normalize(tempVd.xyz);
 
         modTexCoords = ParallaxMapping(textCoord,  viewDir);
         if(modTexCoords.x > 1.0 || modTexCoords.y > 1.0 || modTexCoords.x < 0.0 || modTexCoords.y < 0.0)

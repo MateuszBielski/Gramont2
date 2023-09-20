@@ -15,6 +15,7 @@ public:
     void setProjectionMatrixdv(const double *, bool *);//-
     void setViewGlmMatrixdv(glm::dmat4x4 *);
     void setProjectionGlmMatrixdv(glm::dmat4x4 *);
+    void setInvViewGlmMatrixdv(glm::dmat4x4 *);
 #ifdef TESTOWANIE_F
     virtual
 #endif
@@ -24,6 +25,7 @@ public:
     const float * getModelViewProjectionMatrixfv();
     const float * getViewMatrixfv();
     const float * getModelMatrixfv();
+    const float * getInvModelViewMatrixfv();
     glm::dmat4x4 * getViewGlmMatrixdv() {return viewGlmMatv;}
 //#ifdef TESTOWANIE_F
     glm::dmat4x4 * getProjGlmMatrixdv() {return projGlmMatv;}
@@ -32,10 +34,13 @@ protected:
     glm::dmat4x4 * modelGlmMatv = nullptr;
     glm::dmat4x4 * viewGlmMatv = nullptr;
     glm::dmat4x4 * projGlmMatv = nullptr;
+    glm::dmat4x4 * invViewGlmMatv = nullptr;
+    glm::dmat4x4 invModelViewGlmMat;
     bool * needUpd_model, * needUpd_proj, * needUpd_camMode;
     float modelViewProjectionMatrix[16];
     float viewMatrix[16];
     float modelMatrix[16];
+    float invModelViewMatrix[16];
     bool modelSetted = false, viewSetted = false, projectionSetted = false, camModeMatSetted = false;
 private:
     glm::dmat4x4 m_dToVw, m_dMVP;

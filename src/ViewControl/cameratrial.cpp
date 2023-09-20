@@ -63,6 +63,10 @@ dmat4x4* CameraTrial::getViewGlmMatrixdv()
 {
     return &dmat4view;
 }
+dmat4x4* CameraTrial::getInvViewGlmMatrixdv()
+{
+    return &dmat4inv_view;
+}
 dmat4x4* CameraTrial::getProjGlmMatrixdv()
 {
     return &dmat4proj;
@@ -70,8 +74,6 @@ dmat4x4* CameraTrial::getProjGlmMatrixdv()
 float * CameraTrial::getPositonfv()
 {
     //to jest potrzebne w rendererze dla ParalaxOclusionMapRenderSystem
-    //wydaje się niezmienne w miarę ruchów kamery,
-    //bo obecnie aktualizowane na bieżąco są macierze widok i projekcja
     return position3f;
 }
 void CameraTrial::ViewSizeChanged(int newWidth, int newHeight)
@@ -91,9 +93,13 @@ void CameraTrial::UpdateViewMatrix()
     dvec3 newCamUp = xyz(transformation * dvec4(camUp,1.0));
     dvec3 newTarget = xyz(transformation * dvec4(target,1.0));
     dmat4view = lookAt(newPosition + rotCenter,newTarget + rotCenter,newCamUp);
+    dmat4inv_view = inverse(dmat4view);
+    position3f[0] = newPosition.x + rotCenter.x;
+    position3f[1] = newPosition.y + rotCenter.y;
+    position3f[2] = newPosition.z + rotCenter.z;
     /**DEBUG***/
-    dvec3 newCamPos = newPosition + rotCenter;
-    cout<<"\ncamPosition:\n"<<newCamPos.x<<" "<<newCamPos.y<<" "<<newCamPos.z;
+//    dvec3 newCamPos = newPosition + rotCenter;
+//    cout<<"\ncamPosition:\n"<<newCamPos.x<<" "<<newCamPos.y<<" "<<newCamPos.z;
     /*****/
     camDistance = glm::distance(newPosition,newTarget);
 

@@ -25,6 +25,7 @@ public:
         const float * matModel = nullptr;
         const float * matMVP = nullptr;
         const float * matToVw = nullptr;
+        const float * matInvModelView = nullptr;
         const float * light_position = nullptr;
         const float * light_colour = nullptr;
         const float * viewPosition = nullptr;

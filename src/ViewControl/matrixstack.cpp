@@ -47,7 +47,10 @@ void MatrixStack::setProjectionMatrixdv(const double * projM, bool * b)
     needUpd_proj = b;
     *needUpd_proj = true;
 }
-
+void MatrixStack::setInvViewGlmMatrixdv(glm::dmat4x4* mat)
+{
+    invViewGlmMatv = mat;
+}
 void MatrixStack::UpdateMatrices()
 {
     bool ok = true;
@@ -67,6 +70,10 @@ void MatrixStack::UpdateMatrices()
 //        cout<<"\nms ";
 //        for(short i = 0; i < 16 ; i++)cout<<viewMat[i]<<", ";
         SetAsGLFloat4x4(glm::value_ptr(m_dToVw), viewMatrix, 16);
+        invModelViewGlmMat = (*invViewGlmMatv) * inverse(*modelGlmMatv);
+//        invModelViewGlmMat = inverse(*modelGlmMatv) * (*invViewGlmMatv);
+//        invModelViewGlmMat = (*invViewGlmMatv);
+        SetAsGLFloat4x4(glm::value_ptr(m_dToVw), invModelViewMatrix, 16);
     }
 
     bool updateMVP = updateView;
@@ -95,6 +102,11 @@ const float* MatrixStack::getModelMatrixfv()
 {
 	return modelMatrix;
 }
+const float* MatrixStack::getInvModelViewMatrixfv()
+{
+	return invModelViewMatrix;
+}
+
 //glm::dmat4x4* MatrixStack::getViewGlmMatrixv()
 //{
 //    return viewGlmMatv;

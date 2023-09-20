@@ -125,6 +125,7 @@ void MultiModelManager::SetShadersAndGeometry()
 
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
+    m_ptrMatrixStack->setInvViewGlmMatrixdv(cameraTrial->getInvViewGlmMatrixdv());
 }
 void MultiModelManager::Draw3d()
 {

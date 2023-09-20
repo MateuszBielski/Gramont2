@@ -82,6 +82,7 @@ void OglRenderer::setViewMatrices(spMatrixStack ms)
     m_viewParamsfv.matMVP = ms->getModelViewProjectionMatrixfv();
     m_viewParamsfv.matToVw = ms->getViewMatrixfv();
     m_viewParamsfv.matModel = ms->getModelMatrixfv();
+    m_viewParamsfv.matInvModelView = ms->getInvModelViewMatrixfv();
 }
 void OglRenderer::setLightMatrices(myLight* light)
 {

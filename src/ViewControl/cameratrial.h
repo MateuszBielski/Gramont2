@@ -26,6 +26,7 @@ private:
     dquat q_rotation;
     dmat4 transformation;
     dmat4 dmat4view;
+    dmat4 dmat4inv_view;
     dmat4 dmat4proj;
     dvec3 position;
     float position3f[3];
@@ -48,6 +49,7 @@ public:
     const double * getModeMatrixdv();//?
     dmat4x4 * getViewGlmMatrixdv();
     dmat4x4 * getProjGlmMatrixdv();
+    dmat4x4 * getInvViewGlmMatrixdv();
     float * getPositonfv();
     bool needUpdateViewMat;
     bool needUpdateProjMat;

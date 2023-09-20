@@ -26,9 +26,10 @@ OglRendererProgress PomRenderer::DrawModel(spOneModel model, unsigned int gl_Pro
 //    glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::model], 1, GL_FALSE, m_viewParamsfv.matModel);
     glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mMVP], 1, GL_FALSE, m_viewParamsfv.matMVP);
     glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mToViewSpace], 1, GL_FALSE, m_viewParamsfv.matToVw);
+    glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::mInvModelView], 1, GL_FALSE, m_viewParamsfv.matInvModelView);
     glUniform4fv(shadUnifLocations[(size_t)pomShUnif::lightProps], 1, m_viewParamsfv.light_position);
     glUniform3fv(shadUnifLocations[(size_t)pomShUnif::lightColour], 1, m_viewParamsfv.light_colour);
-//    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
+    glUniform3fv(shadUnifLocations[(size_t)pomShUnif::viewPos], 1, m_viewParamsfv.viewPosition);
    
 
     auto& tex = *model->MyTexture();
