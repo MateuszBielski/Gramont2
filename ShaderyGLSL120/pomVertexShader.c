@@ -30,7 +30,8 @@ void main()
     pointPos = temp4.xyz;
     temp4 = mToViewSpace * vec4(aNormal, 0.0);
     theNormal = normalize(temp4.xyz);
-    invTBN3 = transpose(mat3(aTangent, aBitangent, aNormal));
+//    invTBN3 = transpose(mat3(aTangent, aBitangent, aNormal));
+    invTBN3 = mat3(aTangent, aBitangent, aNormal);
     mat4 TBN4 = mat4(mat3(aTangent, aBitangent, aNormal));
     transform = mToViewSpace * TBN4;// ;
 

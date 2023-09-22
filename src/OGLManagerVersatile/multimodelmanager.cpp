@@ -44,12 +44,12 @@ void MultiModelManager::MakeAndSetCustomModels()
 #define T_BASE_1 "../ResourcesGramont2/MB640x400.png"
 #define T_NORMAL_1 "../ResourcesGramont2/maleKamienie1024normal.jpg"
 #define T_HEIGHT_1 "../ResourcesGramont2/maleKamienie1024height.jpg"
-    auto model_1 = make_shared<ConvexSurface>(80,80,205,205,80);
-    auto model_2 = make_shared<ConvexSurface>(80,80,200,200,80);
+    auto model_1 = make_shared<ConvexSurface>(80,80,205,205,5);
+    auto model_2 = make_shared<ConvexSurface>(80,80,100,100,20);
     setModels( {model_1,model_2});
 
-    model_1->Rotate(60.0f, {0.0f,0.3f,0.8f});
-    model_1->Translate( {60.0f,0.0f,0.0f});
+//    model_1->Rotate(60.0f, {0.0f,0.3f,0.8f});
+//    model_1->Translate( {60.0f,0.0f,0.0f});
     model_2->Rotate(60.0f, {0.0f,0.3f,0.8f});
     model_2->Translate( {-60.0f,0.0f,0.0f});
 

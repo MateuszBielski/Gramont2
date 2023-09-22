@@ -16,7 +16,7 @@ uniform sampler2D normalMap;
 uniform sampler2D depthMap;
 uniform int pomEnabled;
 
-uniform float heightScale = 0.5;
+uniform float heightScale = 0.1;
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
@@ -73,7 +73,7 @@ void main(void)
     if (pomEnabled == 1) {
 
         vec3 viewDir = normalize (viewPosVary - pointPos);
-        vec4 tempVd = invModelView4 * vec4(viewDir, 1.0);//mat4(invTBN3) * 
+        vec4 tempVd = invModelView4 * vec4(viewDir, 0.0);//mat4(invTBN3) *  
         viewDir = normalize(tempVd.xyz);
 
         modTexCoords = ParallaxMapping(textCoord,  viewDir);
