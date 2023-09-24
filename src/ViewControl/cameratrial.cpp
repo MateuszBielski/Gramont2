@@ -95,9 +95,9 @@ void CameraTrial::UpdateViewMatrix()
     dmat4view = lookAt(newPosition + rotCenter,newTarget + rotCenter,newCamUp);
 //    dmat4inv_view = inverse(transformation);
     dmat4inv_view = inverse(dmat4view);
-//    position3f[0] = newPosition.x + rotCenter.x;
-//    position3f[1] = newPosition.y + rotCenter.y;
-//    position3f[2] = newPosition.z + rotCenter.z;
+    position3f[0] = newPosition.x + rotCenter.x;
+    position3f[1] = newPosition.y + rotCenter.y;
+    position3f[2] = newPosition.z + rotCenter.z;
     /**DEBUG***/
 //    dvec3 newCamPos = newPosition + rotCenter;
 //    cout<<"\ncamPosition:\n"<<newCamPos.x<<" "<<newCamPos.y<<" "<<newCamPos.z;

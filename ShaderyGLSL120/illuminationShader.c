@@ -21,7 +21,7 @@ vec3 Illuminate(vec4 LiProps, vec3 LiColour, vec4 PColour,
     vec3 viewDir = vec3(0.0, 0.0, 1.0);
     vec3 halfDir = normalize(lightDirec + viewDir);
     float angleHalf = acos(dot(halfDir, PNormal));
-    float exponent = angleHalf / 0.05;
+    float exponent = angleHalf / 0.2;
     float specular = 0.0;
     if (diffuse > 0.0)
         specular = exp(-exponent * exponent);

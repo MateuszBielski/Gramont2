@@ -3,20 +3,20 @@ varying vec2 textCoord;
 varying vec3 theNormal;
 varying vec3 pointPos;
 varying mat4 transform;
-varying mat3 invTBN3;
 varying vec3 viewPosVary;
-varying mat4 invModelView4;
+varying mat4 invTbnModelView4;
 
 uniform vec4 lightProps;
 uniform vec3 lightColour;
-//uniform vec3 viewPos;
 
 uniform sampler2D diffuseMap;
 uniform sampler2D normalMap;
 uniform sampler2D depthMap;
 uniform int pomEnabled;
 
-uniform float heightScale = 0.1;
+uniform float heightScale = 0.05;
+
+//https://web.eecs.umich.edu/~sugih/courses/eecs487/lectures/18-Shaders.pdf
 
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
 {
@@ -28,8 +28,10 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
     float layerDepth = 1.0 / numLayers;
     // depth of current layer
     float currentLayerDepth = 0.0;
+    
+   
     // the amount to shift the texture coordinates per layer (from vector P)
-    vec2 P = viewDir.xy / viewDir.z * heightScale;
+    vec2 P = viewDir.xy / -viewDir.z * heightScale;
     vec2 deltaTexCoords = P / numLayers;
 
     // get initial values
@@ -54,6 +56,10 @@ vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir)
     // get depth after and before collision for linear interpolation
     float afterDepth  = currentDepthMapValue - currentLayerDepth;
     float beforeDepth = texture2D(depthMap, prevTexCoords).r - currentLayerDepth + layerDepth;
+    
+//    if(currentDepthMapValue * viewDir.z < 0.15 && viewDir.z < 0.3) return vec2(1.1, 1.1);
+//    if(currentDepthMapValue * viewDir.z < 0.10) return vec2(1.1, 1.1);
+//    if(beforeDepth * viewDir.z < 0.15) return vec2(1.1, 1.1);
 
     // interpolation of texture coordinates
     float weight = afterDepth / (afterDepth - beforeDepth);
@@ -65,16 +71,17 @@ vec3 Illuminate(vec4 LiProps, vec3 LiColour, vec4 PColour,
                 vec3 PNormal, vec3 PPos);
 void main(void)
 {
+//    if(gl_PointCoord.x > 0.2 && gl_PointCoord.y > 0.2) discard;
     vec3 normal;
     vec2 modTexCoords = textCoord;
 
 //    vec3 viewDir = normalize(viewPos - pointPos);
 
     if (pomEnabled == 1) {
-
-        vec3 viewDir = normalize (viewPosVary - pointPos);
-        vec4 tempVd = invModelView4 * vec4(viewDir, 0.0);//mat4(invTBN3) *  
-        viewDir = normalize(tempVd.xyz);
+		
+		vec3 viewDir = normalize (viewPosVary - pointPos);
+		vec4 tempVd = invTbnModelView4 * vec4(viewDir, 1.0);// 
+		viewDir = normalize(tempVd.xyz);
 
         modTexCoords = ParallaxMapping(textCoord,  viewDir);
         if(modTexCoords.x > 1.0 || modTexCoords.y > 1.0 || modTexCoords.x < 0.0 || modTexCoords.y < 0.0)
@@ -91,5 +98,6 @@ void main(void)
     vec4 colo4 = texture2D(diffuseMap, modTexCoords);
     vec3 lightRes = Illuminate(lightProps, lightColour, colo4,
                                normal, pointPos);
+                               
     gl_FragColor = vec4(lightRes, colo4.a);
 }

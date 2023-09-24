@@ -70,13 +70,8 @@ void MatrixStack::UpdateMatrices()
 //        cout<<"\nms ";
 //        for(short i = 0; i < 16 ; i++)cout<<viewMat[i]<<", ";
         SetAsGLFloat4x4(glm::value_ptr(m_dToVw), viewMatrix, 16);
-//        invModelViewGlmMat = (*invViewGlmMatv) * inverse(*modelGlmMatv);
-//        invModelViewGlmMat = *modelGlmMatv;
-//        invModelViewGlmMat = inverse(*modelGlmMatv) * (*invViewGlmMatv);
-        invModelViewGlmMat = *invViewGlmMatv;
-//        invModelViewGlmMat = glm::mat4x4(1.0);
-//        invModelViewGlmMat = (*invViewGlmMatv);
-        SetAsGLFloat4x4(glm::value_ptr(m_dToVw), invModelViewMatrix, 16);
+        invModelViewGlmMat = inverse(*modelGlmMatv) * (*invViewGlmMatv);
+        SetAsGLFloat4x4(glm::value_ptr(invModelViewGlmMat), invModelViewMatrix, 16);
     }
 
     bool updateMVP = updateView;
