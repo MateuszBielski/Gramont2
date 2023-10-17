@@ -6,6 +6,7 @@
 #include "matrixstack.h"
 #include "cameratrial.h"
 #include "selecting.h"
+#include "rendersystemmanager.h"
 
 class MultiModelManager : public ModelManager
 {
@@ -39,11 +40,10 @@ protected:
     virtual void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs) override;
     virtual void ConfigureWithMyViewControl(spRenderSystem) override;
     
-    
+    RenderSystemManager m_rs_manager;//czy jest jakaś korzyść z użycia wskaźnika zamiast obiektu?
     spMatrixStack m_ptrMatrixStack;
     vector<spOneModel> models;
     vector<spTextureInMemory> texms;
-    spMyOGLShaders ptr_TextureShader;
     char * textureShaderCode = nullptr;
     
 };

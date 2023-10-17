@@ -33,6 +33,8 @@ protected:
 
 };
 
+enum class RenderSystemType{Normal, Pom};
+
 using FunReSys_MdTfm = void (RenderSystem::*)(ModelData& d,TextureForModel& tex);
 using FunReSys_Tim = void (RenderSystem::*)(TextureInMemory& tex);
 

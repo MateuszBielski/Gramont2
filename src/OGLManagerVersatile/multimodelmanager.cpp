@@ -1,7 +1,7 @@
 #include "multimodelmanager.h"
 #include "convexsurface.h"
 #include "paralaxoclusionmaprendersystem.h"
-//#include "normalmaprendersystem.h"
+#include "normalmaprendersystem.h"
 
 using namespace std;
 
@@ -9,8 +9,6 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
 {
     if(extErrHnd)
         setErrHandler(extErrHnd);
-//    ptr_TextureShader = make_shared<myOGLShaders>();
-    ptr_TextureShader = m_renderSystem->getShader();
     int i = 7;
     cameraTrial = make_shared<CameraTrial>();
     m_Camera = cameraTrial;
@@ -19,11 +17,6 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
 
 
     MakeAndSetCustomModels();
-    activeShader = ptr_TextureShader;
-    activeRenderer = m_TexRenderer;
-
-//    activeRenderer = m_selecting->getRenderer();
-//    activeShader = m_selecting->getShader();
 }
 
 MultiModelManager::~MultiModelManager()
@@ -75,10 +68,20 @@ void MultiModelManager::MakeAndSetCustomModels()
     texNr->setTextureInMemory(texm_normal_1);
     texNr->setCoordinates(model_1->MyTexture());
     model_1->AddTexture(texHg,TextureForModel::Height);
-//    model_1->CopyCoordintatesFromMainTex(texHg,TextureForModel::Height);//brzydko wygląda
     model_1->AddTexture(texNr,TextureForModel::Normal);
 
+    model_2->AddTexture(texNr,TextureForModel::Normal);
+
     m_selecting->RegisterSelectable( {model_1,model_2});
+
+//    unsigned pomId = m_rs_manager.AddRenderSystem<ParalaxOclusionMapRenderSystem>();
+    unsigned normalId = m_rs_manager.AddRenderSystem<NormalMapRenderSystem>();
+    m_rs_manager.ConnectModelWithRenderSystem(model_1->getUniqueId(),normalId);
+    m_rs_manager.ConnectModelWithRenderSystem(model_2->getUniqueId(),normalId);
+    for(auto& model : models) {
+        m_rs_manager.CheckModelWasConnected(model->getUniqueId());
+    }
+
 #endif
 }
 void MultiModelManager::RenderSystemSetIfWant()
@@ -116,12 +119,23 @@ void MultiModelManager::SetShadersAndGeometry()
 
     m_selecting->ConfigureShadersAndLocations();
     ConfigureWithMyViewControl(m_selecting);
+    CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
 
-    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
+//    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
 //    setAndConfigureRenderSystem(make_unique<NormalMapRenderSystem>());
 //    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
 
-    CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
+
+    for(auto& rs : m_rs_manager.getAllRenderSystems()) {
+        rs->ConfigureShadersAndLocations();
+        CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,rs);
+        CallForMyRenderable(&RenderSystem::LoadVAO,rs);
+        CallForMyTextures(&RenderSystem::CreateGraphicBuffers,rs);
+
+        ConfigureWithMyViewControl(rs);
+        ConfigureWithMyLightSystem(rs);
+    }
+
 
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());
@@ -130,11 +144,12 @@ void MultiModelManager::SetShadersAndGeometry()
 void MultiModelManager::Draw3d()
 {
     for(auto& model : models) {
-        auto& tex = *model->MyTexture();
-        auto d = model->GetModelData();
+//        auto& tex = *model->MyTexture();
+//        auto d = model->GetModelData();
         m_ptrMatrixStack->setModelGlmMatrixdv(model->getModelGlmMatrixdv());
         m_ptrMatrixStack->UpdateMatrices();
-        activeRenderer->DrawModel(model,activeShader->getProgramId());
+        m_rs_manager.CurrentModelId(model->getUniqueId());
+        m_rs_manager.ActiveRenderer()->DrawModel(model,m_rs_manager.ActiveShader()->getProgramId());
         /*******
         glm::dvec4 corner(d.verts[0],d.verts[1],d.verts[2],1.0);
         std::cout<<"\npunkt pierwszy:\n"<<corner.x<<" "<<corner.y<<" "<<corner.z;
@@ -188,17 +203,18 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 {
     m_selecting->setReadPosition(posX,posY);
     m_selecting->EnableWritingToFrameBuffer();
-    auto previousActiveShader = activeShader;
-    auto previousActiveRenderer = activeRenderer;
-    activeRenderer = m_selecting->getRenderer();
-    activeShader = m_selecting->getShader();
+//    auto previousActiveShader = activeShader;
+//    auto previousActiveRenderer = activeRenderer;
+//    activeRenderer = m_selecting->getRenderer();
+//    activeShader = m_selecting->getShader();
+    m_rs_manager.EnableExternalRenderSystem(m_selecting);
     Draw3d();
     m_selecting->DisableWritingToFrameBuffer();
     m_selecting->ReadInClickedPosition();
-//    activeRenderer = m_TexRenderer;
-//    activeShader = ptr_TextureShader;
-    activeRenderer = previousActiveRenderer;
-    activeShader = previousActiveShader;
+
+    m_rs_manager.DisableExternalRenderSystem();
+//    activeRenderer = previousActiveRenderer;
+//    activeShader = previousActiveShader;
     setSelectingResult(m_selecting->getResult());
 }
 void MultiModelManager::SetViewport(int x, int y, int width, int height)

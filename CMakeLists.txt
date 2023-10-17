@@ -64,6 +64,8 @@ set ( CXX_SRCS
     src/Selecting/pickingbuffloader.cpp
     src/Selecting/selectable.cpp
     src/Rendering/rendersystem.cpp
+    src/Rendering/rendersystemmanager.cpp
+    #src/Rendering/templatesForLinker.cpp
     src/Rendering/onetexturerendersystem.cpp
     src/Rendering/paralaxoclusionmaprendersystem.cpp
     src/Rendering/normalmaprendersystem.cpp
