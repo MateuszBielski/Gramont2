@@ -22,9 +22,11 @@ public:
     virtual
 #endif
     void ReloadVAO(spOneModel );
+    void CreateVAO(spOneModel);
     virtual void LoadVAO(spOneModel ) {};
     virtual void CreateGraphicBuffers(spOneModel ) {};
     void CreateGraphicBuffers(TextureInMemory& texm);
+    virtual void CheckModelWasConnected(spOneModel ) {}
 protected:
     spOglRenderer m_renderer;
     spBufferLoader m_BufferLoader;
@@ -32,8 +34,6 @@ protected:
     unsigned int * activeVaoPtr = nullptr;
 
 };
-
-enum class RenderSystemType{Normal, Pom};
 
 using FunReSys_MdTfm = void (RenderSystem::*)(ModelData& d,TextureForModel& tex);
 using FunReSys_Tim = void (RenderSystem::*)(TextureInMemory& tex);

@@ -7,21 +7,30 @@
 
 using std::vector;
 
-class RenderSystemManager
+class RenderSystemManager : public RenderSystem
 {
 private:
 
 public:
+    RenderSystemManager() {}
+    virtual ~RenderSystemManager() {}
+    
     template<typename RsType>
     unsigned AddRenderSystem();
     void EnableExternalRenderSystem(spRenderSystem);
     void DisableExternalRenderSystem();
     void ConnectModelWithRenderSystem(unsigned uniqueId,unsigned rsId);
     void CurrentModelId(unsigned id){currentModelId = id;}
-    void CheckModelWasConnected(unsigned id){/*TO DO*/}
     vector<spRenderSystem>& getAllRenderSystems(){return m_rss;}
     spOglRenderer ActiveRenderer();
     spMyOGLShaders ActiveShader();
+    
+    virtual bool ConfigureShadersAndLocations();
+    virtual void LoadVAO(spOneModel );
+    virtual void CreateGraphicBuffers(spOneModel );
+    virtual void CheckModelWasConnected(spOneModel ) override {/*TO DO*/}
+    
+    spOglRenderer getRenderer() = delete;
 protected:
     vector<spRenderSystem> m_rss;
     vector<unsigned> whichSystemForModel;

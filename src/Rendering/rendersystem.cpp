@@ -40,8 +40,11 @@ void RenderSystem::ReloadVAO(spOneModel model)
     LoadVAO(model);
 }
 
-
 void RenderSystem::CreateGraphicBuffers(TextureInMemory& texm)
 {
     m_BufferLoader->CreateBufferForTextureInMemory(texm);
+}
+void RenderSystem::CreateVAO(spOneModel model)
+{
+    m_BufferLoader->CreateVao(model->getVao());
 }

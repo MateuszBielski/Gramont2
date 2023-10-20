@@ -40,7 +40,7 @@ protected:
     virtual void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs) override;
     virtual void ConfigureWithMyViewControl(spRenderSystem) override;
     
-    RenderSystemManager m_rs_manager;//czy jest jakaś korzyść z użycia wskaźnika zamiast obiektu?
+    spRenderSystemManager m_rs_manager;//czy jest jakaś korzyść z użycia wskaźnika zamiast obiektu? Nie korzyść tylko konieczność do stosowania w metodzie CallForMyRenderable(FunReSys_spOm ,spRenderSystem)
     spMatrixStack m_ptrMatrixStack;
     vector<spOneModel> models;
     vector<spTextureInMemory> texms;

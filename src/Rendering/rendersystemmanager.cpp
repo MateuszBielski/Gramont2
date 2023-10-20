@@ -7,7 +7,7 @@ using namespace std;
 template<typename RsType>
 unsigned RenderSystemManager::AddRenderSystem()
 {
-	upRenderSystem rs = make_unique<RsType>();
+    upRenderSystem rs = make_unique<RsType>();
     unsigned pos = m_rss.size();
 //    size_t positionInContainer = rs->getType();
 //    if( < positionInContainer)m_rss.resize(positionInContainer);
@@ -17,11 +17,11 @@ unsigned RenderSystemManager::AddRenderSystem()
 }
 void RenderSystemManager::DisableExternalRenderSystem()
 {
-	externalRenderSystemEnabled = false;
+    externalRenderSystemEnabled = false;
 }
 void RenderSystemManager::EnableExternalRenderSystem(spRenderSystem ers)
 {
-	externalRenderSystemEnabled = true;
+    externalRenderSystemEnabled = true;
     externalRs = ers;
 }
 void RenderSystemManager::ConnectModelWithRenderSystem(unsigned uniqueId, unsigned rsId)
@@ -41,10 +41,26 @@ spOglRenderer RenderSystemManager::ActiveRenderer()
 }
 spMyOGLShaders RenderSystemManager::ActiveShader()
 {
-	if(externalRenderSystemEnabled)return externalRs->getShader();
+    if(externalRenderSystemEnabled)return externalRs->getShader();
     return m_rss[whichSystemForModel[currentModelId]]->getShader();
 }
+void RenderSystemManager::CreateGraphicBuffers(spOneModel model)
+{
+    m_rss[whichSystemForModel[model->getUniqueId()]]->CreateGraphicBuffers(model);
+}
+void RenderSystemManager::LoadVAO(spOneModel model)
+{
+    m_rss[whichSystemForModel[model->getUniqueId()]]->LoadVAO(model);
+}
+bool RenderSystemManager::ConfigureShadersAndLocations()
+{
+    bool result = true;
+    for(auto& rs : m_rss) {
+        result &= (bool)rs->ConfigureShadersAndLocations();
 
+    }
+    return result;
+}
 //for linker
 template unsigned RenderSystemManager::AddRenderSystem<ParalaxOclusionMapRenderSystem>();
 template unsigned RenderSystemManager::AddRenderSystem<NormalMapRenderSystem>();

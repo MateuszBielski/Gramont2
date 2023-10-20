@@ -14,7 +14,7 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     m_Camera = cameraTrial;
     m_ptrMatrixStack = make_shared<MatrixStack>();
     m_selecting = make_shared<Selecting>();
-
+    m_rs_manager = make_shared<RenderSystemManager>();
 
     MakeAndSetCustomModels();
 }
@@ -39,7 +39,8 @@ void MultiModelManager::MakeAndSetCustomModels()
 #define T_HEIGHT_1 "../ResourcesGramont2/maleKamienie1024height.jpg"
     auto model_1 = make_shared<ConvexSurface>(80,80,205,205,85);
     auto model_2 = make_shared<ConvexSurface>(80,80,100,100,20);
-    setModels( {model_1,model_2});
+    setModels( {model_1,model_2});/**************/
+//    setModels( {model_1});
 
 //    model_1->Rotate(60.0f, {0.0f,0.3f,0.8f});
 //    model_1->Translate( {60.0f,0.0f,0.0f});
@@ -72,15 +73,14 @@ void MultiModelManager::MakeAndSetCustomModels()
 
     model_2->AddTexture(texNr,TextureForModel::Normal);
 
-    m_selecting->RegisterSelectable( {model_1,model_2});
+    m_selecting->RegisterSelectable( {model_1,model_2});/**************/
+//    m_selecting->RegisterSelectable( {model_1});
 
-//    unsigned pomId = m_rs_manager.AddRenderSystem<ParalaxOclusionMapRenderSystem>();
-    unsigned normalId = m_rs_manager.AddRenderSystem<NormalMapRenderSystem>();
-    m_rs_manager.ConnectModelWithRenderSystem(model_1->getUniqueId(),normalId);
-    m_rs_manager.ConnectModelWithRenderSystem(model_2->getUniqueId(),normalId);
-    for(auto& model : models) {
-        m_rs_manager.CheckModelWasConnected(model->getUniqueId());
-    }
+    unsigned pomId = m_rs_manager->AddRenderSystem<ParalaxOclusionMapRenderSystem>();
+//    unsigned normalId = m_rs_manager->AddRenderSystem<NormalMapRenderSystem>();
+    m_rs_manager->ConnectModelWithRenderSystem(model_1->getUniqueId(),pomId);
+    m_rs_manager->ConnectModelWithRenderSystem(model_2->getUniqueId(),pomId);
+
 
 #endif
 }
@@ -125,12 +125,17 @@ void MultiModelManager::SetShadersAndGeometry()
 //    setAndConfigureRenderSystem(make_unique<NormalMapRenderSystem>());
 //    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
 
-
-    for(auto& rs : m_rs_manager.getAllRenderSystems()) {
-        rs->ConfigureShadersAndLocations();
-        CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,rs);
-        CallForMyRenderable(&RenderSystem::LoadVAO,rs);
-        CallForMyTextures(&RenderSystem::CreateGraphicBuffers,rs);
+    m_rs_manager->ConfigureShadersAndLocations();
+    CallForMyRenderable(&RenderSystem::CheckModelWasConnected,m_rs_manager);
+    CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,m_rs_manager);
+    CallForMyRenderable(&RenderSystem::CreateVAO,m_rs_manager);
+    CallForMyRenderable(&RenderSystem::LoadVAO,m_rs_manager);
+    CallForMyTextures(&RenderSystem::CreateGraphicBuffers,m_rs_manager);
+    for(auto& rs : m_rs_manager->getAllRenderSystems()) {
+//        rs->ConfigureShadersAndLocations();
+//        CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,rs);
+//        CallForMyRenderable(&RenderSystem::LoadVAO,rs);
+//        CallForMyTextures(&RenderSystem::CreateGraphicBuffers,rs);
 
         ConfigureWithMyViewControl(rs);
         ConfigureWithMyLightSystem(rs);
@@ -148,8 +153,8 @@ void MultiModelManager::Draw3d()
 //        auto d = model->GetModelData();
         m_ptrMatrixStack->setModelGlmMatrixdv(model->getModelGlmMatrixdv());
         m_ptrMatrixStack->UpdateMatrices();
-        m_rs_manager.CurrentModelId(model->getUniqueId());
-        m_rs_manager.ActiveRenderer()->DrawModel(model,m_rs_manager.ActiveShader()->getProgramId());
+        m_rs_manager->CurrentModelId(model->getUniqueId());
+        m_rs_manager->ActiveRenderer()->DrawModel(model,m_rs_manager->ActiveShader()->getProgramId());
         /*******
         glm::dvec4 corner(d.verts[0],d.verts[1],d.verts[2],1.0);
         std::cout<<"\npunkt pierwszy:\n"<<corner.x<<" "<<corner.y<<" "<<corner.z;
@@ -207,12 +212,12 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 //    auto previousActiveRenderer = activeRenderer;
 //    activeRenderer = m_selecting->getRenderer();
 //    activeShader = m_selecting->getShader();
-    m_rs_manager.EnableExternalRenderSystem(m_selecting);
+    m_rs_manager->EnableExternalRenderSystem(m_selecting);
     Draw3d();
     m_selecting->DisableWritingToFrameBuffer();
     m_selecting->ReadInClickedPosition();
 
-    m_rs_manager.DisableExternalRenderSystem();
+    m_rs_manager->DisableExternalRenderSystem();
 //    activeRenderer = previousActiveRenderer;
 //    activeShader = previousActiveShader;
     setSelectingResult(m_selecting->getResult());
