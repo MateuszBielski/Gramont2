@@ -16,7 +16,7 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     m_selecting = make_shared<Selecting>();
     m_rs_manager = make_shared<RenderSystemManager>();
 
-    MakeAndSetCustomModels();
+    
 }
 
 MultiModelManager::~MultiModelManager()
@@ -37,13 +37,13 @@ void MultiModelManager::MakeAndSetCustomModels()
 #define T_BASE_1 "../ResourcesGramont2/MB640x400.png"
 #define T_NORMAL_1 "../ResourcesGramont2/maleKamienie1024normal.jpg"
 #define T_HEIGHT_1 "../ResourcesGramont2/maleKamienie1024height.jpg"
-    auto model_1 = make_shared<ConvexSurface>(80,80,205,205,85);
-    auto model_2 = make_shared<ConvexSurface>(80,80,100,100,20);
+    auto model_1 = make_shared<ConvexSurface>(80,80,160,160,70);
+    auto model_2 = make_shared<ConvexSurface>(80,80,160,160,70);
     setModels( {model_1,model_2});/**************/
 //    setModels( {model_1});
 
 //    model_1->Rotate(60.0f, {0.0f,0.3f,0.8f});
-//    model_1->Translate( {60.0f,0.0f,0.0f});
+    model_1->Translate( {60.0f,0.0f,0.0f});
     model_2->Rotate(60.0f, {0.0f,0.3f,0.8f});
     model_2->Translate( {-60.0f,0.0f,0.0f});
 
@@ -60,6 +60,7 @@ void MultiModelManager::MakeAndSetCustomModels()
     model_1->MyTexture()->setTextureInMemory(texm_base_1);
     model_2->MyTexture()->setTextureInMemory(texm_2);
     model_1->CalculateTangentAndBitangentForAllPointsBasedOn(*model_1->MyTexture());
+    model_2->CalculateTangentAndBitangentForAllPointsBasedOn(*model_2->MyTexture());
 
     spTextureForModel texHg, texNr;
     texHg = make_shared<TextureForModel>();
@@ -77,9 +78,9 @@ void MultiModelManager::MakeAndSetCustomModels()
 //    m_selecting->RegisterSelectable( {model_1});
 
     unsigned pomId = m_rs_manager->AddRenderSystem<ParalaxOclusionMapRenderSystem>();
-//    unsigned normalId = m_rs_manager->AddRenderSystem<NormalMapRenderSystem>();
+    unsigned normalId = m_rs_manager->AddRenderSystem<NormalMapRenderSystem>();
     m_rs_manager->ConnectModelWithRenderSystem(model_1->getUniqueId(),pomId);
-    m_rs_manager->ConnectModelWithRenderSystem(model_2->getUniqueId(),pomId);
+    m_rs_manager->ConnectModelWithRenderSystem(model_2->getUniqueId(),normalId);
 
 
 #endif
@@ -114,16 +115,11 @@ void MultiModelManager::SetShadersAndGeometry()
 #define TEXTURE_IMAGE "nieistniejacyPlik.jpg"
 //real path is timeconsume in tests
 #endif
-
+    MakeAndSetCustomModels();
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
 
     m_selecting->ConfigureShadersAndLocations();
     ConfigureWithMyViewControl(m_selecting);
-    CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting);
-
-//    setAndConfigureRenderSystem(make_unique<ParalaxOclusionMapRenderSystem>());
-//    setAndConfigureRenderSystem(make_unique<NormalMapRenderSystem>());
-//    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
 
     m_rs_manager->ConfigureShadersAndLocations();
     CallForMyRenderable(&RenderSystem::CheckModelWasConnected,m_rs_manager);
@@ -132,15 +128,11 @@ void MultiModelManager::SetShadersAndGeometry()
     CallForMyRenderable(&RenderSystem::LoadVAO,m_rs_manager);
     CallForMyTextures(&RenderSystem::CreateGraphicBuffers,m_rs_manager);
     for(auto& rs : m_rs_manager->getAllRenderSystems()) {
-//        rs->ConfigureShadersAndLocations();
-//        CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,rs);
-//        CallForMyRenderable(&RenderSystem::LoadVAO,rs);
-//        CallForMyTextures(&RenderSystem::CreateGraphicBuffers,rs);
-
         ConfigureWithMyViewControl(rs);
         ConfigureWithMyLightSystem(rs);
     }
-
+    
+    CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting); //may not be earlier
 
     m_ptrMatrixStack->setViewGlmMatrixdv(cameraTrial->getViewGlmMatrixdv());
     m_ptrMatrixStack->setProjectionGlmMatrixdv(cameraTrial->getProjGlmMatrixdv());

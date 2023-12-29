@@ -21,7 +21,7 @@ public:
     void DisableExternalRenderSystem();
     void ConnectModelWithRenderSystem(unsigned uniqueId,unsigned rsId);
     void CurrentModelId(unsigned id){currentModelId = id;}
-    vector<spRenderSystem>& getAllRenderSystems(){return m_rss;}
+    vector<spRenderSystem>& getAllRenderSystems(){return m_CollectionOfRendSystems;}
     spOglRenderer ActiveRenderer();
     spMyOGLShaders ActiveShader();
     
@@ -32,7 +32,7 @@ public:
     
     spOglRenderer getRenderer() = delete;
 protected:
-    vector<spRenderSystem> m_rss;
+    vector<spRenderSystem> m_CollectionOfRendSystems;
     vector<unsigned> whichSystemForModel;
     spRenderSystem externalRs;
 //    spOglRenderer activeRenderer;

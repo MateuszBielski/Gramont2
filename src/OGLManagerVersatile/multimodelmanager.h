@@ -23,22 +23,22 @@ private:
 public:
     MultiModelManager(myOGLErrHandler* extErrHnd);
     ~MultiModelManager();
-    virtual void SetShadersAndGeometry() override;
-    virtual void SetViewport(int x, int y, int width, int height) override;
-    virtual void Draw3d() override;
-    virtual void SwitchViewControl() override;
-    virtual void OnMouseRotDragging(int posX, int posY) override;
-    virtual void OnMouseLeftDClick(int posX, int posY) override;
-    virtual void OnMouseWheel(int rotation) override;
-    virtual void OnMouseMiddleClick(int posX, int posY);
+    void SetShadersAndGeometry() override;
+    void SetViewport(int x, int y, int width, int height) override;
+    void Draw3d() override;
+    void SwitchViewControl() override;
+    void OnMouseRotDragging(int posX, int posY) override;
+    void OnMouseLeftDClick(int posX, int posY) override;
+    void OnMouseWheel(int rotation) override;
+    void OnMouseMiddleClick(int posX, int posY);
     
 
     void setModels(vector<spOneModel>&& );
     void setSelectingResult(SelectingResult&& );
 protected:
-    virtual void CallForMyRenderable(FunReSys_spOm ,spRenderSystem) override;
-    virtual void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs) override;
-    virtual void ConfigureWithMyViewControl(spRenderSystem) override;
+    void CallForMyRenderable(FunReSys_spOm ,spRenderSystem) override;
+    void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs) override;
+    void ConfigureWithMyViewControl(spRenderSystem) override;
     
     spRenderSystemManager m_rs_manager;//czy jest jakaś korzyść z użycia wskaźnika zamiast obiektu? Nie korzyść tylko konieczność do stosowania w metodzie CallForMyRenderable(FunReSys_spOm ,spRenderSystem)
     spMatrixStack m_ptrMatrixStack;
