@@ -44,6 +44,7 @@ set(includes
 
 set ( CXX_SRCS
     src/myglcanvas.cpp
+	src/myglcanvasDependencyInjection.cpp
 	lib/funcs/funkcje.cpp
 	lib/funcs/textfile.cpp
     src/OGLManagerVersatile/modelmanager.cpp

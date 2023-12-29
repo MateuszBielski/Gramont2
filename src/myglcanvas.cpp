@@ -1,6 +1,7 @@
 #include "oglstuff.h"
 #include "myglcanvas.h"
-#include "funkcje.h"
+#include "myoglmanager.h"
+
 
 
 wxBEGIN_EVENT_TABLE(MyGLCanvas, wxGLCanvas)

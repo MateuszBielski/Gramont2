@@ -3,9 +3,9 @@
 
 #include "wx/glcanvas.h"
 #include "myframe.h"
-#include "myoglmanager.h"
 
-//class myOGLManager;
+
+class myOGLManager;
 
 class MyGLCanvas : public wxGLCanvas
 {

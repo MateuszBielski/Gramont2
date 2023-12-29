@@ -1,3 +1,4 @@
+#include "funkcje.h"
 #include "myglcanvas.h"
 //#include "myoglmanagerpyramid.h"
 //#define OGLManager myOGLManagerPyramid;

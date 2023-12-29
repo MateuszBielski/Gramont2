@@ -13,6 +13,7 @@ set(includes
 
 set ( CXX_SRCS
     myglcanvas.cpp
+	myglcanvasDependencyInjection.cpp
     Surface/surface.cpp
     Surface/convexsurface.cpp
     OGLManagerVersatile/onemodelmanager.cpp
