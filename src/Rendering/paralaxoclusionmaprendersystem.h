@@ -26,6 +26,7 @@ public:
     virtual bool ConfigureShadersAndLocations();
     void CreateGraphicBuffers(spOneModel model) override;
     virtual void LoadVAO(spOneModel )  override;
+    void Draw(spOneModel ) override;
 protected:
 
 };

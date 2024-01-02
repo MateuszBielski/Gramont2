@@ -25,23 +25,23 @@ void ModelManager::setLocations(shared_ptr<T> rend, vec_locations_T<T> vec, myOG
         rend->m_loc.*(get<0>(name)) = (shader.*FunGetByString)(get<1>(name));//ok
     }
 }
-bool ModelManager::setAndConfigureRenderSystem(spRenderSystem rs)
-{
-    m_renderSystem = rs;
-    rs->ConfigureShadersAndLocations();
-    
-    CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,rs);
-    CallForMyRenderable(&RenderSystem::ReloadVAO,rs);
-    CallForMyTextures(&RenderSystem::CreateGraphicBuffers,rs);
-    ConfigureWithMyViewControl(rs);
-    
-    ConfigureWithMyLightSystem(rs);
-    activeShader = rs->getShader();
-    activeRenderer = rs->getRenderer();
-    m_BufferLoader = m_renderSystem->getBufferLoader();
-    m_TexRenderer = m_renderSystem->getRenderer();
-    return true;
-}
+//bool ModelManager::setAndConfigureRenderSystem(spRenderSystem rs)
+//{
+//    m_renderSystem = rs;
+//    rs->ConfigureShadersAndLocations();
+//    
+//    CallForMyRenderable(&RenderSystem::CreateGraphicBuffers,rs);
+//    CallForMyRenderable(&RenderSystem::ReloadVAO,rs);
+//    CallForMyTextures(&RenderSystem::CreateGraphicBuffers,rs);
+//    ConfigureWithMyViewControl(rs);
+//    
+//    ConnectWithMyLightSystem(rs);
+//    activeShader = rs->getShader();
+//    activeRenderer = rs->getRenderer();
+//    m_BufferLoader = m_renderSystem->getBufferLoader();
+//    m_TexRenderer = m_renderSystem->getRenderer();
+//    return true;
+//}
 spMyOGLShaders ModelManager::getActiveShader()
 {
     return activeShader;
@@ -54,10 +54,11 @@ myLight* ModelManager::getLightPtr()
 {
 	return &m_Light;
 }
-void ModelManager::ConfigureWithMyLightSystem(spRenderSystem rs)
+void ModelManager::ConnectWithMyLightSystem(spRenderSystem rs)
 {
-	rs->getRenderer()->setLightMatrices(&m_Light);
+    rs->light = &m_Light;
 }
+
 
 
 

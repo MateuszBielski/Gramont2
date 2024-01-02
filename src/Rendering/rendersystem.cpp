@@ -5,7 +5,7 @@ using namespace std;
 RenderSystem::RenderSystem()
 {
     m_shader = make_shared<myOGLShaders>();
-    m_renderer = make_unique<OglRenderer>();
+//    m_renderer = make_unique<OglRenderer>();
     m_BufferLoader = make_unique<BufferLoader>();
 }
 //RenderSystem::RenderSystem(spMyOGLShaders shad, spBufferLoader bl, spOglRenderer rend)
@@ -47,4 +47,12 @@ void RenderSystem::CreateGraphicBuffers(TextureInMemory& texm)
 void RenderSystem::CreateVAO(spOneModel model)
 {
     m_BufferLoader->CreateVao(model->getVao());
+}
+void RenderSystem::DrawIndicesAndFinish(ModelData& d)
+{
+	glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);
+    glBindVertexArray(0);
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glActiveTexture(GL_TEXTURE0);
+    glUseProgram(0);
 }

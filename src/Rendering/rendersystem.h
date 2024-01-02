@@ -4,6 +4,7 @@
 #include <iostream>
 #include <memory>
 #include "oglrenderer.h"
+#include "cameratrial.h"
 
 class RenderSystem
 {
@@ -13,11 +14,16 @@ public:
     RenderSystem();
 //RenderSystem(spMyOGLShaders,spBufferLoader,spOglRenderer);
     virtual bool ConfigureShadersAndLocations() = 0;
+    virtual void Draw(spOneModel ) = 0;
     spOglRenderer getRenderer();
     spMyOGLShaders getShader();
     spBufferLoader getBufferLoader();
     void setBufferLoader(spBufferLoader );
     void setShader(spMyOGLShaders );
+    
+    spMatrixStack matrixStack;
+    spCameraTrial camera;
+    myLight * light = nullptr;
 #ifdef TESTOWANIE_F
     virtual
 #endif
@@ -31,7 +37,10 @@ protected:
     spOglRenderer m_renderer;
     spBufferLoader m_BufferLoader;
     spMyOGLShaders m_shader;
+    
     unsigned int * activeVaoPtr = nullptr;
+    unsigned int getProgramId() {return m_shader->getProgramId();}
+    void DrawIndicesAndFinish(ModelData& d);
 
 };
 

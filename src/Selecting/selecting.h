@@ -67,8 +67,9 @@ public:
             notUsed_2 = 0.0f;
         }
     };
-    virtual void LoadVAO(spOneModel ) override;
-    virtual bool ConfigureShadersAndLocations() override;
+    void LoadVAO(spOneModel ) override;
+    bool ConfigureShadersAndLocations() override;
+    void Draw(spOneModel ) override;
     void RegisterSelectable(vector<spSelectable>&& );
     void setWindowSize(unsigned int, unsigned int);
     void setReadPosition(int posX, int posY);

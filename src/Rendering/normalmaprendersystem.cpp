@@ -1,11 +1,12 @@
 #include "normalmaprendersystem.h"
 #include "shadersPath.h"
 #include "textfile.h"
-#include "normalrenderer.h"
+
+
 
 NormalMapRenderSystem::NormalMapRenderSystem()
 {
-    m_renderer = std::make_unique<NormalRenderer>();
+//    m_renderer = std::make_unique<NormalRenderer>();
 }
 bool NormalMapRenderSystem::ConfigureShadersAndLocations()
 {
@@ -23,7 +24,7 @@ bool NormalMapRenderSystem::ConfigureShadersAndLocations()
     for (auto& unif : uniforms)m_shader->AddUnif(unif);
 
     m_BufferLoader->shadAttribLocations.resize((size_t)normalShAttr::normalShAttrSize);
-    m_renderer->shadUnifLocations.resize((size_t)normalShUnif::normalShUnifSize);
+//    m_renderer->shadUnifLocations.resize((size_t)normalShUnif::normalShUnifSize);
 
     bool ok = true;
     ok &= (bool)vertCode;
@@ -33,19 +34,27 @@ bool NormalMapRenderSystem::ConfigureShadersAndLocations()
     string nameOfFunction = "NormalMapRenderSystem::ConfigureShadersAndLocations";
     if(ok)m_shader->Init(nameOfFunction);
 
-    int atLoc[(size_t)normalShAttr::normalShAttrSize], unifLoc[(size_t)normalShUnif::normalShUnifSize];//******DEBUG*
+    int atLoc[(size_t)normalShAttr::normalShAttrSize];//******DEBUG*
+//    , unifLoc[(size_t)normalShUnif::normalShUnifSize]
     string unifNames[(size_t)normalShUnif::normalShUnifSize];
-    //locations are accessible after compile and link shader
+
     for(short a = 0 ; a < (short)normalShAttr::normalShAttrSize ; a++) {
         m_BufferLoader->shadAttribLocations[a] = m_shader->GetAttribLoc(attribs[a]);
         atLoc[a] = m_BufferLoader->shadAttribLocations[a];//******DEBUG*
     }
-
-    for(short u = 0 ; u < (short)normalShUnif::normalShUnifSize; u++) {
-        m_renderer->shadUnifLocations[u] = m_shader->GetUnifLoc(uniforms[u]);
-        unifNames[u] = uniforms[u];
-        unifLoc[u] = m_renderer->shadUnifLocations[u];//******DEBUG*
-    }
+    loc_mMVP = m_shader->GetUnifLoc("mMVP");
+    loc_mToViewSpace = m_shader->GetUnifLoc("mToViewSpace");
+    loc_lightProps = m_shader->GetUnifLoc("lightProps");
+    loc_lightColour = m_shader->GetUnifLoc("lightColour");
+    loc_diffuseMap = m_shader->GetUnifLoc("diffuseMap");
+    loc_normalMap = m_shader->GetUnifLoc("normalMap");
+    loc_normalEnabled = m_shader->GetUnifLoc("normalEnabled");
+    
+//    for(short u = 0 ; u < (short)normalShUnif::normalShUnifSize; u++) {
+//        m_renderer->shadUnifLocations[u] = m_shader->GetUnifLoc(uniforms[u]);
+//        unifNames[u] = uniforms[u];
+//        unifLoc[u] = m_renderer->shadUnifLocations[u];//******DEBUG*
+//    }
     return true;
 }
 
@@ -71,4 +80,36 @@ void NormalMapRenderSystem::LoadVAO(spOneModel model)
     m_BufferLoader->LoadSubBufferOnLocation3f(d.bufColNorId,(size_t)normalShAttr::aNormal,4,d.nuColours);
     m_BufferLoader->LoadBufferOnLocation2f(tex.bufTexCoordId,(size_t)normalShAttr::aTexCoords);
     m_BufferLoader->LoadIndicesAndFinish(d.bufIndexId);
+}
+void NormalMapRenderSystem::Draw(spOneModel model)
+{
+	auto vao = model->getVao();
+    if(!vao) return;
+    glUseProgram(getProgramId());
+    glBindVertexArray(vao);
+    glUniformMatrix4fv(loc_mMVP, 1, GL_FALSE, matrixStack->getModelViewProjectionMatrixfv());
+    glUniformMatrix4fv(loc_mToViewSpace, 1, GL_FALSE, matrixStack->getViewMatrixfv());
+    glUniform4fv(loc_lightProps, 1, light->GetFLightPos());
+    glUniform3fv(loc_lightColour, 1, light->GetFLightColour());
+
+    auto& tex = *model->MyTexture();
+    auto d = model->GetModelData();
+
+    glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
+    glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
+    glUniform1i(loc_diffuseMap, tex.getTextureUnit());
+    
+    int normalEnabled = 1;
+    auto& texNormalMap = *model->getTextureOfType(TextureForModel::Normal);
+    
+    if(texNormalMap.bufTexCoordId != (unsigned)-1) {
+        glActiveTexture(GL_TEXTURE0 + texNormalMap.getTextureUnit());
+        glBindTexture(GL_TEXTURE_2D, texNormalMap.getTextureId());
+        glUniform1i(loc_normalMap, texNormalMap.getTextureUnit());
+    }else{normalEnabled = 0;}
+//
+    glUniform1i(loc_normalEnabled, (int)normalEnabled);
+   
+    DrawIndicesAndFinish(d);
+    
 }

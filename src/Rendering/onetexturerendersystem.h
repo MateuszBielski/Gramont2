@@ -13,6 +13,7 @@ class OneTextureRenderSystem : public RenderSystem
 	virtual bool ConfigureShadersAndLocations() override;
     void CreateGraphicBuffers(spOneModel model) override;
     virtual void LoadVAO(spOneModel )  override;
+    void Draw(spOneModel ) override {} //will it be used?
 protected:
 
 private:

@@ -157,3 +157,7 @@ void ParalaxOclusionMapRenderSystem::LoadVAO(spOneModel model)
     m_BufferLoader->LoadBufferOnLocation2f(tex.bufTexCoordId,(size_t)pomShAttr::aTexCoords);
     m_BufferLoader->LoadIndicesAndFinish(d.bufIndexId);
 }
+void ParalaxOclusionMapRenderSystem::Draw(spOneModel)
+{
+	
+}

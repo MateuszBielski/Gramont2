@@ -85,10 +85,17 @@ void MultiModelManager::MakeAndSetCustomModels()
 
 #endif
 }
-void MultiModelManager::RenderSystemSetIfWant()
+//void MultiModelManager::RenderSystemSetIfWant()
+//{
+////    setAndConfigureRenderSystem(make_unique<c>());//move to configuration module (when it will be made)
+//    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
+//}
+void MultiModelManager::ConnectWithMyViewControl(spRenderSystem rs)
 {
-//    setAndConfigureRenderSystem(make_unique<c>());//move to configuration module (when it will be made)
-    setAndConfigureRenderSystem(make_unique<OneTextureRenderSystem>());
+//    rs->getRenderer()->setViewMatrices(m_ptrMatrixStack);
+//    rs->getRenderer()->m_viewParamsfv.viewPosition = cameraTrial->getPositonfv();
+    rs->matrixStack = m_ptrMatrixStack;
+    rs->camera = cameraTrial;
 }
 void MultiModelManager::CallForMyRenderable(FunReSys_spOm FunToCall, spRenderSystem rs)
 {
@@ -102,11 +109,7 @@ void MultiModelManager::CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem
         ((*rs).*FunToCall)(*textureInMemory);
     }
 }
-void MultiModelManager::ConfigureWithMyViewControl(spRenderSystem rs)
-{
-    rs->getRenderer()->setViewMatrices(m_ptrMatrixStack);
-    rs->getRenderer()->m_viewParamsfv.viewPosition = cameraTrial->getPositonfv();
-}
+
 
 void MultiModelManager::SetShadersAndGeometry()
 {
@@ -119,7 +122,7 @@ void MultiModelManager::SetShadersAndGeometry()
     m_Light.Set(myVec3(0.0, 0.0, 0.0), 1.0, 1.0, 1.0, 1.0);
 
     m_selecting->ConfigureShadersAndLocations();
-    ConfigureWithMyViewControl(m_selecting);
+    ConnectWithMyViewControl(m_selecting);
 
     m_rs_manager->ConfigureShadersAndLocations();
     CallForMyRenderable(&RenderSystem::CheckModelWasConnected,m_rs_manager);
@@ -128,8 +131,8 @@ void MultiModelManager::SetShadersAndGeometry()
     CallForMyRenderable(&RenderSystem::LoadVAO,m_rs_manager);
     CallForMyTextures(&RenderSystem::CreateGraphicBuffers,m_rs_manager);
     for(auto& rs : m_rs_manager->getAllRenderSystems()) {
-        ConfigureWithMyViewControl(rs);
-        ConfigureWithMyLightSystem(rs);
+        ConnectWithMyViewControl(rs);
+        ConnectWithMyLightSystem(rs);
     }
     
     CallForMyRenderable(&RenderSystem::LoadVAO,m_selecting); //may not be earlier
@@ -145,8 +148,11 @@ void MultiModelManager::Draw3d()
 //        auto d = model->GetModelData();
         m_ptrMatrixStack->setModelGlmMatrixdv(model->getModelGlmMatrixdv());
         m_ptrMatrixStack->UpdateMatrices();
-        m_rs_manager->CurrentModelId(model->getUniqueId());
-        m_rs_manager->ActiveRenderer()->DrawModel(model,m_rs_manager->ActiveShader()->getProgramId());
+        /********* leaving OglRendereClass*/
+        m_rs_manager->Draw(model);
+//        m_rs_manager->CurrentModelId(model->getUniqueId());
+//        m_rs_manager->ActiveRenderer()->DrawModel(model,m_rs_manager->ActiveShader()->getProgramId());
+        /************/
         /*******
         glm::dvec4 corner(d.verts[0],d.verts[1],d.verts[2],1.0);
         std::cout<<"\npunkt pierwszy:\n"<<corner.x<<" "<<corner.y<<" "<<corner.z;
@@ -200,18 +206,12 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 {
     m_selecting->setReadPosition(posX,posY);
     m_selecting->EnableWritingToFrameBuffer();
-//    auto previousActiveShader = activeShader;
-//    auto previousActiveRenderer = activeRenderer;
-//    activeRenderer = m_selecting->getRenderer();
-//    activeShader = m_selecting->getShader();
     m_rs_manager->EnableExternalRenderSystem(m_selecting);
     Draw3d();
     m_selecting->DisableWritingToFrameBuffer();
     m_selecting->ReadInClickedPosition();
 
     m_rs_manager->DisableExternalRenderSystem();
-//    activeRenderer = previousActiveRenderer;
-//    activeShader = previousActiveShader;
     setSelectingResult(m_selecting->getResult());
 }
 void MultiModelManager::SetViewport(int x, int y, int width, int height)

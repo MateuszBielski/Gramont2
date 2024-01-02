@@ -61,6 +61,10 @@ bool RenderSystemManager::ConfigureShadersAndLocations()
     }
     return result;
 }
+void RenderSystemManager::Draw(spOneModel model)
+{
+    m_CollectionOfRendSystems[whichSystemForModel[model->getUniqueId()]]->Draw(model);
+}
 //for linker
 template unsigned RenderSystemManager::AddRenderSystem<ParalaxOclusionMapRenderSystem>();
 template unsigned RenderSystemManager::AddRenderSystem<NormalMapRenderSystem>();

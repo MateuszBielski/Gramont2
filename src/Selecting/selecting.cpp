@@ -239,4 +239,8 @@ void Selecting::SetFragmentShaderPath(string p)
 {
 //    m_fragmentShaderPath = p;
 }
+void Selecting::Draw(spOneModel)
+{
+	
+}
 

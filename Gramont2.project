@@ -44,9 +44,7 @@
       <File Name="src/OGLManagerVersatile/modelmanager.h"/>
       <File Name="src/OGLManagerVersatile/modelmanager.cpp"/>
       <File Name="src/OGLManagerVersatile/bufferloader.cpp"/>
-      <File Name="src/OGLManagerVersatile/oglrenderer.cpp"/>
       <File Name="src/OGLManagerVersatile/bufferloader.h"/>
-      <File Name="src/OGLManagerVersatile/oglrenderer.h"/>
       <File Name="src/OGLManagerVersatile/ModelManagerTemplatesForLinker.cpp"/>
     </VirtualDirectory>
     <VirtualDirectory Name="GeometryModel">
@@ -101,11 +99,9 @@
       <File Name="src/Rendering/rspreproc.h"/>
       <File Name="src/Rendering/rspreprocdefinition.cpp"/>
       <File Name="src/Rendering/normalmaprendersystem.cpp"/>
-      <File Name="src/Rendering/normalrenderer.cpp"/>
-      <File Name="src/Rendering/normalrenderer.h"/>
-      <File Name="src/Rendering/normalpreproc.h"/>
       <File Name="src/Rendering/rendersystemmanager.h"/>
       <File Name="src/Rendering/rendersystemmanager.cpp"/>
+      <File Name="src/Rendering/normalpreproc.h"/>
     </VirtualDirectory>
     <File Name="src/myglcanvasDependencyInjection.cpp"/>
   </VirtualDirectory>

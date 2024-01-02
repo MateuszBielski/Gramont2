@@ -26,7 +26,7 @@ private:
 public:
     ModelManager();
 //    ~ModelManager();
-    bool setAndConfigureRenderSystem(spRenderSystem);
+//    bool setAndConfigureRenderSystem(spRenderSystem);
 #ifdef TESTOWANIE_F
     spBufferLoader getBufferLoaderForTest() {
         return m_BufferLoader;
@@ -51,11 +51,12 @@ protected:
 
     spOglRenderer activeRenderer;
     spMyOGLShaders activeShader;
-    
+
     virtual void CallForMyRenderable(FunReSys_spOm ,spRenderSystem) {};
-    virtual void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs){};
-    virtual void ConfigureWithMyViewControl(spRenderSystem){};
-    virtual void ConfigureWithMyLightSystem(spRenderSystem);
+    virtual void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs) {};
+//    virtual void ConfigureWithMyViewControl(spRenderSystem){};
+    
+    void ConnectWithMyLightSystem(spRenderSystem);
 
     template<typename T>
     void setLocations(std::shared_ptr<T>,  vec_locations_T<T>, myOGLShaders&, sha_FunGetStr );

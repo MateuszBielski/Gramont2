@@ -17,6 +17,7 @@ public:
     
     template<typename RsType>
     unsigned AddRenderSystem();
+    void Draw(spOneModel ) override;
     void EnableExternalRenderSystem(spRenderSystem);
     void DisableExternalRenderSystem();
     void ConnectModelWithRenderSystem(unsigned uniqueId,unsigned rsId);

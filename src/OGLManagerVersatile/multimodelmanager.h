@@ -19,7 +19,7 @@ private:
     spSelecting m_selecting;
     spTransformable selectedTransformable;
     void MakeAndSetCustomModels();
-    void RenderSystemSetIfWant();
+//    void RenderSystemSetIfWant();
 public:
     MultiModelManager(myOGLErrHandler* extErrHnd);
     ~MultiModelManager();
@@ -38,7 +38,7 @@ public:
 protected:
     void CallForMyRenderable(FunReSys_spOm ,spRenderSystem) override;
     void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs) override;
-    void ConfigureWithMyViewControl(spRenderSystem) override;
+    void ConnectWithMyViewControl(spRenderSystem);
     
     spRenderSystemManager m_rs_manager;//czy jest jakaś korzyść z użycia wskaźnika zamiast obiektu? Nie korzyść tylko konieczność do stosowania w metodzie CallForMyRenderable(FunReSys_spOm ,spRenderSystem)
     spMatrixStack m_ptrMatrixStack;
