@@ -3,7 +3,6 @@
 #include "textfile.h"
 
 
-
 NormalMapRenderSystem::NormalMapRenderSystem():loc{0}
 {
 }
@@ -26,12 +25,13 @@ bool NormalMapRenderSystem::ConfigureShadersAndLocations()
     ok &= (bool)fragIlumCode;
     ok &= (bool)fragCode;
     
-    MA_CreateStrings(uniforms, NORMAL_SH_UNIF);
-    for (auto& unif : uniforms)m_shader->AddUnif(unif);
+//    MA_CreateStrings(uniforms, NORMAL_SH_UNIF);
+//    for (auto& unif : uniforms)m_shader->AddUnif(unif);
 
     string nameOfFunction = "NormalMapRenderSystem::ConfigureShadersAndLocations";
-    if(ok)m_shader->Init(nameOfFunction);
-
+//    if(ok)m_shader->Init(nameOfFunction);
+    if(ok)InitShadersAndReadLocations(nameOfFunction, NORMAL_SH_UNIF, loc);
+        
     int atLoc[(size_t)normalShAttr::normalShAttrSize];
 
     for(short a = 0 ; a < (short)normalShAttr::normalShAttrSize ; a++) {
@@ -39,8 +39,8 @@ bool NormalMapRenderSystem::ConfigureShadersAndLocations()
         atLoc[a] = m_BufferLoader->shadAttribLocations[a];//******DEBUG*
     }
     
-    short u{ 0 };
-    for (auto& unif : uniforms)loc[u++] = m_shader->GetUnifLoc(unif);
+//    short u{ 0 };
+//    for (auto& unif : uniforms)loc[u++] = m_shader->GetUnifLoc(unif);
     
     return true;
 }

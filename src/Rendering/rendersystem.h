@@ -40,6 +40,7 @@ protected:
     
     unsigned int * activeVaoPtr = nullptr;
     unsigned int getProgramId() {return m_shader->getProgramId();}
+    void InitShadersAndReadLocations(string& ,const char * ,unsigned int * loc);
     void DrawIndicesAndFinish(ModelData& d);
 
 };

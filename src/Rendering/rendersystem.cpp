@@ -1,4 +1,5 @@
 #include "rendersystem.h"
+#include "rspreproc.h"
 
 using namespace std;
 
@@ -48,6 +49,16 @@ void RenderSystem::CreateVAO(spOneModel model)
 {
     m_BufferLoader->CreateVao(model->getVao());
 }
+void RenderSystem::InitShadersAndReadLocations(string& nameOfFunction,const char * definedUniformNames, unsigned int * loc)
+{
+//	MA_CreateStrings(uniforms, NORMAL_SH_UNIF);
+	MA_CreateStrings(uniforms, definedUniformNames);
+    for (auto& unif : uniforms)m_shader->AddUnif(unif);
+//    string nameOfFunction = "NormalMapRenderSystem::ConfigureShadersAndLocations";
+    m_shader->Init(nameOfFunction);
+    short u{ 0 };
+    for (auto& unif : uniforms)loc[u++] = m_shader->GetUnifLoc(unif);
+}
 void RenderSystem::DrawIndicesAndFinish(ModelData& d)
 {
 	glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);
@@ -56,3 +67,4 @@ void RenderSystem::DrawIndicesAndFinish(ModelData& d)
     glActiveTexture(GL_TEXTURE0);
     glUseProgram(0);
 }
+
