@@ -11,7 +11,7 @@ Selecting::Selecting()
 
     m_pickingBuffLoader = make_shared<PickingBuffLoader>();
 
-    m_renderer = m_pickingRenderer;
+//    m_renderer = m_pickingRenderer;
     m_BufferLoader = m_pickingBuffLoader;
     m_pickingShader = m_shader;
 }
@@ -239,8 +239,19 @@ void Selecting::SetFragmentShaderPath(string p)
 {
 //    m_fragmentShaderPath = p;
 }
-void Selecting::Draw(spOneModel)
+void Selecting::Draw(spOneModel model)
 {
-	
+//	ModelData& d = model->GetModelData();
+//    
+//    glUseProgram(gl_ProgramId);
+//    glBindVertexArray(model->getVAOforSelect());
+//
+//    glUniformMatrix4fv(m_loc.mMVP, 1, GL_FALSE, m_viewParamsfv.matMVP);
+//    glUniform1i(m_objectIndexLocation, model->getUniqueId() + BACKGROUND_COMPENSATION);
+//
+//    glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);
+//    
+//    glBindVertexArray(0);
+//    glUseProgram(0);
 }
 

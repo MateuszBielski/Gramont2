@@ -30,15 +30,15 @@ void RenderSystemManager::ConnectModelWithRenderSystem(unsigned uniqueId, unsign
     auto s = whichSystemForModel.size();
     whichSystemForModel[uniqueId] = rsId;
 }
-spOglRenderer RenderSystemManager::ActiveRenderer()
-{
-    if(externalRenderSystemEnabled)return externalRs->getRenderer();
-    auto whichRs = whichSystemForModel[currentModelId];
-    auto rs = m_CollectionOfRendSystems[whichRs];
-    auto rend = rs->getRenderer();
-    return rend;
-    return m_CollectionOfRendSystems[whichSystemForModel[currentModelId]]->getRenderer();
-}
+//spOglRenderer RenderSystemManager::ActiveRenderer()
+//{
+//    if(externalRenderSystemEnabled)return externalRs->getRenderer();
+//    auto whichRs = whichSystemForModel[currentModelId];
+//    auto rs = m_CollectionOfRendSystems[whichRs];
+//    auto rend = rs->getRenderer();
+//    return rend;
+//    return m_CollectionOfRendSystems[whichSystemForModel[currentModelId]]->getRenderer();
+//}
 spMyOGLShaders RenderSystemManager::ActiveShader()
 {
     if(externalRenderSystemEnabled)return externalRs->getShader();

@@ -12,8 +12,8 @@ ModelManager::ModelManager():myOGLManager()
     functionsMock.Define();
 #endif
     m_renderSystem = make_shared<OneTextureRenderSystem>(); //default
-    m_BufferLoader = m_renderSystem->getBufferLoader();
-    m_TexRenderer = m_renderSystem->getRenderer();
+//    m_BufferLoader = m_renderSystem->getBufferLoader();
+//    m_TexRenderer = m_renderSystem->getRenderer();
 
     m_Camera = make_unique<myOGLCamera>();
 }
@@ -42,14 +42,14 @@ void ModelManager::setLocations(shared_ptr<T> rend, vec_locations_T<T> vec, myOG
 //    m_TexRenderer = m_renderSystem->getRenderer();
 //    return true;
 //}
-spMyOGLShaders ModelManager::getActiveShader()
-{
-    return activeShader;
-}
-spOglRenderer ModelManager::getActiveRenderer()
-{
-	return activeRenderer;
-}
+//spMyOGLShaders ModelManager::getActiveShader()
+//{
+//    return activeShader;
+//}
+//spOglRenderer ModelManager::getActiveRenderer()
+//{
+//	return activeRenderer;
+//}
 myLight* ModelManager::getLightPtr()
 {
 	return &m_Light;

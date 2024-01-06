@@ -23,10 +23,10 @@ void RenderSystem::setShader(spMyOGLShaders sha)
 {
     m_shader = sha;
 }
-spOglRenderer RenderSystem::getRenderer()
-{
-    return m_renderer;
-}
+//spOglRenderer RenderSystem::getRenderer()
+//{
+//    return m_renderer;
+//}
 spMyOGLShaders RenderSystem::getShader()
 {
     return m_shader;
@@ -49,15 +49,12 @@ void RenderSystem::CreateVAO(spOneModel model)
 {
     m_BufferLoader->CreateVao(model->getVao());
 }
-void RenderSystem::InitShadersAndReadLocations(string& nameOfFunction,const char * definedUniformNames, unsigned int * loc)
+void RenderSystem::InitShadersAndReadLocations(string& nameOfFunction, const vector<string>& uniformNames, unsigned int* loc)
 {
-//	MA_CreateStrings(uniforms, NORMAL_SH_UNIF);
-	MA_CreateStrings(uniforms, definedUniformNames);
-    for (auto& unif : uniforms)m_shader->AddUnif(unif);
-//    string nameOfFunction = "NormalMapRenderSystem::ConfigureShadersAndLocations";
+    for (auto& unif : uniformNames)m_shader->AddUnif(unif);
     m_shader->Init(nameOfFunction);
     short u{ 0 };
-    for (auto& unif : uniforms)loc[u++] = m_shader->GetUnifLoc(unif);
+    for (auto& unif : uniformNames)loc[u++] = m_shader->GetUnifLoc(unif);
 }
 void RenderSystem::DrawIndicesAndFinish(ModelData& d)
 {

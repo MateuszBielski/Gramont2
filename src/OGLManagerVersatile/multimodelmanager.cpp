@@ -95,7 +95,7 @@ void MultiModelManager::ConnectWithMyViewControl(spRenderSystem rs)
 //    rs->getRenderer()->setViewMatrices(m_ptrMatrixStack);
 //    rs->getRenderer()->m_viewParamsfv.viewPosition = cameraTrial->getPositonfv();
     rs->matrixStack = m_ptrMatrixStack;
-    rs->camera = cameraTrial;
+    rs->camera = cameraTrial;//we don't know where it is used, so getter and setter would be better
 }
 void MultiModelManager::CallForMyRenderable(FunReSys_spOm FunToCall, spRenderSystem rs)
 {

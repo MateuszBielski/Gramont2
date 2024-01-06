@@ -40,7 +40,7 @@ bool OneTextureRenderSystem::ConfigureShadersAndLocations()
 
     string nameOfFunction = "OneTextureRenderSystem::ConfigureShadersAndLocations";
     m_shader->Init(nameOfFunction);
-    m_renderer->setLocationsFrom(m_shader);
+//    m_renderer->setLocationsFrom(m_shader);
     
     m_BufferLoader->shadAttribLocations[0] = m_shader->GetAttribLoc("in_sPosition");
     m_BufferLoader->shadAttribLocations[1] = m_shader->GetAttribLoc("in_sNormal");

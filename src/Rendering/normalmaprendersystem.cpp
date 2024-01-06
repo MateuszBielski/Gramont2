@@ -25,12 +25,12 @@ bool NormalMapRenderSystem::ConfigureShadersAndLocations()
     ok &= (bool)fragIlumCode;
     ok &= (bool)fragCode;
     
-//    MA_CreateStrings(uniforms, NORMAL_SH_UNIF);
-//    for (auto& unif : uniforms)m_shader->AddUnif(unif);
 
     string nameOfFunction = "NormalMapRenderSystem::ConfigureShadersAndLocations";
+    MA_CreateStrings(uniforms, NORMAL_SH_UNIF);
+//    for (auto& unif : uniforms)m_shader->AddUnif(unif);
 //    if(ok)m_shader->Init(nameOfFunction);
-    if(ok)InitShadersAndReadLocations(nameOfFunction, NORMAL_SH_UNIF, loc);
+    if(ok)InitShadersAndReadLocations(nameOfFunction, uniforms, loc);
         
     int atLoc[(size_t)normalShAttr::normalShAttrSize];
 

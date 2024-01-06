@@ -38,19 +38,19 @@ public:
         return *m_Camera;
     }
 #endif
-    spMyOGLShaders getActiveShader();
-    spOglRenderer getActiveRenderer();
+//    spMyOGLShaders getActiveShader();
+//    spOglRenderer getActiveRenderer();
     myLight * getLightPtr();
 protected:
 
     spRenderSystem m_renderSystem;
 
-    spBufferLoader m_BufferLoader;
-    spOglRenderer m_TexRenderer;//j/w
-    spOglRenderer m_OglRenderer;
-
-    spOglRenderer activeRenderer;
-    spMyOGLShaders activeShader;
+//    spBufferLoader m_BufferLoader;
+//    spOglRenderer m_TexRenderer;//j/w
+//    spOglRenderer m_OglRenderer;
+//
+//    spOglRenderer activeRenderer;
+//    spMyOGLShaders activeShader;
 
     virtual void CallForMyRenderable(FunReSys_spOm ,spRenderSystem) {};
     virtual void CallForMyTextures(FunReSys_Tim FunToCall, spRenderSystem rs) {};

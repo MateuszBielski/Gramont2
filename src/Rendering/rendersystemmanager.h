@@ -23,7 +23,7 @@ public:
     void ConnectModelWithRenderSystem(unsigned uniqueId,unsigned rsId);
     void CurrentModelId(unsigned id){currentModelId = id;}
     vector<spRenderSystem>& getAllRenderSystems(){return m_CollectionOfRendSystems;}
-    spOglRenderer ActiveRenderer();
+//    spOglRenderer ActiveRenderer();
     spMyOGLShaders ActiveShader();
     
     virtual bool ConfigureShadersAndLocations();
@@ -31,7 +31,7 @@ public:
     virtual void CreateGraphicBuffers(spOneModel );
     virtual void CheckModelWasConnected(spOneModel ) override {/*TO DO*/}
     
-    spOglRenderer getRenderer() = delete;
+//    spOglRenderer getRenderer() = delete;
 protected:
     vector<spRenderSystem> m_CollectionOfRendSystems;
     vector<unsigned> whichSystemForModel;

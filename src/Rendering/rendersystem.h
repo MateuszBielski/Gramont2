@@ -3,7 +3,11 @@
 
 #include <iostream>
 #include <memory>
-#include "oglrenderer.h"
+#include "onemodel.h"
+//#include "textureformodel.h"
+#include "bufferloader.h"
+#include "matrixstack.h"
+//#include "oglstuff.h"
 #include "cameratrial.h"
 
 class RenderSystem
@@ -15,7 +19,7 @@ public:
 //RenderSystem(spMyOGLShaders,spBufferLoader,spOglRenderer);
     virtual bool ConfigureShadersAndLocations() = 0;
     virtual void Draw(spOneModel ) = 0;
-    spOglRenderer getRenderer();
+//    spOglRenderer getRenderer();
     spMyOGLShaders getShader();
     spBufferLoader getBufferLoader();
     void setBufferLoader(spBufferLoader );
@@ -34,18 +38,18 @@ public:
     void CreateGraphicBuffers(TextureInMemory& texm);
     virtual void CheckModelWasConnected(spOneModel ) {}
 protected:
-    spOglRenderer m_renderer;
+//    spOglRenderer m_renderer;
     spBufferLoader m_BufferLoader;
     spMyOGLShaders m_shader;
     
     unsigned int * activeVaoPtr = nullptr;
     unsigned int getProgramId() {return m_shader->getProgramId();}
-    void InitShadersAndReadLocations(string& ,const char * ,unsigned int * loc);
+    void InitShadersAndReadLocations(string& ,const vector<string>& ,unsigned int * loc);
     void DrawIndicesAndFinish(ModelData& d);
 
 };
 
-using FunReSys_MdTfm = void (RenderSystem::*)(ModelData& d,TextureForModel& tex);
+//using FunReSys_MdTfm = void (RenderSystem::*)(ModelData& d,TextureForModel& tex);
 using FunReSys_Tim = void (RenderSystem::*)(TextureInMemory& tex);
 
 using FunReSys_spOm = void (RenderSystem::*)(spOneModel model);

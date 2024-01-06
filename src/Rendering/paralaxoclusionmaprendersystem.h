@@ -21,6 +21,7 @@ class ParalaxOclusionMapRenderSystem : public RenderSystem
 private:
     map<unsigned, unsigned> tbnInversedBufferIdForModel;
     vec_for_subbuf CalculateInversedMatricesForModel(spOneModel model);
+    unsigned int loc[(size_t)pomShUnif::pomShUnifSize];
 public:
     ParalaxOclusionMapRenderSystem();
     virtual bool ConfigureShadersAndLocations();

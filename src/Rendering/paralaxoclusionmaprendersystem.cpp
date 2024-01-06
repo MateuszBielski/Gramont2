@@ -1,13 +1,13 @@
 #include "paralaxoclusionmaprendersystem.h"
 #include "shadersPath.h"
 #include "textfile.h"
-#include "pomrenderer.h"
+//#include "pomrenderer.h"
 
 using namespace std;
 
-ParalaxOclusionMapRenderSystem::ParalaxOclusionMapRenderSystem()
+ParalaxOclusionMapRenderSystem::ParalaxOclusionMapRenderSystem():loc{0}
 {
-    m_renderer = std::make_unique<PomRenderer>();
+//    m_renderer = std::make_unique<PomRenderer>();
 }
 
 bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
@@ -22,35 +22,37 @@ bool ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations()
     MA_CreateStrings(attribs, POM_SH_ATTR);
     for (auto& attr : attribs)m_shader->AddAttrib(attr);
 
-    MA_CreateStrings(uniforms, POM_SH_UNIF);
-    for (auto& unif : uniforms)m_shader->AddUnif(unif);
+    
 
     m_BufferLoader->shadAttribLocations.resize((size_t)pomShAttr::pomShAttrSize);
-    m_renderer->shadUnifLocations.resize((size_t)pomShUnif::pomShUnifSize);
+//    m_renderer->shadUnifLocations.resize((size_t)pomShUnif::pomShUnifSize);
 
     bool ok = true;
     ok &= (bool)vertCode;
 //    ok &= (bool)fragIlumCode;
     ok &= (bool)fragCode;
 //    if(!ok)return false;
-
+    MA_CreateStrings(uniforms, POM_SH_UNIF);
+//    for (auto& unif : uniforms)m_shader->AddUnif(unif);
     string nameOfFunction = "ParalaxOclusionMapRenderSystem::ConfigureShadersAndLocations";
-    if(ok)m_shader->Init(nameOfFunction);
+    if(ok)InitShadersAndReadLocations(nameOfFunction, uniforms, loc);
+//        m_shader->Init(nameOfFunction);
 
 
-    int atLoc[(size_t)pomShAttr::pomShAttrSize], unifLoc[(size_t)pomShUnif::pomShUnifSize];//******DEBUG*
-    string unifNames[(size_t)pomShUnif::pomShUnifSize];
+    int atLoc[(size_t)pomShAttr::pomShAttrSize];
+//    , unifLoc[(size_t)pomShUnif::pomShUnifSize];//******DEBUG*
+//    string unifNames[(size_t)pomShUnif::pomShUnifSize];
     //locations are accessible after compile and link shader
     for(short a = 0 ; a < (short)pomShAttr::pomShAttrSize ; a++) {
         m_BufferLoader->shadAttribLocations[a] = m_shader->GetAttribLoc(attribs[a]);
         atLoc[a] = m_BufferLoader->shadAttribLocations[a];//******DEBUG*
     }
 
-    for(short u = 0 ; u < (short)pomShUnif::pomShUnifSize; u++) {
-        m_renderer->shadUnifLocations[u] = m_shader->GetUnifLoc(uniforms[u]);
-        unifNames[u] = uniforms[u];
-        unifLoc[u] = m_renderer->shadUnifLocations[u];//******DEBUG*
-    }
+//    for(short u = 0 ; u < (short)pomShUnif::pomShUnifSize; u++) {
+//        m_renderer->shadUnifLocations[u] = m_shader->GetUnifLoc(uniforms[u]);
+//        unifNames[u] = uniforms[u];
+//        unifLoc[u] = m_renderer->shadUnifLocations[u];//******DEBUG*
+//    }
     return true;
 }
 vec_for_subbuf ParalaxOclusionMapRenderSystem::CalculateInversedMatricesForModel(spOneModel model)
@@ -157,7 +159,48 @@ void ParalaxOclusionMapRenderSystem::LoadVAO(spOneModel model)
     m_BufferLoader->LoadBufferOnLocation2f(tex.bufTexCoordId,(size_t)pomShAttr::aTexCoords);
     m_BufferLoader->LoadIndicesAndFinish(d.bufIndexId);
 }
-void ParalaxOclusionMapRenderSystem::Draw(spOneModel)
+void ParalaxOclusionMapRenderSystem::Draw(spOneModel model)
 {
-	
+	auto vao = model->getVao();
+    if(!vao)return;
+    glUseProgram(getProgramId());
+//    glBindVertexArray(tex.textureVAO);
+    glBindVertexArray(vao);
+//    glUniformMatrix4fv(shadUnifLocations[(size_t)pomShUnif::model], 1, GL_FALSE, m_viewParamsfv.matModel);
+    glUniformMatrix4fv(loc[(size_t)pomShUnif::mMVP], 1, GL_FALSE, 
+                        matrixStack->getModelViewProjectionMatrixfv());
+    glUniformMatrix4fv(loc[(size_t)pomShUnif::mToViewSpace], 1, GL_FALSE, 
+                        matrixStack->getViewMatrixfv());
+    glUniformMatrix4fv(loc[(size_t)pomShUnif::mInvModelView], 1, GL_FALSE, matrixStack->getInvModelViewMatrixfv());
+    glUniform4fv(loc[(size_t)pomShUnif::lightProps], 1, light->GetFLightPos());
+    glUniform3fv(loc[(size_t)pomShUnif::lightColour], 1, light->GetFLightColour());
+    glUniform3fv(loc[(size_t)pomShUnif::viewPos], 1, camera->getPositonfv());
+   
+
+    auto& tex = *model->MyTexture();
+    auto d = model->GetModelData();
+
+    glActiveTexture(GL_TEXTURE0 + tex.getTextureUnit());
+    glBindTexture(GL_TEXTURE_2D, tex.getTextureId());
+    glUniform1i(loc[(size_t)pomShUnif::diffuseMap], tex.getTextureUnit());
+    
+    int pomEnabled = 1;
+
+    auto& texNormalMap = *model->getTextureOfType(TextureForModel::Normal);
+    if(texNormalMap.bufTexCoordId != (unsigned)-1) {
+        glActiveTexture(GL_TEXTURE0 + texNormalMap.getTextureUnit());
+        glBindTexture(GL_TEXTURE_2D, texNormalMap.getTextureId());
+        glUniform1i(loc[(size_t)pomShUnif::normalMap], texNormalMap.getTextureUnit());
+    }else{pomEnabled = 0;}
+    
+    auto& texHeightMap = *model->getTextureOfType(TextureForModel::Height);
+    if(texHeightMap.bufTexCoordId != (unsigned)-1) {
+        glActiveTexture(GL_TEXTURE0 + texHeightMap.getTextureUnit());
+        glBindTexture(GL_TEXTURE_2D, texHeightMap.getTextureId());
+        glUniform1i(loc[(size_t)pomShUnif::depthMap], texHeightMap.getTextureUnit());
+    }else{pomEnabled = 0;}
+    
+    glUniform1i(loc[(size_t)pomShUnif::pomEnabled], (int)pomEnabled);
+
+    DrawIndicesAndFinish(d);
 }
