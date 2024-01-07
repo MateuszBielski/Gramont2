@@ -15,7 +15,7 @@ MultiModelManager::MultiModelManager(myOGLErrHandler* extErrHnd)
     m_ptrMatrixStack = make_shared<MatrixStack>();
     m_selecting = make_shared<Selecting>();
     m_rs_manager = make_shared<RenderSystemManager>();
-
+    activeRenderSystem = m_rs_manager;
     
 }
 
@@ -74,7 +74,7 @@ void MultiModelManager::MakeAndSetCustomModels()
 
     model_2->AddTexture(texNr,TextureForModel::Normal);
 
-    m_selecting->RegisterSelectable( {model_1,model_2});/**************/
+    m_selecting->RegisterSelectable( {model_1,model_2});
 //    m_selecting->RegisterSelectable( {model_1});
 
     unsigned pomId = m_rs_manager->AddRenderSystem<ParalaxOclusionMapRenderSystem>();
@@ -92,8 +92,6 @@ void MultiModelManager::MakeAndSetCustomModels()
 //}
 void MultiModelManager::ConnectWithMyViewControl(spRenderSystem rs)
 {
-//    rs->getRenderer()->setViewMatrices(m_ptrMatrixStack);
-//    rs->getRenderer()->m_viewParamsfv.viewPosition = cameraTrial->getPositonfv();
     rs->matrixStack = m_ptrMatrixStack;
     rs->camera = cameraTrial;//we don't know where it is used, so getter and setter would be better
 }
@@ -144,15 +142,9 @@ void MultiModelManager::SetShadersAndGeometry()
 void MultiModelManager::Draw3d()
 {
     for(auto& model : models) {
-//        auto& tex = *model->MyTexture();
-//        auto d = model->GetModelData();
         m_ptrMatrixStack->setModelGlmMatrixdv(model->getModelGlmMatrixdv());
         m_ptrMatrixStack->UpdateMatrices();
-        /********* leaving OglRendereClass*/
-        m_rs_manager->Draw(model);
-//        m_rs_manager->CurrentModelId(model->getUniqueId());
-//        m_rs_manager->ActiveRenderer()->DrawModel(model,m_rs_manager->ActiveShader()->getProgramId());
-        /************/
+        activeRenderSystem->Draw(model);
         /*******
         glm::dvec4 corner(d.verts[0],d.verts[1],d.verts[2],1.0);
         std::cout<<"\npunkt pierwszy:\n"<<corner.x<<" "<<corner.y<<" "<<corner.z;
@@ -172,7 +164,6 @@ void MultiModelManager::OnMouseMiddleClick(int posX, int posY)
     if(doesCameraViewControl) {
         cameraTrial->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY);
     } else {
-//        models[0]->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewGlmMatrixdv());
         selectedTransformable->MoveOnScreenPlane(m_mousePrevX, m_mousePrevY, posX, posY,m_ptrMatrixStack->getViewGlmMatrixdv());
     }
     m_mousePrevX = posX;
@@ -206,12 +197,11 @@ void MultiModelManager::OnMouseLeftDClick(int posX, int posY)
 {
     m_selecting->setReadPosition(posX,posY);
     m_selecting->EnableWritingToFrameBuffer();
-    m_rs_manager->EnableExternalRenderSystem(m_selecting);
+    activeRenderSystem = m_selecting;
     Draw3d();
     m_selecting->DisableWritingToFrameBuffer();
     m_selecting->ReadInClickedPosition();
-
-    m_rs_manager->DisableExternalRenderSystem();
+    activeRenderSystem = m_rs_manager;
     setSelectingResult(m_selecting->getResult());
 }
 void MultiModelManager::SetViewport(int x, int y, int width, int height)

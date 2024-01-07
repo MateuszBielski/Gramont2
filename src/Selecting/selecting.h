@@ -4,10 +4,11 @@
 #include <string>
 #include <vector>
 #include "oglstuff.h"
-#include "pickingrenderer.h"
 #include "pickingbuffloader.h"
 #include "selectable.h"
 #include "rendersystem.h"
+
+#define BACKGROUND_COMPENSATION 2
 
 using std::string, std::vector;
 
@@ -29,7 +30,6 @@ class Selecting : public RenderSystem
 #endif
 private:
     bool shadersLoaded = false;
-//    bool readyForRendering = false;
     bool needUpdateFrameBuffer = true;
     bool frameBufferUpdated = false;
 
@@ -40,9 +40,10 @@ private:
     unsigned int WindowWidth = 1, WindowHeight = 1;
     const char * vertCode = nullptr;
     const char * fragCode = nullptr;
+    unsigned int loc_mMVP = 0;
+    unsigned int loc_objectIndex = 0;
 
     spMyOGLShaders m_pickingShader;
-    spPickingRenderer m_pickingRenderer;
     spPickingBuffLoader m_pickingBuffLoader;
 
     int clickedPosX = 0;

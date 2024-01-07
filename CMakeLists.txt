@@ -61,7 +61,7 @@ set ( CXX_SRCS
     src/ViewControl/cameratrial.cpp
     src/Selecting/selecting.cpp
     src/Selecting/selectingresult.cpp
-    src/Selecting/pickingrenderer.cpp
+    #src/Selecting/pickingrenderer.cpp
     src/Selecting/pickingbuffloader.cpp
     src/Selecting/selectable.cpp
     src/Rendering/rendersystem.cpp
@@ -76,34 +76,18 @@ set ( CXX_SRCS
 )
 add_compile_definitions(_USE_MATH_DEFINES)#for using M_PI constant
 add_executable(${CMAKE_PROJECT_NAME} ${CXX_SRCS})
-#add_subdirectory(lib/glad)
-#add_subdirectory(lib/mathstuff)
 add_subdirectory(lib/oglstuff)
-# add_subdirectory(lib/funcs)
 add_subdirectory(lib/wxApp)
-# add_subdirectory(src)
 
 target_link_libraries(${CMAKE_PROJECT_NAME} 
     PUBLIC 
     ${wxWidgets_LIBRARIES}
-    #Glad
     OglStuff
     wxApp
-    #MathStuff
 	)
 target_include_directories(${CMAKE_PROJECT_NAME} PUBLIC ${includes})
 target_include_directories(wxApp PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src)
-#target_include_directories(OglStuff 
-#            PRIVATE 
- #           src/GeometryModel
- #           src/Textures
- #           )
-#target_compile_definitions(
- #      ${CMAKE_PROJECT_NAME}
- #      PUBLIC 
- #     GLIBCXX_DEBUG#nie widać działania
- #     )
-#set(CMAKE_BUILD_TYPE Release) ustawia dla wszytkich wykonywalnych
+
 
             
 

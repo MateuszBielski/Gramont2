@@ -68,8 +68,6 @@
       <File Name="src/Selecting/selecting.h"/>
       <File Name="src/Selecting/selecting.cpp"/>
       <File Name="src/Selecting/selectingresult.cpp"/>
-      <File Name="src/Selecting/pickingrenderer.h"/>
-      <File Name="src/Selecting/pickingrenderer.cpp"/>
       <File Name="src/Selecting/selectable.h"/>
       <File Name="src/Selecting/selectable.cpp"/>
       <File Name="src/Selecting/pickingbuffloader.h"/>
@@ -93,8 +91,6 @@
       <File Name="src/Rendering/paralaxoclusionmaprendersystem.h"/>
       <File Name="src/Rendering/paralaxoclusionmaprendersystem.cpp"/>
       <File Name="src/Rendering/pomrenderer.h"/>
-      <File Name="src/Rendering/pomrenderer.cpp"/>
-      <File Name="src/Rendering/pompreproc.h"/>
       <File Name="src/Rendering/normalmaprendersystem.h"/>
       <File Name="src/Rendering/rspreproc.h"/>
       <File Name="src/Rendering/rspreprocdefinition.cpp"/>

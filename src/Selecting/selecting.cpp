@@ -7,11 +7,7 @@ using namespace std;
 
 Selecting::Selecting()
 {
-    m_pickingRenderer = make_shared<PickingRenderer>();
-
     m_pickingBuffLoader = make_shared<PickingBuffLoader>();
-
-//    m_renderer = m_pickingRenderer;
     m_BufferLoader = m_pickingBuffLoader;
     m_pickingShader = m_shader;
 }
@@ -32,7 +28,8 @@ bool Selecting::ConfigureShadersAndLocations()
     m_pickingShader->Init(nameOfFunction);
 
     CreateAndLoadFrameBuffer();
-    m_pickingRenderer->setLocationsFrom(m_pickingShader);
+    loc_mMVP = m_pickingShader->GetUnifLoc("mMVP");
+    loc_objectIndex = m_pickingShader->GetUnifLoc("modelUniqueId");
     m_pickingBuffLoader->setLocationsFrom(m_pickingShader);
     inited = true;
     return true;
@@ -241,17 +238,19 @@ void Selecting::SetFragmentShaderPath(string p)
 }
 void Selecting::Draw(spOneModel model)
 {
-//	ModelData& d = model->GetModelData();
-//    
-//    glUseProgram(gl_ProgramId);
-//    glBindVertexArray(model->getVAOforSelect());
-//
+	ModelData& d = model->GetModelData();
+    
+    glUseProgram(getProgramId());
+    glBindVertexArray(model->getVAOforSelect());
+
 //    glUniformMatrix4fv(m_loc.mMVP, 1, GL_FALSE, m_viewParamsfv.matMVP);
+    glUniformMatrix4fv(loc_mMVP, 1, GL_FALSE, matrixStack->getModelViewProjectionMatrixfv());
 //    glUniform1i(m_objectIndexLocation, model->getUniqueId() + BACKGROUND_COMPENSATION);
-//
-//    glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);
-//    
-//    glBindVertexArray(0);
-//    glUseProgram(0);
+    glUniform1i(loc_objectIndex, model->getUniqueId() + BACKGROUND_COMPENSATION);
+
+    glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);
+    
+    glBindVertexArray(0);
+    glUseProgram(0);
 }
 

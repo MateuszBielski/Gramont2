@@ -15,34 +15,11 @@ unsigned RenderSystemManager::AddRenderSystem()
     m_CollectionOfRendSystems.emplace_back(move(rs));
     return pos;
 }
-void RenderSystemManager::DisableExternalRenderSystem()
-{
-    externalRenderSystemEnabled = false;
-}
-void RenderSystemManager::EnableExternalRenderSystem(spRenderSystem ers)
-{
-    externalRenderSystemEnabled = true;
-    externalRs = ers;
-}
 void RenderSystemManager::ConnectModelWithRenderSystem(unsigned uniqueId, unsigned rsId)
 {
     if(whichSystemForModel.size() <= uniqueId + 1)whichSystemForModel.resize(uniqueId + 1);
     auto s = whichSystemForModel.size();
     whichSystemForModel[uniqueId] = rsId;
-}
-//spOglRenderer RenderSystemManager::ActiveRenderer()
-//{
-//    if(externalRenderSystemEnabled)return externalRs->getRenderer();
-//    auto whichRs = whichSystemForModel[currentModelId];
-//    auto rs = m_CollectionOfRendSystems[whichRs];
-//    auto rend = rs->getRenderer();
-//    return rend;
-//    return m_CollectionOfRendSystems[whichSystemForModel[currentModelId]]->getRenderer();
-//}
-spMyOGLShaders RenderSystemManager::ActiveShader()
-{
-    if(externalRenderSystemEnabled)return externalRs->getShader();
-    return m_CollectionOfRendSystems[whichSystemForModel[currentModelId]]->getShader();
 }
 void RenderSystemManager::CreateGraphicBuffers(spOneModel model)
 {
