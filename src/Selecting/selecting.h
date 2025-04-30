@@ -72,6 +72,7 @@ public:
     bool ConfigureShadersAndLocations() override;
     void Draw(spOneModel ) override;
     void RegisterSelectable(vector<spSelectable>&& );
+    void RegisterSelectable(spSelectable );
     void setWindowSize(unsigned int, unsigned int);
     void setReadPosition(int posX, int posY);
     void UpdateSelectedModelId(PixelInfo& pxi);

@@ -70,6 +70,7 @@ set ( CXX_SRCS
     src/Rendering/onetexturerendersystem.cpp
     src/Rendering/paralaxoclusionmaprendersystem.cpp
     src/Rendering/normalmaprendersystem.cpp
+    src/Rendering/onecolourrendersystem.cpp
     #src/Rendering/pomrenderer.cpp
     #src/Rendering/normalrenderer.cpp
     src/Rendering/rspreprocdefinition.cpp

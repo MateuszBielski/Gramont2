@@ -34,6 +34,7 @@ public:
     
 
     void setModels(vector<spOneModel>&& );
+    void addModel(spOneModel);
     void setSelectingResult(SelectingResult&& );
 protected:
     void CallForMyRenderable(FunReSys_spOm ,spRenderSystem) override;

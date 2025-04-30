@@ -98,6 +98,9 @@
       <File Name="src/Rendering/rendersystemmanager.h"/>
       <File Name="src/Rendering/rendersystemmanager.cpp"/>
       <File Name="src/Rendering/normalpreproc.h"/>
+      <File Name="src/Rendering/onecolourrendersystem.cpp"/>
+      <File Name="src/Rendering/onecolourrendersystem.h"/>
+      <File Name="src/Rendering/pompreproc.h"/>
     </VirtualDirectory>
     <File Name="src/myglcanvasDependencyInjection.cpp"/>
   </VirtualDirectory>
@@ -118,6 +121,39 @@
     <File Name="ShaderyCoreProfile/pomVertexShader.c"/>
     <File Name="ShaderyCoreProfile/pomFragmentShader.c"/>
   </VirtualDirectory>
+  <VirtualDirectory Name="lib">
+    <File Name="lib/oglstuff/oglstuff.cpp"/>
+    <File Name="lib/oglstuff/oglstuff.h"/>
+    <File Name="lib/oglstuff/myoglmanager.cpp"/>
+    <File Name="lib/oglstuff/myoglmanager.h"/>
+    <File Name="lib/wxApp/MyApp.h"/>
+    <File Name="lib/wxApp/myframe.h"/>
+    <File Name="lib/wxApp/myframe.cpp"/>
+    <File Name="lib/wxApp/wxAppMain.cpp"/>
+    <File Name="lib/funcs/funkcje.cpp"/>
+    <File Name="lib/funcs/funkcje.h"/>
+    <File Name="lib/funcs/textfile.cpp"/>
+    <File Name="lib/funcs/textfile.h"/>
+    <File Name="lib/mathstuff/mathstuff.cpp"/>
+    <File Name="lib/mathstuff/mathstuff.h"/>
+  </VirtualDirectory>
+  <VirtualDirectory Name="Shadery120">
+    <File Name="ShaderyGLSL120/illuminationShader.c"/>
+    <File Name="ShaderyGLSL120/textureFragmentShader.c"/>
+    <File Name="ShaderyGLSL120/textureVertexShader.c"/>
+    <File Name="ShaderyGLSL120/triangFragmentShader.c"/>
+    <File Name="ShaderyGLSL120/triangVertexShader.c"/>
+    <File Name="ShaderyGLSL120/pickingFragmentShader.c"/>
+    <File Name="ShaderyGLSL120/pickingVertexShader.c"/>
+    <File Name="ShaderyGLSL120/pomVertexShader.c"/>
+    <File Name="ShaderyGLSL120/pomFragmentShader.c"/>
+    <File Name="ShaderyGLSL120/normalFragmentShader.c"/>
+    <File Name="ShaderyGLSL120/normalVertexShader.c"/>
+    <File Name="ShaderyGLSL120/oneColourFragmentShader.c"/>
+    <File Name="ShaderyGLSL120/oneColourVertexShader.c"/>
+  </VirtualDirectory>
+  <Dependencies Name="Debug"/>
+  <Dependencies Name="Release"/>
   <Settings Type="Executable">
     <GlobalSettings>
       <Compiler Options="" C_Options="" Assembler="">
@@ -208,35 +244,4 @@
       </Completion>
     </Configuration>
   </Settings>
-  <VirtualDirectory Name="lib">
-    <File Name="lib/oglstuff/oglstuff.cpp"/>
-    <File Name="lib/oglstuff/oglstuff.h"/>
-    <File Name="lib/oglstuff/myoglmanager.cpp"/>
-    <File Name="lib/oglstuff/myoglmanager.h"/>
-    <File Name="lib/wxApp/MyApp.h"/>
-    <File Name="lib/wxApp/myframe.h"/>
-    <File Name="lib/wxApp/myframe.cpp"/>
-    <File Name="lib/wxApp/wxAppMain.cpp"/>
-    <File Name="lib/funcs/funkcje.cpp"/>
-    <File Name="lib/funcs/funkcje.h"/>
-    <File Name="lib/funcs/textfile.cpp"/>
-    <File Name="lib/funcs/textfile.h"/>
-    <File Name="lib/mathstuff/mathstuff.cpp"/>
-    <File Name="lib/mathstuff/mathstuff.h"/>
-  </VirtualDirectory>
-  <VirtualDirectory Name="Shadery120">
-    <File Name="ShaderyGLSL120/illuminationShader.c"/>
-    <File Name="ShaderyGLSL120/textureFragmentShader.c"/>
-    <File Name="ShaderyGLSL120/textureVertexShader.c"/>
-    <File Name="ShaderyGLSL120/triangFragmentShader.c"/>
-    <File Name="ShaderyGLSL120/triangVertexShader.c"/>
-    <File Name="ShaderyGLSL120/pickingFragmentShader.c"/>
-    <File Name="ShaderyGLSL120/pickingVertexShader.c"/>
-    <File Name="ShaderyGLSL120/pomVertexShader.c"/>
-    <File Name="ShaderyGLSL120/pomFragmentShader.c"/>
-    <File Name="ShaderyGLSL120/normalFragmentShader.c"/>
-    <File Name="ShaderyGLSL120/normalVertexShader.c"/>
-  </VirtualDirectory>
-  <Dependencies Name="Debug"/>
-  <Dependencies Name="Release"/>
 </CodeLite_Project>

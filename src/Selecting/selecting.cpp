@@ -174,14 +174,19 @@ void Selecting::UpdateFrameBuffer()
 }
 void Selecting::RegisterSelectable(vector<spSelectable>&& selectables)
 {
-    registeredForSelection = selectables;
-    int count = registeredForSelection.size();
+    int count = selectables.size();
     int counter = 0;
     for(counter; counter < count; counter++) {
         selectables[counter]->setUniqueId(counter);
     }
+    registeredForSelection = selectables;
 }
 
+void Selecting::RegisterSelectable(spSelectable s)
+{
+    s->setUniqueId(registeredForSelection.size());
+    registeredForSelection.push_back(s);
+}
 Selecting::PixelInfo Selecting::ReadPixel(unsigned int x, unsigned int y)
 {
     glBindFramebuffer(GL_READ_FRAMEBUFFER, m_fbo);
@@ -238,8 +243,8 @@ void Selecting::SetFragmentShaderPath(string p)
 }
 void Selecting::Draw(spOneModel model)
 {
-	ModelData& d = model->GetModelData();
-    
+    ModelData& d = model->GetModelData();
+
     glUseProgram(getProgramId());
     glBindVertexArray(model->getVAOforSelect());
 
@@ -249,8 +254,7 @@ void Selecting::Draw(spOneModel model)
     glUniform1i(loc_objectIndex, model->getUniqueId() + BACKGROUND_COMPENSATION);
 
     glDrawElements(d.primitiveMode, d.nuIndices, GL_UNSIGNED_INT, (GLvoid *)0);
-    
+
     glBindVertexArray(0);
     glUseProgram(0);
 }
-

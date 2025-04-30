@@ -1,6 +1,7 @@
 #include "multimodelmanager.h"
 #include "convexsurface.h"
 #include "paralaxoclusionmaprendersystem.h"
+#include "onecolourrendersystem.h"
 #include "normalmaprendersystem.h"
 
 using namespace std;
@@ -26,6 +27,9 @@ void MultiModelManager::setModels(vector<spOneModel>&& m)
 {
     models = m;
 }
+void MultiModelManager::addModel(spOneModel m){
+    models.push_back(m);
+}
 void MultiModelManager::MakeAndSetCustomModels()
 {
 #ifndef TESTOWANIE_F
@@ -39,6 +43,7 @@ void MultiModelManager::MakeAndSetCustomModels()
 #define T_HEIGHT_1 "../ResourcesGramont2/maleKamienie1024height.jpg"
     auto model_1 = make_shared<ConvexSurface>(80,80,160,160,70);
     auto model_2 = make_shared<ConvexSurface>(80,80,160,160,70);
+//    auto model_3 =
     setModels( {model_1,model_2});/**************/
 //    setModels( {model_1});
 
@@ -72,8 +77,9 @@ void MultiModelManager::MakeAndSetCustomModels()
     model_1->AddTexture(texHg,TextureForModel::Height);
     model_1->AddTexture(texNr,TextureForModel::Normal);
 
+//    model_2->AddTexture(texHg,TextureForModel::Height);
     model_2->AddTexture(texNr,TextureForModel::Normal);
-
+    
     m_selecting->RegisterSelectable( {model_1,model_2});
 //    m_selecting->RegisterSelectable( {model_1});
 
@@ -81,8 +87,15 @@ void MultiModelManager::MakeAndSetCustomModels()
     unsigned normalId = m_rs_manager->AddRenderSystem<NormalMapRenderSystem>();
     m_rs_manager->ConnectModelWithRenderSystem(model_1->getUniqueId(),pomId);
     m_rs_manager->ConnectModelWithRenderSystem(model_2->getUniqueId(),normalId);
-
-
+    
+    //third model added after year
+    auto model_3 = make_shared<ConvexSurface>(80,80,90,90,30);
+    addModel(model_3);
+    m_selecting->RegisterSelectable(model_3);
+    model_3->Translate( {0.0f,60.0f,0.0f});
+    model_3->MyTexture()->setTextureInMemory(texm_2);
+    unsigned oneColourId = m_rs_manager->AddRenderSystem<OneColourRenderSystem>();
+    m_rs_manager->ConnectModelWithRenderSystem(model_3->getUniqueId(),oneColourId);
 #endif
 }
 //void MultiModelManager::RenderSystemSetIfWant()

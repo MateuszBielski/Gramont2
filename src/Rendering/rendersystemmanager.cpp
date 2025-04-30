@@ -1,6 +1,7 @@
 #include "rendersystemmanager.h"
 #include "paralaxoclusionmaprendersystem.h"
 #include "normalmaprendersystem.h"
+#include "onecolourrendersystem.h"
 
 using namespace std;
 
@@ -45,3 +46,4 @@ void RenderSystemManager::Draw(spOneModel model)
 //for linker
 template unsigned RenderSystemManager::AddRenderSystem<ParalaxOclusionMapRenderSystem>();
 template unsigned RenderSystemManager::AddRenderSystem<NormalMapRenderSystem>();
+template unsigned RenderSystemManager::AddRenderSystem<OneColourRenderSystem>();

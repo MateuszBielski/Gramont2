@@ -98,7 +98,7 @@ bool myOGLShaders::AskUnifLocations()
     for (shaVars_v::iterator it = m_shaUnif.begin(); it != m_shaUnif.end(); ++it) {
         GLint glret = glGetUniformLocation(m_proId, it->name.c_str());
         if ( glret == -1 ) {
-            string err = "uniform " + it->name + " not found";
+            string err = "uniform " + it->name + " not found in shader code";
             MyOnGLError(myoglERR_SHADERLOCATION, err.c_str());
             isNoError = false;
             continue;

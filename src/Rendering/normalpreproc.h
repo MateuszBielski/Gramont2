@@ -8,7 +8,7 @@
 MA_CreateEnum(normalShAttr, NORMAL_SH_ATTR)
 
 #ifndef NORMAL_SH_UNIF
-#define NORMAL_SH_UNIF model, mMVP, mToViewSpace, lightColour, lightProps, lightPos, viewPos, diffuseMap, normalMap, normalEnabled, normalShUnifSize
+#define NORMAL_SH_UNIF mMVP, mToViewSpace, lightColour, lightProps, diffuseMap, normalMap, normalEnabled, normalShUnifSize
 MA_CreateEnum(normalShUnif, NORMAL_SH_UNIF)
 #endif
 

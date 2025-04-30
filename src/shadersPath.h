@@ -22,5 +22,7 @@
 #define d_pomFragmentShaderPath d_path"pomFragmentShader.c"
 #define d_normalVertexShaderPath d_path"normalVertexShader.c"
 #define d_normalFragmentShaderPath d_path"normalFragmentShader.c"
+#define d_oneColourVertexShaderPath d_path"oneColourVertexShader.c"
+#define d_oneColourFragmentShaderPath d_path"oneColourFragmentShader.c"
 
 #endif
